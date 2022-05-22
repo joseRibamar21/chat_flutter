@@ -13,6 +13,11 @@ ThemeData makeTheme1() {
           color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
       iconTheme: IconThemeData(color: Colors.white));
 
+  PopupMenuThemeData popupMenuTheme = const PopupMenuThemeData(
+      color: secondary,
+      textStyle: TextStyle(
+          color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold));
+
   InputDecorationTheme inputDecorationTheme = const InputDecorationTheme(
       border: InputBorder.none,
       labelStyle: TextStyle(color: Color.fromARGB(195, 255, 255, 255)),
@@ -27,6 +32,7 @@ ThemeData makeTheme1() {
       colorScheme: ColorScheme.fromSeed(seedColor: primary),
       inputDecorationTheme: inputDecorationTheme,
       listTileTheme: listTileThemedata,
+      popupMenuTheme: popupMenuTheme,
       useMaterial3: true,
       textTheme: textTheme);
 }

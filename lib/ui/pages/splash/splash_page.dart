@@ -15,7 +15,7 @@ class SplashPage extends StatelessWidget {
           width: double.maxFinite,
           color: const Color(0xFF1D356C),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 51),
+            padding: const EdgeInsets.symmetric(horizontal: 50),
             child: Image.asset("lib/ui/assets/imgs/logo.png",
                 fit: BoxFit.fitWidth),
           ),

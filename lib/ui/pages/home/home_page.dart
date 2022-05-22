@@ -8,8 +8,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {}, icon: const Icon(Icons.more_vert_outlined)),
+        leading: PopupMenuButton(
+            icon: const Icon(Icons.more_vert_rounded),
+            itemBuilder: (_) {
+              return [const PopupMenuItem(child: Text("Configurações"))];
+            }),
         title: const Text("Chat"),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded))
