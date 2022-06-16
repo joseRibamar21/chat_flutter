@@ -4,7 +4,9 @@ ThemeData makeTheme1() {
   const Color primary = Color(0xFF1D356C);
   const Color secondary = Color(0xFF1C6892);
 
-  TextTheme textTheme = const TextTheme(titleMedium: TextStyle(fontSize: 18));
+  TextTheme textTheme = const TextTheme(
+      titleMedium: TextStyle(fontSize: 18),
+      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
 
   AppBarTheme appBarTheme = const AppBarTheme(
       backgroundColor: primary,

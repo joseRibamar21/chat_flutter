@@ -17,14 +17,15 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: makeTheme1(),
-      initialRoute: "/",
+      initialRoute: "/register",
       getPages: [
         GetPage(name: "/", page: () => const SplashPage()),
+        GetPage(name: "/register", page: () => const RegisterPage()),
         GetPage(name: "/home", page: () => const HomePage()),
         GetPage(
-            name: "/chat",
-            page: () => const ChatPage(),
-            fullscreenDialog: true),
+          name: "/chat",
+          page: () => const ChatPage(),
+        ),
       ],
     );
   }
