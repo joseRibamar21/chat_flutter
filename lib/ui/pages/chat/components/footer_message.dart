@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 class FooterMessage extends StatelessWidget {
@@ -28,6 +30,8 @@ class FooterMessage extends StatelessWidget {
                 enableSuggestions: true,
                 maxLines: 4,
                 minLines: 1,
+                toolbarOptions: const ToolbarOptions(
+                    copy: true, cut: true, selectAll: true, paste: true),
                 onEditingComplete: sendMessage,
                 style: const TextStyle(color: Colors.white, fontSize: 16),
                 decoration: const InputDecoration(hintText: "Digi te algo..."),

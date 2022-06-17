@@ -53,9 +53,11 @@ class _ListMessageState extends State<ListMessage> {
         itemCount: _list.length,
         itemBuilder: (context, index) {
           return ChatItem(
-              menssage: _list[index].body,
-              sender: _list[index].sender,
-              isSentder: (_list[index].sender == widget.nick));
+            menssage: _list[index].body.message,
+            sender: _list[index].sender,
+            isSentder: (_list[index].sender == widget.nick),
+            connection: _list[index].body.connecting,
+          );
         });
   }
 }

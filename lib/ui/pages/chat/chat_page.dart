@@ -18,17 +18,17 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    controller.init();
     nick = Get.arguments['nick'];
+    controller.init(nick);
     WidgetsBinding.instance.addObserver(this);
 
     super.initState();
   }
 
   @override
-  void dispose() {
-    controller.dispose();
+  void dispose() async {
     controller.disp();
+    controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _textController.dispose();
     super.dispose();
@@ -36,7 +36,6 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state);
     if (state == AppLifecycleState.resumed) {
       setState(() {});
     }
@@ -56,9 +55,6 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         title: Text(nick!),
-        actions: [
-          IconButton(onPressed: controller.teste, icon: Icon(Icons.abc))
-        ],
       ),
       body: Builder(builder: (_) {
         return Column(
