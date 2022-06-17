@@ -26,19 +26,13 @@ class _ChatItemState extends State<ChatItem> {
       case 0:
         return Align(
           alignment: Alignment.center,
-          child: Card(
-            color: Colors.red[200],
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: widget.isSentder
-                  ? Text(widget.menssage)
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                          Text("${widget.sender} saiu!",
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ]),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text("${widget.sender} saiu!",
+                style: TextStyle(
+                    color: Colors.red[800],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16)),
           ),
         );
       case 1:
@@ -49,7 +43,7 @@ class _ChatItemState extends State<ChatItem> {
             });
           },
           selected: _isSelect,
-          selectedTileColor: Colors.grey[400],
+          selectedTileColor: Colors.grey[200],
           title: Align(
             alignment:
                 widget.isSentder ? Alignment.centerRight : Alignment.centerLeft,
@@ -58,7 +52,6 @@ class _ChatItemState extends State<ChatItem> {
                   ? const EdgeInsets.only(left: 30, right: 10)
                   : const EdgeInsets.only(left: 10, right: 30),
               child: Card(
-                color: Colors.white54,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: widget.isSentder
@@ -80,20 +73,11 @@ class _ChatItemState extends State<ChatItem> {
       case 3:
         return Align(
           alignment: Alignment.center,
-          child: Card(
-            color: Colors.green[200],
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: widget.isSentder
-                  ? Text(widget.menssage)
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                          Text("${widget.sender} entrou!",
-                              style: Theme.of(context).textTheme.bodyLarge),
-                        ]),
-            ),
-          ),
+          child: Text("${widget.sender} entrou!",
+              style: TextStyle(
+                  color: Colors.green[800],
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16)),
         );
 
       default:
