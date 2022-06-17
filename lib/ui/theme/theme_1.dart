@@ -28,6 +28,12 @@ ThemeData makeTheme1() {
   ListTileThemeData listTileThemedata =
       const ListTileThemeData(style: ListTileStyle.drawer);
 
+  BottomSheetThemeData sheetThemeData = const BottomSheetThemeData(
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+  );
+
   return ThemeData(
       primaryColor: secondary,
       appBarTheme: appBarTheme,
@@ -36,5 +42,6 @@ ThemeData makeTheme1() {
       listTileTheme: listTileThemedata,
       popupMenuTheme: popupMenuTheme,
       useMaterial3: true,
+      bottomSheetTheme: sheetThemeData,
       textTheme: textTheme);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import 'chat_controller.dart';
 import 'components/components.dart';
@@ -52,23 +53,30 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(nick!),
-      ),
-      body: Builder(builder: (_) {
-        return Column(
-          children: [
-            Expanded(
-              child: ListMessage(
-                stream: controller.listMessagesStream,
-                nick: nick ?? "",
+    return Provider(
+      create: (context) => controller,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 60,
+          title: const AppBarSender(),
+        ),
+        body: Builder(builder: (_) {
+          return Column(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: FocusScope.of(context).unfocus,
+                  child: ListMessage(
+                    stream: controller.listMessagesStream,
+                    nick: nick ?? "",
+                  ),
+                ),
               ),
-            ),
-            FooterMessage(controller: _textController, sendMessage: _send)
-          ],
-        );
-      }),
+              FooterMessage(controller: _textController, sendMessage: _send)
+            ],
+          );
+        }),
+      ),
     );
   }
 }

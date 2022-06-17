@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
 
 class FooterMessage extends StatelessWidget {
@@ -23,6 +21,7 @@ class FooterMessage extends StatelessWidget {
                 child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: TextFormField(
+                autofocus: false,
                 controller: controller,
                 cursorColor: Colors.white,
                 keyboardType: TextInputType.multiline,
@@ -34,7 +33,8 @@ class FooterMessage extends StatelessWidget {
                     copy: true, cut: true, selectAll: true, paste: true),
                 onEditingComplete: sendMessage,
                 style: const TextStyle(color: Colors.white, fontSize: 16),
-                decoration: const InputDecoration(hintText: "Digi te algo..."),
+                decoration:
+                    const InputDecoration(hintText: "Escreva uma mensagem..."),
               ),
             )),
             IconButton(

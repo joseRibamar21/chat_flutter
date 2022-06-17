@@ -11,20 +11,21 @@ class ChatController extends GetxController {
   final _rxListMessages = Rx<List<MessageEntity>>([]);
   late Stream<dynamic> _channelStream;
   late StreamSubscription<dynamic> _channelObs;
-  late String _nick;
+  late String nickG;
   bool isInit = false;
-  List<String> senders = [];
+  final _rxSenders = Rx<List<String>>([]);
 
   WebSocketChannel? _channel =
       WebSocketChannel.connect(Uri.parse('wss://wss.infatec.solutions'));
 
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
+  Stream<List<String>> get listSendersStream => _rxSenders.stream;
 
   void init(String? nick) async {
     _channelStream = _channel!.stream;
 
     if (nick != null && !isInit) {
-      _nick = nick;
+      nickG = nick;
       var body = jsonEncode(MessageModel(
               sender: nick,
               body: BodyModel(message: "null", connecting: 3).toEntity())
@@ -43,22 +44,23 @@ class ChatController extends GetxController {
       switch (value.body.connecting) {
         // caso algue se desconect
         case 0:
-          senders.remove(value.sender);
+          _rxSenders.value.remove(value.sender);
+          _rxSenders.refresh();
           _rxListMessages.value = _rxListMessages.value..add(value);
           _rxListMessages.refresh();
           break;
         case 2:
-          senders.addIf(_nick != value.sender, value.sender);
-
+          _rxSenders.value.addIf(nickG != value.sender, value.sender);
+          _rxSenders.refresh();
           break;
         // Caso possua um novo conectado
         case 3:
           var body = jsonEncode(MessageModel(
-                  sender: _nick,
+                  sender: nickG,
                   body: BodyModel(message: "null", connecting: 2).toEntity())
               .toJson());
           _channel?.sink.add(body);
-          if (value.sender != _nick) {
+          if (value.sender != nickG) {
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
           }
@@ -67,7 +69,6 @@ class ChatController extends GetxController {
           _rxListMessages.value = _rxListMessages.value..add(value);
           _rxListMessages.refresh();
       }
-      print(senders);
     });
   }
 
@@ -84,7 +85,7 @@ class ChatController extends GetxController {
   Future<void> disp() async {
     if (isInit) {
       var body = jsonEncode(MessageModel(
-              sender: _nick,
+              sender: nickG,
               body: BodyModel(message: "null", connecting: 0).toEntity())
           .toJson());
       _channel?.sink.add(body);
@@ -93,4 +94,6 @@ class ChatController extends GetxController {
     _channelObs.cancel();
     _channel = null;
   }
+
+  List<String> get getlistSnders => _rxSenders.value;
 }

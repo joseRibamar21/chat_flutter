@@ -37,11 +37,11 @@ class _ChatItemState extends State<ChatItem> {
         );
       case 1:
         return ListTile(
-          onLongPress: () {
+          /* onLongPress: () {
             setState(() {
               _isSelect = !_isSelect;
             });
-          },
+          }, */
           selected: _isSelect,
           selectedTileColor: Colors.grey[200],
           title: Align(
@@ -49,8 +49,10 @@ class _ChatItemState extends State<ChatItem> {
                 widget.isSentder ? Alignment.centerRight : Alignment.centerLeft,
             child: Padding(
               padding: widget.isSentder
-                  ? const EdgeInsets.only(left: 30, right: 10)
-                  : const EdgeInsets.only(left: 10, right: 30),
+                  ? const EdgeInsets.only(
+                      left: 30,
+                    )
+                  : const EdgeInsets.only(right: 30),
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
