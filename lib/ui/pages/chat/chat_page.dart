@@ -40,8 +40,12 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       setState(() {});
     }
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {}
+    if (state == AppLifecycleState.inactive) {
+      print("object");
+    }
+    if (state == AppLifecycleState.resumed) {
+      print("object");
+    }
   }
 
   void _send() {

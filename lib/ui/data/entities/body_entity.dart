@@ -9,4 +9,5 @@ class BodyEntity {
 1 - Conectado;
 2 - lista conectados;
 3 - Nova conexão 
+4 - Inativo
 */

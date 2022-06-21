@@ -82,17 +82,29 @@ class ChatController extends GetxController {
     }
   }
 
+  void inactive() {
+    var body = jsonEncode(MessageModel(
+            sender: nickG,
+            body: BodyModel(message: "null", connecting: 4).toEntity())
+        .toJson());
+    _channel?.sink.add(body);
+  }
+
   Future<void> disp() async {
     if (isInit) {
-      var body = jsonEncode(MessageModel(
-              sender: nickG,
-              body: BodyModel(message: "null", connecting: 0).toEntity())
-          .toJson());
-      _channel?.sink.add(body);
+      _sendUserState(0);
       isInit = false;
     }
     _channelObs.cancel();
     _channel = null;
+  }
+
+  void _sendUserState(int status) {
+    var body = jsonEncode(MessageModel(
+            sender: nickG,
+            body: BodyModel(message: "null", connecting: status).toEntity())
+        .toJson());
+    _channel?.sink.add(body);
   }
 
   List<String> get getlistSnders => _rxSenders.value;
