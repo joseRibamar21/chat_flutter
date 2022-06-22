@@ -66,22 +66,22 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Provider(
       create: (context) => controller,
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 60,
-          title: const AppBarSender(),
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  _authController.verify(true);
-                },
-                icon: const Icon(Icons.security))
-          ],
-        ),
-        body: Builder(builder: (_) {
-          return BlockAuth(
-            controller: _authController,
-            body: Column(
+      child: BlockAuth(
+        controller: _authController,
+        body: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 60,
+            title: const AppBarSender(),
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    _authController.verify(true);
+                  },
+                  icon: const Icon(Icons.security))
+            ],
+          ),
+          body: Builder(builder: (_) {
+            return Column(
               children: [
                 Expanded(
                   child: GestureDetector(
@@ -94,9 +94,9 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                 ),
                 FooterMessage(controller: _textController, sendMessage: _send)
               ],
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }

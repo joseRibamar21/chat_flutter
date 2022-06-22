@@ -50,7 +50,7 @@ class _BlockAuthState extends State<BlockAuth> {
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.black, Colors.black87],
+                          colors: [Colors.white38, Colors.white54],
                         ),
                       )),
                 );
