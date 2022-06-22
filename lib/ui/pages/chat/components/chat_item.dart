@@ -33,6 +33,9 @@ class _ChatItemState extends State<ChatItem> {
           ),
         );
       case 1:
+        if (widget.sender == "SYSTEM") {
+          return _SystemMessage(message: widget.menssage);
+        }
         return widget.menssage == "null" || widget.menssage.isEmpty
             ? const SizedBox()
             : ListTile(
@@ -61,6 +64,29 @@ class _ChatItemState extends State<ChatItem> {
       default:
         return const SizedBox();
     }
+  }
+}
+
+class _SystemMessage extends StatelessWidget {
+  final String message;
+  const _SystemMessage({Key? key, required this.message}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Column(
+        children: [
+          Center(
+            child: Text(message,
+                style: Theme.of(context).textTheme.bodySmall,
+                textAlign: TextAlign.center),
+          ),
+          const SizedBox(height: 10),
+          const Divider()
+        ],
+      ),
+    );
   }
 }
 

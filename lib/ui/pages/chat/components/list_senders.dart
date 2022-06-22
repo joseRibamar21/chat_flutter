@@ -54,7 +54,7 @@ class __ListSendersState extends State<_ListSenders> {
 
   @override
   void initState() {
-    _list = widget.controller.getlistSnders;
+    _list = widget.controller.getlistSenders;
     super.initState();
   }
 

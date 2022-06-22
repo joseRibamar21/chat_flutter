@@ -16,7 +16,9 @@ ThemeData makeTheme2() {
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
-      bodyMedium: TextStyle(fontSize: 14, color: Colors.white));
+      bodyMedium: TextStyle(fontSize: 14, color: Colors.white),
+      bodySmall: TextStyle(
+          fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic));
 
   AppBarTheme appBarTheme = const AppBarTheme(
       backgroundColor: color1,
@@ -27,6 +29,9 @@ ThemeData makeTheme2() {
 
   CardTheme cardTheme =
       const CardTheme(color: color2, surfaceTintColor: Colors.white);
+
+  DividerThemeData dividerThemeData =
+      const DividerThemeData(color: Colors.white);
 
   PopupMenuThemeData popupMenuTheme = const PopupMenuThemeData(
       color: color2,
@@ -53,6 +58,7 @@ ThemeData makeTheme2() {
       cardTheme: cardTheme,
       cardColor: color5,
       colorScheme: ColorScheme.fromSeed(seedColor: color1),
+      dividerTheme: dividerThemeData,
       inputDecorationTheme: inputDecorationTheme,
       listTileTheme: listTileThemedata,
       popupMenuTheme: popupMenuTheme,

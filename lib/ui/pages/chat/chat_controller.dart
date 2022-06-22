@@ -24,15 +24,15 @@ class ChatController extends GetxController {
   void init(String? nick) async {
     _channelStream = _channel!.stream;
 
+    //Primeiras acoes a serem executas
     if (nick != null && !isInit) {
-      nickG = nick;
-      _sendUserState(status: 3);
-      isInit = true;
+      _inicialization(nick);
     }
-
+    //Abrir canal
     _channelObs = _channelStream.listen((event) async {
       print(event);
       print(_rxSenders.value);
+      // Pegar menssagem recebida
       var message = jsonDecode(event);
       MessageEntity value = MessageEntity(
           sender: message['sender'],
@@ -110,6 +110,25 @@ class ChatController extends GetxController {
     _sendUserState(status: 4);
   }
 
+  void _inicialization(String nick) async {
+    //ATUALIZAR NICK
+    nickG = nick;
+    //Mandar menssagem para todos verem sua disponibilidade
+    _sendUserState(status: 3);
+    isInit = true;
+    Future.delayed(const Duration(milliseconds: 10)).then((value) {
+      _rxListMessages.value = _rxListMessages.value
+        ..add(MessageEntity(
+            sender: 'SYSTEM',
+            body: BodyEntity(
+                message:
+                    "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e todas as mensagens são apagas ao sair da sala.",
+                connecting: 1)));
+
+      _rxListMessages.refresh();
+    });
+  }
+
   Future<void> disp() async {
     if (isInit) {
       _sendUserState(status: 0);
@@ -128,5 +147,5 @@ class ChatController extends GetxController {
     _channel?.sink.add(body);
   }
 
-  List<Map<String, dynamic>> get getlistSnders => _rxSenders.value;
+  List<Map<String, dynamic>> get getlistSenders => _rxSenders.value;
 }
