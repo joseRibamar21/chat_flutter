@@ -50,7 +50,7 @@ class _ListSenders extends StatefulWidget {
 }
 
 class __ListSendersState extends State<_ListSenders> {
-  List<String> _list = [];
+  List<Map<String, dynamic>> _list = [];
 
   @override
   void initState() {
@@ -69,9 +69,11 @@ class __ListSendersState extends State<_ListSenders> {
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Divider(thickness: 3),
           ),
-          StreamBuilder<List<String>>(
+          StreamBuilder<List<Map<String, dynamic>>>(
             stream: widget.controller.listSendersStream,
             builder: ((context, snapshot) {
+              print("Widget");
+              print(_list);
               return ConstrainedBox(
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height - 150),
@@ -88,13 +90,17 @@ class __ListSendersState extends State<_ListSenders> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    e,
+                                    e["user"] ?? "Error",
                                     style:
                                         Theme.of(context).textTheme.titleSmall,
                                   ),
-                                  const CircleAvatar(
+                                  CircleAvatar(
                                     radius: 10,
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: e["status"] == 1
+                                        ? Colors.green
+                                        : e["status"] == 4
+                                            ? Colors.grey[500]
+                                            : Colors.red,
                                   )
                                 ],
                               ),

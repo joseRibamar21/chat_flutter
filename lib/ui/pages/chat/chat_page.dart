@@ -1,3 +1,4 @@
+import 'package:chat_flutter/data/usecase/autentication_local.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   final TextEditingController _textController = TextEditingController();
+  final BlockAuthController _authController = BlockAuthController();
   String? nick;
   ChatController controller = ChatController();
 
@@ -31,20 +33,25 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     controller.disp();
     controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    _authController.dispose();
     _textController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      setState(() {});
-    }
-    if (state == AppLifecycleState.inactive) {
-      print("object");
-    }
-    if (state == AppLifecycleState.resumed) {
-      print("object");
+    switch (state) {
+      case AppLifecycleState.resumed:
+        controller.resume();
+
+        break;
+      case AppLifecycleState.inactive:
+        controller.inactive();
+        break;
+      case AppLifecycleState.detached:
+        controller.disp();
+        break;
+      default:
     }
   }
 
@@ -63,21 +70,31 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
         appBar: AppBar(
           toolbarHeight: 60,
           title: const AppBarSender(),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  _authController.verify(true);
+                },
+                icon: const Icon(Icons.security))
+          ],
         ),
         body: Builder(builder: (_) {
-          return Column(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: FocusScope.of(context).unfocus,
-                  child: ListMessage(
-                    stream: controller.listMessagesStream,
-                    nick: nick ?? "",
+          return BlockAuth(
+            controller: _authController,
+            body: Column(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: FocusScope.of(context).unfocus,
+                    child: ListMessage(
+                      stream: controller.listMessagesStream,
+                      nick: nick ?? "",
+                    ),
                   ),
                 ),
-              ),
-              FooterMessage(controller: _textController, sendMessage: _send)
-            ],
+                FooterMessage(controller: _textController, sendMessage: _send)
+              ],
+            ),
           );
         }),
       ),

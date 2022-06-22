@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: makeTheme1(),
+      theme: makeTheme2(),
       initialRoute: "/register",
       getPages: [
         GetPage(name: "/", page: () => const SplashPage()),
