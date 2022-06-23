@@ -1,4 +1,3 @@
-import 'package:chat_flutter/data/usecase/autentication_local.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -64,38 +63,43 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) => controller,
-      child: BlockAuth(
-        controller: _authController,
-        body: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 60,
-            title: const AppBarSender(),
-            actions: [
-              IconButton(
-                  onPressed: () async {
-                    _authController.verify(true);
-                  },
-                  icon: const Icon(Icons.security))
-            ],
-          ),
-          body: Builder(builder: (_) {
-            return Column(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: FocusScope.of(context).unfocus,
-                    child: ListMessage(
-                      stream: controller.listMessagesStream,
-                      nick: nick ?? "",
+    return WillPopScope(
+      onWillPop: () async {
+        return await showDialogReturn(context);
+      },
+      child: Provider(
+        create: (context) => controller,
+        child: BlockAuth(
+          controller: _authController,
+          body: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 60,
+              title: const AppBarSender(),
+              actions: [
+                IconButton(
+                    onPressed: () async {
+                      _authController.verify(true);
+                    },
+                    icon: const Icon(Icons.security))
+              ],
+            ),
+            body: Builder(builder: (_) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: FocusScope.of(context).unfocus,
+                      child: ListMessage(
+                        stream: controller.listMessagesStream,
+                        nick: nick ?? "",
+                      ),
                     ),
                   ),
-                ),
-                FooterMessage(controller: _textController, sendMessage: _send)
-              ],
-            );
-          }),
+                  FooterMessage(controller: _textController, sendMessage: _send)
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );

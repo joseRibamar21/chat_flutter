@@ -122,7 +122,7 @@ class ChatController extends GetxController {
             sender: 'SYSTEM',
             body: BodyEntity(
                 message:
-                    "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e todas as mensagens são apagas ao sair da sala.",
+                    "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala.",
                 connecting: 1)));
       _rxListMessages.refresh();
     });

@@ -8,7 +8,10 @@ ThemeData makeTheme2() {
   const Color color5 = Color(0xFF3E8C3B);
 
   TextTheme textTheme = const TextTheme(
-      titleMedium: TextStyle(fontSize: 18),
+      titleLarge: TextStyle(
+          fontSize: 40, color: Colors.white, fontWeight: FontWeight.w500),
+      titleMedium: TextStyle(
+          fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
       titleSmall: TextStyle(
           fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
       bodyLarge: TextStyle(
@@ -33,6 +36,18 @@ ThemeData makeTheme2() {
   DividerThemeData dividerThemeData =
       const DividerThemeData(color: Colors.white);
 
+  DialogTheme dialogTheme = const DialogTheme(
+    backgroundColor: color2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(20),
+      ),
+    ),
+  );
+
+  FloatingActionButtonThemeData floatingActionButtonThemeData =
+      const FloatingActionButtonThemeData(shape: CircleBorder());
+
   PopupMenuThemeData popupMenuTheme = const PopupMenuThemeData(
       color: color2,
       textStyle: TextStyle(
@@ -52,18 +67,24 @@ ThemeData makeTheme2() {
             topLeft: Radius.circular(20), topRight: Radius.circular(20))),
   );
 
+  TextButtonThemeData textButtonThemeData = TextButtonThemeData(
+      style: TextButton.styleFrom(textStyle: textTheme.bodyMedium));
+
   return ThemeData(
       primaryColor: color1,
       appBarTheme: appBarTheme,
       cardTheme: cardTheme,
       cardColor: color5,
+      floatingActionButtonTheme: floatingActionButtonThemeData,
       colorScheme: ColorScheme.fromSeed(seedColor: color1),
       dividerTheme: dividerThemeData,
+      dialogTheme: dialogTheme,
       inputDecorationTheme: inputDecorationTheme,
       listTileTheme: listTileThemedata,
       popupMenuTheme: popupMenuTheme,
       useMaterial3: true,
       bottomSheetTheme: sheetThemeData,
       scaffoldBackgroundColor: color3,
-      textTheme: textTheme);
+      textTheme: textTheme,
+      textButtonTheme: textButtonThemeData);
 }
