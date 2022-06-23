@@ -9,7 +9,7 @@ ThemeData makeTheme2() {
 
   TextTheme textTheme = const TextTheme(
       titleLarge: TextStyle(
-          fontSize: 40, color: Colors.white, fontWeight: FontWeight.w500),
+          fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
       titleMedium: TextStyle(
           fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
       titleSmall: TextStyle(
