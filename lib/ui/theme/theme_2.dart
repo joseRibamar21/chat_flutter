@@ -7,34 +7,41 @@ ThemeData makeTheme2() {
   //const Color color4 = Color(0xFF91D9D2);
   const Color color5 = Color(0xFF3E8C3B);
 
+  const Color textColor = Colors.white;
+  const Color labelColor = Colors.grey;
+
+  const Color dividerColor = Colors.white;
+  const Color cardColor = Colors.white;
+
   TextTheme textTheme = const TextTheme(
-      titleLarge: TextStyle(
-          fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),
-      titleMedium: TextStyle(
-          fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
-      titleSmall: TextStyle(
-          fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
-      bodyLarge: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      bodyMedium: TextStyle(fontSize: 14, color: Colors.white),
-      bodySmall: TextStyle(
-          fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic));
+    titleLarge:
+        TextStyle(fontSize: 20, color: textColor, fontWeight: FontWeight.w500),
+    titleMedium:
+        TextStyle(fontSize: 18, color: textColor, fontWeight: FontWeight.w500),
+    titleSmall:
+        TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.w500),
+    bodyLarge: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      color: textColor,
+    ),
+    bodyMedium: TextStyle(fontSize: 14, color: textColor),
+    bodySmall:
+        TextStyle(fontSize: 12, color: labelColor, fontStyle: FontStyle.italic),
+  );
 
   AppBarTheme appBarTheme = const AppBarTheme(
       backgroundColor: color1,
       centerTitle: true,
       titleTextStyle: TextStyle(
-          color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          color: textColor, fontSize: 20, fontWeight: FontWeight.bold),
       iconTheme: IconThemeData(color: Colors.white));
 
   CardTheme cardTheme =
-      const CardTheme(color: color2, surfaceTintColor: Colors.white);
+      const CardTheme(color: color2, surfaceTintColor: cardColor);
 
   DividerThemeData dividerThemeData =
-      const DividerThemeData(color: Colors.white);
+      const DividerThemeData(color: dividerColor);
 
   DialogTheme dialogTheme = const DialogTheme(
     backgroundColor: color2,
@@ -51,12 +58,13 @@ ThemeData makeTheme2() {
   PopupMenuThemeData popupMenuTheme = const PopupMenuThemeData(
       color: color2,
       textStyle: TextStyle(
-          color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold));
+          color: textColor, fontSize: 16, fontWeight: FontWeight.bold));
 
   InputDecorationTheme inputDecorationTheme = const InputDecorationTheme(
-      border: InputBorder.none,
-      labelStyle: TextStyle(color: Color.fromARGB(195, 255, 255, 255)),
-      hintStyle: TextStyle(color: Color.fromARGB(195, 255, 255, 255)));
+    border: InputBorder.none,
+    labelStyle: TextStyle(color: labelColor),
+    hintStyle: TextStyle(color: labelColor),
+  );
 
   ListTileThemeData listTileThemedata =
       const ListTileThemeData(style: ListTileStyle.drawer);

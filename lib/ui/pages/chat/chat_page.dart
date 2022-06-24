@@ -16,7 +16,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
-  AuthenticationLocal _authenticationLocal = AuthenticationLocal();
+  final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
   String? nick;
   ChatController controller = ChatController();
 
