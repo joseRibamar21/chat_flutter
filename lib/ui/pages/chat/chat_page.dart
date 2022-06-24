@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/usecase/autentication_local.dart';
 import 'chat_controller.dart';
 import 'components/components.dart';
 
@@ -15,6 +16,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
+  AuthenticationLocal _authenticationLocal = AuthenticationLocal();
   String? nick;
   ChatController controller = ChatController();
 
@@ -42,8 +44,11 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         controller.resume();
-        Future.delayed(const Duration(milliseconds: 40))
-            .then((value) => _authController.verify(true));
+        Future.delayed(const Duration(milliseconds: 40)).then((value) async {
+          if (await _authenticationLocal.varifyCanAuthentican()) {
+            _authController.verify(true);
+          }
+        });
         break;
       case AppLifecycleState.inactive:
         controller.inactive();

@@ -73,7 +73,7 @@ class _BlockAuthState extends State<BlockAuth> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'Ops! não foi possivel se autenticar',
+                                'Ops! não foi possivel se autenticar?',
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               const SizedBox(height: 20),
