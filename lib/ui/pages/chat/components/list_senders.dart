@@ -72,8 +72,6 @@ class __ListSendersState extends State<_ListSenders> {
           StreamBuilder<List<Map<String, dynamic>>>(
             stream: widget.controller.listSendersStream,
             builder: ((context, snapshot) {
-              print("Widget");
-              print(_list);
               return ConstrainedBox(
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height - 150),

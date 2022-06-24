@@ -4,7 +4,7 @@ ThemeData makeTheme2() {
   const Color color1 = Color(0xFF112626);
   const Color color2 = Color(0xFF3D7373);
   const Color color3 = Color(0xFF15403B);
-  const Color color4 = Color(0xFF91D9D2);
+  //const Color color4 = Color(0xFF91D9D2);
   const Color color5 = Color(0xFF3E8C3B);
 
   TextTheme textTheme = const TextTheme(

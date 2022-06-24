@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -30,8 +31,8 @@ class ChatController extends GetxController {
     }
     //Abrir canal
     _channelObs = _channelStream.listen((event) async {
-      print(event);
-      print(_rxSenders.value);
+      _status();
+
       // Pegar menssagem recebida
       var message = jsonDecode(event);
       MessageEntity value = MessageEntity(
@@ -103,6 +104,9 @@ class ChatController extends GetxController {
   }
 
   void resume() {
+    if (_channelObs.isPaused) {
+      _channelObs.resume();
+    }
     _sendUserState(status: 1);
   }
 
@@ -147,4 +151,15 @@ class ChatController extends GetxController {
   }
 
   List<Map<String, dynamic>> get getlistSenders => _rxSenders.value;
+
+  void _status() {
+    if (kDebugMode) {
+      print("Channel Paused: ${_channelObs.isPaused}");
+      print("Messages");
+      for (var element in _rxListMessages.value) {
+        print("${element.body.message} - ${element.body.connecting} ");
+      }
+      print(_rxSenders.value);
+    }
+  }
 }

@@ -42,7 +42,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         controller.resume();
-
+        Future.delayed(const Duration(milliseconds: 40))
+            .then((value) => _authController.verify(true));
         break;
       case AppLifecycleState.inactive:
         controller.inactive();
@@ -76,11 +77,13 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
               toolbarHeight: 60,
               title: const AppBarSender(),
               actions: [
-                IconButton(
-                    onPressed: () async {
-                      _authController.verify(true);
-                    },
-                    icon: const Icon(Icons.security))
+                PopupMenuButton(
+                    itemBuilder: (context) => [
+                          PopupMenuItem(
+                            onTap: () {},
+                            child: const Text("Configurações"),
+                          )
+                        ])
               ],
             ),
             body: Builder(builder: (_) {

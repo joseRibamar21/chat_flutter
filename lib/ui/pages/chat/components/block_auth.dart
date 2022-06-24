@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../data/usecase/autentication_local.dart';
+
 class BlockAuthController extends GetxController {
   final _rxBlock = Rx<bool>(false);
 
@@ -28,36 +30,70 @@ class BlockAuth extends StatefulWidget {
 }
 
 class _BlockAuthState extends State<BlockAuth> {
+  AuthenticationLocal authLocal = AuthenticationLocal();
   var block = false;
+  var flagBlock = true;
+
+  Future<void> teste() async {
+    block = await authLocal.varifyAuthentican();
+    widget.controller.verify(block);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         widget.body,
-        StreamBuilder<bool>(
-            stream: widget.controller.blockStream,
-            builder: (context, snapshot) {
-              block = snapshot.data ?? false;
-              if (block) {
-                return BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: AnimatedContainer(
-                      height: block ? double.maxFinite : 0,
-                      width: block ? double.maxFinite : 0,
-                      duration: const Duration(milliseconds: 300),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomCenter,
-                          colors: [Colors.white38, Colors.white54],
+        Builder(builder: (context) {
+          return StreamBuilder<bool>(
+              stream: widget.controller.blockStream,
+              builder: (context, snapshot) {
+                block = snapshot.data ?? false;
+                flagBlock = block;
+                if (block) {
+                  if (flagBlock) {
+                    teste();
+                    flagBlock = false;
+                  }
+                  return BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                    child: AnimatedContainer(
+                        height: block ? double.maxFinite : 0,
+                        width: block ? double.maxFinite : 0,
+                        duration: const Duration(milliseconds: 300),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.black12, Colors.black26],
+                          ),
                         ),
-                      )),
-                );
-              } else {
-                return const SizedBox();
-              }
-            })
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Ops! não foi possivel se autenticar',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: () {
+                                  teste();
+                                },
+                                child: const Text(
+                                  'Tentar novamente',
+                                ),
+                              )
+                            ],
+                          ),
+                        )),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              });
+        })
       ],
     );
   }
