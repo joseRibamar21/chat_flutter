@@ -17,6 +17,9 @@ class AppBarSender extends StatelessWidget {
           onTap: () async {
             await showModalBottomSheet(
                 isScrollControlled: true,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height - 50),
                 context: context,
@@ -75,36 +78,39 @@ class __ListSendersState extends State<_ListSenders> {
               return ConstrainedBox(
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height - 150),
-                child: Container(
-                  color: Colors.grey[100],
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: _list
-                        .map<Widget>((e) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    e["user"] ?? "Error",
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
-                                  ),
-                                  CircleAvatar(
-                                    radius: 10,
-                                    backgroundColor: e["status"] == 1
-                                        ? Colors.green
-                                        : e["status"] == 4
-                                            ? Colors.grey[500]
-                                            : Colors.red,
-                                  )
-                                ],
-                              ),
-                            ))
-                        .toList(),
-                  ),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: _list.isEmpty
+                      ? const [
+                          Center(child: Text("Vc está sozinho aqui!")),
+                          SizedBox(height: 20)
+                        ]
+                      : _list
+                          .map<Widget>((e) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      e["user"] ?? "Error",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall,
+                                    ),
+                                    CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: e["status"] == 1
+                                          ? Colors.green
+                                          : e["status"] == 4
+                                              ? Colors.grey[500]
+                                              : Theme.of(context).errorColor,
+                                    )
+                                  ],
+                                ),
+                              ))
+                          .toList(),
                 ),
               );
             }),

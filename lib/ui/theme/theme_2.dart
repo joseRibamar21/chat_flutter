@@ -79,20 +79,22 @@ ThemeData makeTheme2() {
       style: TextButton.styleFrom(textStyle: textTheme.bodyMedium));
 
   return ThemeData(
-      primaryColor: color1,
-      appBarTheme: appBarTheme,
-      cardTheme: cardTheme,
-      cardColor: color5,
-      floatingActionButtonTheme: floatingActionButtonThemeData,
-      colorScheme: ColorScheme.fromSeed(seedColor: color1),
-      dividerTheme: dividerThemeData,
-      dialogTheme: dialogTheme,
-      inputDecorationTheme: inputDecorationTheme,
-      listTileTheme: listTileThemedata,
-      popupMenuTheme: popupMenuTheme,
-      useMaterial3: true,
-      bottomSheetTheme: sheetThemeData,
-      scaffoldBackgroundColor: color3,
-      textTheme: textTheme,
-      textButtonTheme: textButtonThemeData);
+    appBarTheme: appBarTheme,
+    bottomSheetTheme: sheetThemeData,
+    cardTheme: cardTheme,
+    cardColor: color5,
+    colorScheme: ColorScheme.fromSeed(seedColor: color1),
+    dialogTheme: dialogTheme,
+    backgroundColor: Colors.amber,
+    dividerTheme: dividerThemeData,
+    floatingActionButtonTheme: floatingActionButtonThemeData,
+    primaryColor: color1,
+    inputDecorationTheme: inputDecorationTheme,
+    listTileTheme: listTileThemedata,
+    popupMenuTheme: popupMenuTheme,
+    scaffoldBackgroundColor: color3,
+    textButtonTheme: textButtonThemeData,
+    textTheme: textTheme,
+    useMaterial3: true,
+  );
 }

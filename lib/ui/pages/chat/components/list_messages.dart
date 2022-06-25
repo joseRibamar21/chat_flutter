@@ -51,8 +51,10 @@ class _ListMessageState extends State<ListMessage> {
         controller: _scrollController,
         shrinkWrap: true,
         itemCount: _list.length,
+        cacheExtent: 99,
         itemBuilder: (context, index) {
           return ChatItem(
+            key: Key(index.toString()),
             menssage: _list[index].body.message,
             sender: _list[index].sender,
             isSentder: (_list[index].sender == widget.nick),
