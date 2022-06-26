@@ -18,13 +18,19 @@ class _ListMessageState extends State<ListMessage> {
   late ScrollController _scrollController;
   late List<MessageEntity> _list = [];
   late StreamSubscription _streamSubscription;
+  late GlobalKey<AnimatedListState> animatedKey;
 
   @override
   void initState() {
     _scrollController = ScrollController();
+    animatedKey = GlobalKey<AnimatedListState>();
     _streamSubscription = widget.stream.listen((event) {
-      _list = event;
-      setState(() {});
+      _list.add(event[event.length - 1]);
+      if (animatedKey.currentState != null) {
+        animatedKey.currentState?.insertItem(_list.length - 1,
+            duration: const Duration(milliseconds: 300));
+        _scrollToBotton();
+      }
     });
     super.initState();
   }
@@ -46,20 +52,42 @@ class _ListMessageState extends State<ListMessage> {
 
   @override
   Widget build(BuildContext context) {
-    _scrollToBotton();
-    return ListView.builder(
-        controller: _scrollController,
-        shrinkWrap: true,
-        itemCount: _list.length,
-        cacheExtent: 99,
-        itemBuilder: (context, index) {
-          return ChatItem(
+    return AnimatedList(
+      initialItemCount: _list.length,
+      key: animatedKey,
+      itemBuilder: (context, index, animation) {
+        return SlideTransition(
+          position: (_list[index].sender == widget.nick)
+              ? Tween<Offset>(
+                  begin: Offset.zero,
+                  end: const Offset(1, 0),
+                ).animate(animation)
+              : Tween<Offset>(
+                  begin: const Offset(-1, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+          child: ChatItem(
             key: Key(index.toString()),
             menssage: _list[index].body.message,
             sender: _list[index].sender,
             isSentder: (_list[index].sender == widget.nick),
             connection: _list[index].body.connecting,
-          );
-        });
+          ),
+        );
+      },
+    );
+    /* return ListView.builder(
+        controller: _scrollController,
+        itemCount: 100,
+        cacheExtent: 99,
+        itemBuilder: (context, index) {
+          return ChatItem(
+              key: Key(index.toString()),
+              menssage: "_list[index].body.message",
+              sender: "_list[index].sender",
+              isSentder: false, //(_list[index].sender == widget.nick),
+              connection: 1 //_list[index].body.connecting,
+              );
+        }); */
   }
 }

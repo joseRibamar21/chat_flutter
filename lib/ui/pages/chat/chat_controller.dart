@@ -128,7 +128,6 @@ class ChatController extends GetxController {
                 message:
                     "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala.",
                 connecting: 1)));
-      _rxListMessages.refresh();
     });
   }
 
