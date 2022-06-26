@@ -28,6 +28,10 @@ class ChatItem extends StatelessWidget {
       case 1:
         if (sender == "SYSTEM") {
           return _SystemMessage(message: menssage);
+        } else {
+          if (sender == "SYSTEM_SPACE") {
+            return const SizedBox(height: 60);
+          }
         }
         return menssage == "null" || menssage.isEmpty
             ? const SizedBox()
@@ -90,10 +94,8 @@ class _BalloonChat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: isSentder
-          ? const EdgeInsets.only(
-              left: 30,
-            )
-          : const EdgeInsets.only(right: 30),
+          ? const EdgeInsets.only(left: 30, right: 10)
+          : const EdgeInsets.only(right: 30, left: 10),
       child: Card(
         color: isSentder
             ? Theme.of(context).cardColor

@@ -11,12 +11,15 @@ class ListMessage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ListMessage> createState() => _ListMessageState();
+  State<ListMessage> createState() => ListMessageState();
 }
 
-class _ListMessageState extends State<ListMessage> {
+class ListMessageState extends State<ListMessage> {
   late ScrollController _scrollController;
-  late List<MessageEntity> _list = [];
+  late List<MessageEntity> list = [
+    MessageEntity(
+        sender: "SYSTEM_SPACE", body: BodyEntity(message: "", connecting: 1))
+  ];
   late StreamSubscription _streamSubscription;
   late GlobalKey<AnimatedListState> animatedKey;
 
@@ -25,9 +28,9 @@ class _ListMessageState extends State<ListMessage> {
     _scrollController = ScrollController();
     animatedKey = GlobalKey<AnimatedListState>();
     _streamSubscription = widget.stream.listen((event) {
-      _list.add(event[event.length - 1]);
+      list.insert(list.length - 1, event[event.length - 1]);
       if (animatedKey.currentState != null) {
-        animatedKey.currentState?.insertItem(_list.length - 1,
+        animatedKey.currentState?.insertItem(list.length - 2,
             duration: const Duration(milliseconds: 300));
         _scrollToBotton();
       }
@@ -53,14 +56,16 @@ class _ListMessageState extends State<ListMessage> {
   @override
   Widget build(BuildContext context) {
     return AnimatedList(
-      initialItemCount: _list.length,
+      controller: _scrollController,
+      shrinkWrap: true,
+      initialItemCount: list.length,
       key: animatedKey,
       itemBuilder: (context, index, animation) {
         return SlideTransition(
-          position: (_list[index].sender == widget.nick)
+          position: (list[index].sender == widget.nick)
               ? Tween<Offset>(
-                  begin: Offset.zero,
-                  end: const Offset(1, 0),
+                  begin: const Offset(1, 0),
+                  end: Offset.zero,
                 ).animate(animation)
               : Tween<Offset>(
                   begin: const Offset(-1, 0),
@@ -68,10 +73,10 @@ class _ListMessageState extends State<ListMessage> {
                 ).animate(animation),
           child: ChatItem(
             key: Key(index.toString()),
-            menssage: _list[index].body.message,
-            sender: _list[index].sender,
-            isSentder: (_list[index].sender == widget.nick),
-            connection: _list[index].body.connecting,
+            menssage: list[index].body.message,
+            sender: list[index].sender,
+            isSentder: (list[index].sender == widget.nick),
+            connection: list[index].body.connecting,
           ),
         );
       },
@@ -83,10 +88,10 @@ class _ListMessageState extends State<ListMessage> {
         itemBuilder: (context, index) {
           return ChatItem(
               key: Key(index.toString()),
-              menssage: "_list[index].body.message",
-              sender: "_list[index].sender",
-              isSentder: false, //(_list[index].sender == widget.nick),
-              connection: 1 //_list[index].body.connecting,
+              menssage: "list[index].body.message",
+              sender: "list[index].sender",
+              isSentder: false, //(list[index].sender == widget.nick),
+              connection: 1 //list[index].body.connecting,
               );
         }); */
   }

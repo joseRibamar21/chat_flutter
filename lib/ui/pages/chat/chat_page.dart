@@ -73,11 +73,13 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
       onWillPop: () async {
         return await showDialogReturn(context);
       },
-      child: Provider(
-        create: (context) => controller,
-        child: BlockAuth(
-          controller: _authController,
-          body: Scaffold(
+      child: BlockAuth(
+        controller: _authController,
+        body: Provider(
+          create: (context) => controller,
+          child: Scaffold(
+            bottomSheet:
+                FooterMessage(controller: _textController, sendMessage: _send),
             appBar: AppBar(
               toolbarHeight: 60,
               title: const AppBarSender(),
@@ -91,22 +93,10 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                         ])
               ],
             ),
-            body: Builder(builder: (_) {
-              return Column(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: FocusScope.of(context).unfocus,
-                      child: ListMessage(
-                        stream: controller.listMessagesStream,
-                        nick: nick ?? "",
-                      ),
-                    ),
-                  ),
-                  FooterMessage(controller: _textController, sendMessage: _send)
-                ],
-              );
-            }),
+            body: ListMessage(
+              stream: controller.listMessagesStream,
+              nick: nick ?? "",
+            ),
           ),
         ),
       ),
