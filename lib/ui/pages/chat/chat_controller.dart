@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -141,6 +142,15 @@ class ChatController extends GetxController {
   }
 
   void _sendUserState({required int status, String? message}) {
+    var teste;
+    var t2;
+    if (message!.isNotEmpty) {
+      teste = utf8.encode(message);
+      t2 = sha512.convert(teste);
+    }
+    print(teste);
+    print(message);
+    print(t2);
     var body = jsonEncode(MessageModel(
             sender: nickG,
             body: BodyModel(message: message ?? "", connecting: status)
