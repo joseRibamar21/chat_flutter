@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:chat_flutter/data/usecase/encrypt_message.dart';
 import 'package:flutter/foundation.dart';
-import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -17,6 +17,7 @@ class ChatController extends GetxController {
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
 
+  EncryptMessage encryptMessage = EncryptMessage();
   WebSocketChannel? _channel =
       WebSocketChannel.connect(Uri.parse('wss://wss.infatec.solutions'));
 
@@ -36,9 +37,15 @@ class ChatController extends GetxController {
 
       // Pegar menssagem recebida
       var message = jsonDecode(event);
+      var teste = jsonDecode(message['body']);
+      try {
+        teste['message'] = teste['message'] != null
+            ? encryptMessage.dencrypt(teste['message'])
+            : null;
+      } finally {}
       MessageEntity value = MessageEntity(
           sender: message['sender'],
-          body: BodyModel.fromJson(message['body']).toEntity());
+          body: BodyModel.fromJson(teste).toEntity());
 
       switch (value.body.connecting) {
         // caso algue se desconect
@@ -100,7 +107,8 @@ class ChatController extends GetxController {
 
   void send(String? value, String nick) {
     if (value!.isNotEmpty) {
-      _sendUserState(status: 1, message: value);
+      var messageEncryted = encryptMessage.encrypt(value);
+      _sendUserState(status: 1, message: messageEncryted);
     }
   }
 
@@ -142,15 +150,6 @@ class ChatController extends GetxController {
   }
 
   void _sendUserState({required int status, String? message}) {
-    var teste;
-    var t2;
-    if (message!.isNotEmpty) {
-      teste = utf8.encode(message);
-      t2 = sha512.convert(teste);
-    }
-    print(teste);
-    print(message);
-    print(t2);
     var body = jsonEncode(MessageModel(
             sender: nickG,
             body: BodyModel(message: message ?? "", connecting: status)
@@ -168,7 +167,7 @@ class ChatController extends GetxController {
       for (var element in _rxListMessages.value) {
         print("${element.body.message} - ${element.body.connecting} ");
       }
-      print(_rxSenders.value);
+      //print(_rxSenders.value);
     }
   }
 }
