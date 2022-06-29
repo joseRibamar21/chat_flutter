@@ -84,11 +84,6 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
               toolbarHeight: 60,
               title: const AppBarSender(),
               actions: [
-                IconButton(
-                    onPressed: () {
-                      print(controller.getlistSenders());
-                    },
-                    icon: Icon(Icons.abc_outlined)),
                 PopupMenuButton(
                     itemBuilder: (context) => [
                           PopupMenuItem(

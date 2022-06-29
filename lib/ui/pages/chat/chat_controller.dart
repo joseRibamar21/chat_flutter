@@ -33,7 +33,6 @@ class ChatController extends GetxController {
     }
     //Abrir canal
     _channelObs = _channelStream.listen((event) async {
-      print(event);
       _status();
 
       // Pegar menssagem recebida
