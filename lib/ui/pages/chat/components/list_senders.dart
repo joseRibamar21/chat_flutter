@@ -57,7 +57,10 @@ class __ListSendersState extends State<_ListSenders> {
 
   @override
   void initState() {
-    _list = widget.controller.getlistSenders;
+    _list = widget.controller.getlistSenders();
+    setState(() {});
+    print("Web");
+    print(_list);
     super.initState();
   }
 
@@ -75,6 +78,11 @@ class __ListSendersState extends State<_ListSenders> {
           StreamBuilder<List<Map<String, dynamic>>>(
             stream: widget.controller.listSendersStream,
             builder: ((context, snapshot) {
+              print("builder");
+              print(snapshot.data);
+              if (snapshot.hasData) {
+                _list = snapshot.data!;
+              }
               return ConstrainedBox(
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height - 150),

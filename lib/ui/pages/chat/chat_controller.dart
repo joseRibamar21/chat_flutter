@@ -33,6 +33,7 @@ class ChatController extends GetxController {
     }
     //Abrir canal
     _channelObs = _channelStream.listen((event) async {
+      print(event);
       _status();
 
       // Pegar menssagem recebida
@@ -70,21 +71,18 @@ class ChatController extends GetxController {
           _rxListMessages.refresh();
           break;
         case 2:
-          _rxSenders.value = [];
           _rxSenders.value.addIf(
               nickG != value.sender, {"user": value.sender, "status": 1});
           _rxSenders.refresh();
           break;
         // Caso possua um novo conectado
         case 3:
+          _rxSenders.value = [];
           _sendUserState(status: 2);
 
           if (value.sender != nickG) {
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
-            _rxSenders.value.addIf(
-                nickG != value.sender, {"user": value.sender, "status": 1});
-            _rxSenders.refresh();
           }
           break;
         // Caso fique inativo
@@ -131,12 +129,15 @@ class ChatController extends GetxController {
     isInit = true;
     Future.delayed(const Duration(milliseconds: 10)).then((value) {
       _rxListMessages.value = _rxListMessages.value
-        ..add(MessageEntity(
+        ..add(
+          MessageEntity(
             sender: 'SYSTEM',
             body: BodyEntity(
                 message:
                     "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala.",
-                connecting: 1)));
+                connecting: 1),
+          ),
+        );
     });
   }
 
@@ -152,20 +153,26 @@ class ChatController extends GetxController {
   void _sendUserState({required int status, String? message}) {
     var body = jsonEncode(MessageModel(
             sender: nickG,
-            body: BodyModel(message: message ?? "", connecting: status)
-                .toEntity())
+            body: BodyModel(message: message, connecting: status).toEntity())
         .toJson());
     _channel?.sink.add(body);
   }
 
-  List<Map<String, dynamic>> get getlistSenders => _rxSenders.value;
+  List<Map<String, dynamic>> getlistSenders() {
+    _rxSenders.refresh();
+    return _rxSenders.value;
+  }
 
   void _status() {
     if (kDebugMode) {
-      print("Channel Paused: ${_channelObs.isPaused}");
+      /* print("Channel Paused: ${_channelObs.isPaused}");
       print("Messages");
       for (var element in _rxListMessages.value) {
         print("${element.body.message} - ${element.body.connecting} ");
+      } */
+
+      for (var element in _rxSenders.value) {
+        print(element);
       }
       //print(_rxSenders.value);
     }

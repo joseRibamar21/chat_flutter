@@ -1,7 +1,7 @@
 import 'package:encrypt/encrypt.dart';
 
 class EncryptMessage {
-  final _key = Key.fromUtf8('my 32 length key................');
+  final _key = Key.fromUtf8('mya32alengthakey123123123123.123');
   final _iv = IV.fromLength(16);
 
   String encrypt(String message) {

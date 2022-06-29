@@ -1,5 +1,5 @@
 class BodyEntity {
-  final String message;
+  final String? message;
   final int connecting;
   BodyEntity({required this.message, required this.connecting});
 }

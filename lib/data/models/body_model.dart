@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../entities/entities.dart';
 
 class BodyModel {
-  final String message;
+  final String? message;
   final int connecting;
   BodyModel({required this.message, required this.connecting});
 

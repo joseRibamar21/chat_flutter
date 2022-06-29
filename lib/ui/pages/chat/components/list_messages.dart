@@ -73,7 +73,7 @@ class ListMessageState extends State<ListMessage> {
                 ).animate(animation),
           child: ChatItem(
             key: Key(index.toString()),
-            menssage: list[index].body.message,
+            menssage: list[index].body.message ?? "",
             sender: list[index].sender,
             isSentder: (list[index].sender == widget.nick),
             connection: list[index].body.connecting,
