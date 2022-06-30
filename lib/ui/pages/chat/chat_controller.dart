@@ -16,6 +16,7 @@ class ChatController extends GetxController {
   late String nickG;
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
+  final _rxDesconect = Rx<bool>(false);
 
   EncryptMessage encryptMessage = EncryptMessage();
   WebSocketChannel? _channel =
@@ -23,6 +24,11 @@ class ChatController extends GetxController {
 
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
   Stream<List<Map<String, dynamic>>> get listSendersStream => _rxSenders.stream;
+  Stream<bool> get desconectStream => _rxDesconect.stream;
+
+  void desconect() {
+    _rxDesconect.value = true;
+  }
 
   void init(String? nick) async {
     _channelStream = _channel!.stream;
@@ -100,7 +106,7 @@ class ChatController extends GetxController {
           _rxListMessages.value = _rxListMessages.value..add(value);
           _rxListMessages.refresh();
       }
-    });
+    }, onDone: () => _rxDesconect.value = true);
   }
 
   void send(String? value, String nick) {

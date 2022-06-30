@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/usecase/autentication_local.dart';
+import '../../mixins/mixins.dart';
 import 'chat_controller.dart';
 import 'components/components.dart';
 
@@ -13,7 +14,8 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
+class _ChatPageState extends State<ChatPage>
+    with WidgetsBindingObserver, DesconectMixin {
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
@@ -93,10 +95,13 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                         ])
               ],
             ),
-            body: ListMessage(
-              stream: controller.listMessagesStream,
-              nick: nick ?? "",
-            ),
+            body: Builder(builder: (context) {
+              handleDesconect(context, controller.desconectStream);
+              return ListMessage(
+                stream: controller.listMessagesStream,
+                nick: nick ?? "",
+              );
+            }),
           ),
         ),
       ),
