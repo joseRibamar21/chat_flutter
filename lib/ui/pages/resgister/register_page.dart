@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 60),
-            Text("Digite seu um nome!",
+            Text("Digite um nome!",
                 style: Theme.of(context).textTheme.titleMedium),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),

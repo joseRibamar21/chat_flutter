@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:chat_flutter/data/usecase/encrypt_message.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../data/entities/entities.dart';
 import '../../../data/models/models.dart';
+import '../../../data/usecase/usecase.dart';
 
 class ChatController extends GetxController {
   final _rxListMessages = Rx<List<MessageEntity>>([]);
@@ -32,6 +32,7 @@ class ChatController extends GetxController {
       _inicialization(nick);
     }
     //Abrir canal
+
     _channelObs = _channelStream.listen((event) async {
       _status();
 
