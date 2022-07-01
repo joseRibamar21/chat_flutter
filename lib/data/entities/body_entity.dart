@@ -1,7 +1,8 @@
 class BodyEntity {
+  final String id;
   final String? message;
-  final int connecting;
-  BodyEntity({required this.message, required this.connecting});
+  final int function;
+  BodyEntity({required this.id, required this.message, required this.function});
 }
 
 /* 

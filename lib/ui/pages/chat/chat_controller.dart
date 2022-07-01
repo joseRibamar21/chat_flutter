@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -40,21 +39,21 @@ class ChatController extends GetxController {
     //Abrir canal
 
     _channelObs = _channelStream.listen((event) async {
-      _status();
-
       // Pegar menssagem recebida
       var message = jsonDecode(event);
       var teste = jsonDecode(message['body']);
-      try {
-        teste['message'] = teste['message'] != null
-            ? encryptMessage.dencrypt(teste['message'])
-            : null;
-      } finally {}
+      if (teste['function'] != 5) {
+        try {
+          teste['message'] = teste['message'] != null
+              ? encryptMessage.dencrypt(teste['message'])
+              : null;
+        } finally {}
+      }
       MessageEntity value = MessageEntity(
           sender: message['sender'],
           body: BodyModel.fromJson(teste).toEntity());
 
-      switch (value.body.connecting) {
+      switch (value.body.function) {
         // caso algue se desconect
         case 0:
           _rxSenders.value.removeWhere((e) => e["user"] == value.sender);
@@ -102,6 +101,12 @@ class ChatController extends GetxController {
             _rxSenders.refresh();
           }
           break;
+        case 5:
+          _rxListMessages.value = _rxListMessages.value..add(value);
+          _rxListMessages.refresh();
+          _rxListMessages.value
+              .removeWhere((element) => element.body.id == value.body.message);
+          break;
         default:
           _rxListMessages.value = _rxListMessages.value..add(value);
           _rxListMessages.refresh();
@@ -109,13 +114,22 @@ class ChatController extends GetxController {
     }, onDone: () => _rxDesconect.value = true);
   }
 
-  void send(String? value, String nick) {
+  /// Funcão para mandar uma mensagem.
+  ///
+  /// Parâmetros: [value] será a mensagem a ser enviada.
+  void send(String? value) {
     if (value!.isNotEmpty) {
       var messageEncryted = encryptMessage.encrypt(value);
       _sendUserState(status: 1, message: messageEncryted);
     }
   }
 
+  /// Função para apagar uma mensagem para todos
+  void removeMessage({required String id}) async {
+    _sendUserState(message: id, status: 5);
+  }
+
+  /// Funcão que emite um sinal de retorno de visibilidade.
   void resume() {
     if (_channelObs.isPaused) {
       _channelObs.resume();
@@ -123,6 +137,7 @@ class ChatController extends GetxController {
     _sendUserState(status: 1);
   }
 
+  /// Funcão que emite um sinal de visibilidade inativa.
   void inactive() {
     _sendUserState(status: 4);
   }
@@ -139,9 +154,10 @@ class ChatController extends GetxController {
           MessageEntity(
             sender: 'SYSTEM',
             body: BodyEntity(
+                id: "0",
                 message:
                     "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala.",
-                connecting: 1),
+                function: 1),
           ),
         );
     });
@@ -159,7 +175,12 @@ class ChatController extends GetxController {
   void _sendUserState({required int status, String? message}) {
     var body = jsonEncode(MessageModel(
             sender: nickG,
-            body: BodyModel(message: message, connecting: status).toEntity())
+            body: BodyModel(
+                    id: nickG +
+                        DateTime.now().microsecondsSinceEpoch.toString(),
+                    message: message,
+                    function: status)
+                .toEntity())
         .toJson());
     _channel?.sink.add(body);
   }
@@ -167,20 +188,5 @@ class ChatController extends GetxController {
   List<Map<String, dynamic>> getlistSenders() {
     _rxSenders.refresh();
     return _rxSenders.value;
-  }
-
-  void _status() {
-    if (kDebugMode) {
-      /* print("Channel Paused: ${_channelObs.isPaused}");
-      print("Messages");
-      for (var element in _rxListMessages.value) {
-        print("${element.body.message} - ${element.body.connecting} ");
-      } */
-
-      for (var element in _rxSenders.value) {
-        print(element);
-      }
-      //print(_rxSenders.value);
-    }
   }
 }

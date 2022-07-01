@@ -64,7 +64,7 @@ class _ChatPageState extends State<ChatPage>
 
   void _send() {
     if (_textController.text.isNotEmpty) {
-      controller.send(_textController.text, nick!);
+      controller.send(_textController.text);
       _textController.text = "";
     }
   }

@@ -3,9 +3,10 @@ import 'dart:convert';
 import '../entities/entities.dart';
 
 class BodyModel {
+  final String id;
   final String? message;
-  final int connecting;
-  BodyModel({required this.message, required this.connecting});
+  final int function;
+  BodyModel({required this.id, required this.message, required this.function});
 
   factory BodyModel.fromJson(dynamic json) {
     Map<String, dynamic> data;
@@ -14,14 +15,16 @@ class BodyModel {
     } else {
       data = json;
     }
-    return BodyModel(message: data['message'], connecting: data["connecting"]);
+    return BodyModel(
+        id: data['id'], message: data['message'], function: data["function"]);
   }
 
-  factory BodyModel.fromEntity(BodyEntity entity) =>
-      BodyModel(message: entity.message, connecting: entity.connecting);
+  factory BodyModel.fromEntity(BodyEntity entity) => BodyModel(
+      id: entity.id, message: entity.message, function: entity.function);
 
   Map<String, dynamic> toJson() =>
-      {"message": message, "connecting": connecting};
+      {"id": id, "message": message, "function": function};
 
-  BodyEntity toEntity() => BodyEntity(message: message, connecting: connecting);
+  BodyEntity toEntity() =>
+      BodyEntity(message: message, function: function, id: id);
 }

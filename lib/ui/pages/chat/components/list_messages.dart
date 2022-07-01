@@ -18,7 +18,8 @@ class ListMessageState extends State<ListMessage> {
   late ScrollController _scrollController;
   late List<MessageEntity> list = [
     MessageEntity(
-        sender: "SYSTEM_SPACE", body: BodyEntity(message: "", connecting: 1))
+        sender: "SYSTEM_SPACE",
+        body: BodyEntity(message: "", function: 1, id: '0'))
   ];
   late StreamSubscription _streamSubscription;
   late GlobalKey<AnimatedListState> animatedKey;
@@ -28,11 +29,28 @@ class ListMessageState extends State<ListMessage> {
     _scrollController = ScrollController();
     animatedKey = GlobalKey<AnimatedListState>();
     _streamSubscription = widget.stream.listen((event) {
-      list.insert(list.length - 1, event[event.length - 1]);
-      if (animatedKey.currentState != null) {
-        animatedKey.currentState?.insertItem(list.length - 2,
-            duration: const Duration(milliseconds: 300));
-        _scrollToBotton();
+      /// Para excluir algo da lista
+      if (event[event.length - 1].body.function == 5) {
+        int index = list.indexWhere((element) =>
+            element.body.id == event[event.length - 1].body.message);
+        list.removeAt(index);
+        if (index != -1) {
+          if (animatedKey.currentState != null) {
+            animatedKey.currentState?.removeItem(
+                index,
+                (context, animation) => SizeTransition(
+                    sizeFactor: animation,
+                    axis: Axis.vertical,
+                    child: const SizedBox(height: 50.0, child: Card())));
+          }
+        }
+      } else {
+        list.insert(list.length - 1, event[event.length - 1]);
+        if (animatedKey.currentState != null) {
+          animatedKey.currentState?.insertItem(list.length - 2,
+              duration: const Duration(milliseconds: 300));
+          _scrollToBotton();
+        }
       }
     });
     super.initState();
@@ -73,10 +91,11 @@ class ListMessageState extends State<ListMessage> {
                 ).animate(animation),
           child: ChatItem(
             key: Key(index.toString()),
+            id: list[index].body.id,
             menssage: list[index].body.message ?? "",
             sender: list[index].sender,
             isSentder: (list[index].sender == widget.nick),
-            connection: list[index].body.connecting,
+            connection: list[index].body.function,
           ),
         );
       },

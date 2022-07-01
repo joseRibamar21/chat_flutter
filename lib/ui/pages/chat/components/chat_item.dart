@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../chat_controller.dart';
 
 class ChatItem extends StatelessWidget {
+  final String id;
   final String menssage;
   final String sender;
   final bool isSentder;
   final int connection;
   const ChatItem({
     Key? key,
+    required this.id,
     required this.menssage,
     required this.sender,
     required this.isSentder,
@@ -39,7 +44,10 @@ class ChatItem extends StatelessWidget {
                 alignment:
                     isSentder ? Alignment.centerRight : Alignment.centerLeft,
                 child: _BalloonChat(
-                    menssage: menssage, sender: sender, isSentder: isSentder),
+                    id: id,
+                    menssage: menssage,
+                    sender: sender,
+                    isSentder: isSentder),
               );
 
       case 3:
@@ -79,36 +87,49 @@ class _SystemMessage extends StatelessWidget {
 }
 
 class _BalloonChat extends StatelessWidget {
-  const _BalloonChat({
-    Key? key,
-    required this.menssage,
-    required this.sender,
-    required this.isSentder,
-  }) : super(key: key);
+  const _BalloonChat(
+      {Key? key,
+      required this.menssage,
+      required this.sender,
+      required this.isSentder,
+      required this.id})
+      : super(key: key);
 
   final String menssage;
   final String sender;
   final bool isSentder;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
+    var controller = Provider.of<ChatController>(context);
     return Padding(
       padding: isSentder
           ? const EdgeInsets.only(left: 30, right: 10)
           : const EdgeInsets.only(right: 30, left: 10),
-      child: Card(
-        color: isSentder
-            ? Theme.of(context).cardColor
-            : Theme.of(context).cardTheme.color,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: isSentder
-              ? Text(menssage)
-              : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(sender, style: Theme.of(context).textTheme.bodyLarge),
-                  const SizedBox(height: 5),
-                  Text(menssage)
-                ]),
+      child: PopupMenuButton(
+        itemBuilder: (context) => [
+          PopupMenuItem(
+              onTap: () => controller.removeMessage(id: id),
+              child: const Text("Apagar"))
+        ],
+        child: Card(
+          color: isSentder
+              ? Theme.of(context).cardColor
+              : Theme.of(context).cardTheme.color,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: isSentder
+                ? Text(menssage)
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Text(sender,
+                            style: Theme.of(context).textTheme.bodyLarge),
+                        const SizedBox(height: 5),
+                        Text(menssage)
+                      ]),
+          ),
         ),
       ),
     );
