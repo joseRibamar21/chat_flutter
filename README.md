@@ -1,4 +1,4 @@
-![Secreto]("lib/ui/assets/imgs/icon_foregraund.png")
+![Secreto](lib/ui/assets/imgs/icon_foregraund.png)
 
 # Secreto
 
