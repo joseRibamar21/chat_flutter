@@ -1,16 +1,68 @@
-# chat_flutter
+![]("lib/ui/assets/imgs/icon_foregraund.png")
+# Secreto
 
-A new Flutter project.
+  
 
-## Getting Started
+App de salas de bate papo seguras e criptografadas.
 
-This project is a starting point for a Flutter application.
+  
 
-A few resources to get you started if this is your first Flutter project:
+## Pre Requisitos
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Flutter 3.0.3
+
+  
+
+Dart 2.17
+
+
+
+## Funcionalidades
+
+  
+
+- [x] Mensagens com Criptografia ponta a ponta
+
+- [x] Status dos membros na sala
+
+- [ ] Criação de novas salas
+
+## Instalação
+Para a instalação do Flutter, segue o link para a instalação e documentacão online do Flutter
+
+- [Flutter](https://flutter.dev/)
+
+- [Documentação online](https://docs.flutter.dev/)
+  
+
+Com flutter instalado em sua maquina rode o seguinte comando para
+
+  
+
+```bash
+
+flutter run
+
+```
+
+Para gerar builds
+
+  
+
+```bash
+
+flutter build apk
+
+flutter build linux
+
+flutter build windows
+
+flutter build aar
+
+```
+
+  
+
+
