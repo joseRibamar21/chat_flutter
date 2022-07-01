@@ -2,8 +2,8 @@
 
 Local na qual ficam todas as entidades do projeto
 
-## Tipod de Função da Entidade Body
-Variavel na qual vai emitir qual tipo de função ela irá execurtar ao enviar ou receber.
+## Tipos de Função da Entidade Body
+"function" variável na qual vai emitir qual tipo de função ela irá executar ao enviar ou receber.
 
 0 - Descontectado
 
