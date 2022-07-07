@@ -18,6 +18,7 @@ class ListMessageState extends State<ListMessage> {
   late ScrollController _scrollController;
   late List<MessageEntity> list = [
     MessageEntity(
+        sentAt: DateTime.now().millisecondsSinceEpoch,
         sender: "SYSTEM_SPACE",
         body: BodyEntity(message: "", function: 1, id: '0'))
   ];
@@ -91,7 +92,7 @@ class ListMessageState extends State<ListMessage> {
                 ).animate(animation),
           child: ChatItem(
             key: Key(index.toString()),
-            id: list[index].body.id,
+            id: list[index].body.id ?? "",
             menssage: list[index].body.message ?? "",
             sender: list[index].sender,
             isSentder: (list[index].sender == widget.nick),

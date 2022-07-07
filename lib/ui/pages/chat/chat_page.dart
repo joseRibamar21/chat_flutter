@@ -27,6 +27,7 @@ class _ChatPageState extends State<ChatPage>
     nick = Get.arguments['nick'];
     controller.init(nick);
     WidgetsBinding.instance.addObserver(this);
+    controller.timerDeleteMessages();
 
     super.initState();
   }

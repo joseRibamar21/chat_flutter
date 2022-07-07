@@ -24,6 +24,8 @@ class ChatController extends GetxController {
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
   Stream<List<Map<String, dynamic>>> get listSendersStream => _rxSenders.stream;
   Stream<bool> get desconectStream => _rxDesconect.stream;
+  late Timer timer;
+  late int timerDate;
 
   void desconect() {
     _rxDesconect.value = true;
@@ -51,7 +53,8 @@ class ChatController extends GetxController {
       }
       MessageEntity value = MessageEntity(
           sender: message['sender'],
-          body: BodyModel.fromJson(teste).toEntity());
+          body: BodyModel.fromJson(teste).toEntity(),
+          sentAt: message['sentAt']);
 
       switch (value.body.function) {
         // caso algue se desconect
@@ -125,7 +128,7 @@ class ChatController extends GetxController {
   }
 
   /// Função para apagar uma mensagem para todos
-  void removeMessage({required String id}) async {
+  void sendRemoveMessage({required String id}) async {
     _sendUserState(message: id, status: 5);
   }
 
@@ -153,6 +156,7 @@ class ChatController extends GetxController {
         ..add(
           MessageEntity(
             sender: 'SYSTEM',
+            sentAt: null,
             body: BodyEntity(
                 id: "0",
                 message:
@@ -174,6 +178,7 @@ class ChatController extends GetxController {
 
   void _sendUserState({required int status, String? message}) {
     var body = jsonEncode(MessageModel(
+            sentAt: null,
             sender: nickG,
             body: BodyModel(
                     id: nickG +
@@ -188,5 +193,36 @@ class ChatController extends GetxController {
   List<Map<String, dynamic>> getlistSenders() {
     _rxSenders.refresh();
     return _rxSenders.value;
+  }
+
+  Future<void> timerDeleteMessages() async {
+    timerDate = DateTime.now().millisecondsSinceEpoch;
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      List<MessageEntity> list = [];
+      for (var element in _rxListMessages.value) {
+        if (element.sentAt != null && (element.sentAt! <= timerDate)) {
+          list.add(element);
+
+          /* sendRemoveMessage(id: element.body.id); */
+          /* removeMessage(element); */
+        }
+      }
+      for (var element in list) {
+        var t = MessageEntity(
+            sender: element.sender,
+            body: BodyEntity(id: null, message: element.body.id, function: 5),
+            sentAt: null);
+        removeMessage(t);
+      }
+
+      timerDate = DateTime.now().millisecondsSinceEpoch;
+    });
+  }
+
+  removeMessage(MessageEntity messageEntity) {
+    _rxListMessages.value = _rxListMessages.value..add(messageEntity);
+    _rxListMessages.refresh();
+    _rxListMessages.value.removeWhere(
+        (element) => element.body.id == messageEntity.body.message);
   }
 }

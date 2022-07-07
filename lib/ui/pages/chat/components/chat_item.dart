@@ -110,7 +110,7 @@ class _BalloonChat extends StatelessWidget {
       child: PopupMenuButton(
         itemBuilder: (context) => [
           PopupMenuItem(
-              onTap: () => controller.removeMessage(id: id),
+              onTap: () => controller.sendRemoveMessage(id: id),
               child: const Text("Apagar"))
         ],
         child: Card(

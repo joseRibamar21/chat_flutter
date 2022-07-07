@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Secreto',
       debugShowCheckedModeBanner: false,
       theme: makeTheme2(),
-      initialRoute: "/register",
+      initialRoute: "/home",
       getPages: [
         GetPage(name: "/", page: () => const SplashPage()),
         GetPage(name: "/register", page: () => const RegisterPage()),
