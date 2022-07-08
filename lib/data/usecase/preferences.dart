@@ -44,7 +44,11 @@ class Preferences implements LocalPreferences {
       await local.saveData(data);
       return true;
     } catch (e) {
-      return false;
+      if (await reset()) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -56,7 +60,11 @@ class Preferences implements LocalPreferences {
       await local.saveData(data);
       return true;
     } catch (e) {
-      return false;
+      if (await reset()) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }
