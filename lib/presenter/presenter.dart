@@ -1,0 +1,1 @@
+export 'getx/getx.dart';

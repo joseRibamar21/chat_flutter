@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../../../data/entities/entities.dart';
 import '../../../data/models/models.dart';
 import '../../../data/usecase/usecase.dart';
+import '../../../domain/entities/entities.dart';
 
 class ChatController extends GetxController {
   final _rxListMessages = Rx<List<MessageEntity>>([]);

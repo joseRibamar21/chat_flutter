@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import './ui/theme/theme.dart';
 import './ui/pages/pages.dart';
+import 'factories.dart/pages/pages.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/home",
       getPages: [
         GetPage(name: "/", page: () => const SplashPage()),
-        GetPage(name: "/register", page: () => const RegisterPage()),
+        GetPage(name: "/register", page: makeRegisterPage),
         GetPage(name: "/home", page: () => const HomePage()),
         GetPage(
           name: "/chat",

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../../../../data/entities/entities.dart';
+import '../../../../domain/entities/entities.dart';
 import 'components.dart';
 
 class ListMessage extends StatefulWidget {

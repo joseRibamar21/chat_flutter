@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../entities/entities.dart';
+import '../../domain/entities/entities.dart';
 
 class BodyModel {
   final String? id;
