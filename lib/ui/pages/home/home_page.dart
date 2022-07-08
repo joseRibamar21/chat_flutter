@@ -51,13 +51,13 @@ class HomePage extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Text(
                   "Salas",
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               ListView.separated(
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: 20,
+                  itemCount: 1,
                   separatorBuilder: (context, index) {
                     return const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -69,11 +69,15 @@ class HomePage extends StatelessWidget {
                       onTap: () {
                         Get.toNamed('/chat');
                       },
-                      title: const Text("Usuario"),
-                      subtitle: const Text("Mensagem"),
+                      leading: Icon(Icons.lock_outline_rounded,
+                          color: Theme.of(context).iconTheme.color),
+                      trailing: Icon(Icons.arrow_forward_ios_rounded,
+                          color: Theme.of(context).iconTheme.color),
+                      title: const Text("Sala Segura 1"),
+                      /*  subtitle: const Text("Mensagem"),
                       trailing: const CircleAvatar(
                         child: Text("1"),
-                      ),
+                      ), */
                     );
                   })
             ],

@@ -52,6 +52,8 @@ ThemeData makeTheme2() {
     ),
   );
 
+  IconThemeData iconThemeData = const IconThemeData(color: Colors.white);
+
   FloatingActionButtonThemeData floatingActionButtonThemeData =
       const FloatingActionButtonThemeData(shape: CircleBorder());
 
@@ -68,7 +70,7 @@ ThemeData makeTheme2() {
 
   ListTileThemeData listTileThemedata =
       const ListTileThemeData(style: ListTileStyle.drawer);
-  
+
   BottomSheetThemeData sheetThemeData = const BottomSheetThemeData(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -87,6 +89,7 @@ ThemeData makeTheme2() {
     dialogTheme: dialogTheme,
     backgroundColor: Colors.amber,
     dividerTheme: dividerThemeData,
+    iconTheme: iconThemeData,
     floatingActionButtonTheme: floatingActionButtonThemeData,
     primaryColor: color1,
     inputDecorationTheme: inputDecorationTheme,
