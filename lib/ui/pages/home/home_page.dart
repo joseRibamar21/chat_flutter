@@ -34,14 +34,14 @@ class _HomePageState extends State<HomePage> {
                     PopupMenuItem(
                         child: const Text("Sair"),
                         onTap: () {
-                          Navigator.pop(context);
+                          Get.back();
                         })
                   ];
                 }),
             title: const Text("Secreto"),
             actions: [
-              IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.search_rounded))
+              /* IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.search_rounded)) */
             ],
           ),
           body: Builder(builder: (_) {

@@ -2,16 +2,10 @@
 
 import 'package:get/get.dart';
 
-import '../../domain/usecase/usecase.dart';
-import '../../infra/cache/cache.dart';
-import '../../ui/pages/resgister/register.dart';
+import '../../../infra/cache/cache.dart';
 
-class GetxRegisterPresenter extends GetxController
-    implements RegisterPresenter {
-  final LocalPreferences preferences;
+class RegisterController extends GetxController {
   final SecureStorage secureStorage = SecureStorage();
-
-  GetxRegisterPresenter({required this.preferences});
 
   final _rxNavigateTo = Rx<String>("");
   final _rxUiError = Rx<String>("");
@@ -19,33 +13,30 @@ class GetxRegisterPresenter extends GetxController
 
   String _name = "";
 
-  @override
   Stream<bool> get isLoading => _rxIsLoading.stream;
 
-  @override
   Stream<String> get navigationStream => _rxNavigateTo.stream;
 
-  @override
   Stream<String> get uiErrorStream => _rxUiError.stream;
 
-  @override
-  void register() async {
+  Future<bool> register() async {
     _rxIsLoading.value = true;
     try {
       await secureStorage.writeSecureData('name', _name);
-      _rxNavigateTo.value = "/home";
+      // _rxNavigateTo.value = "/home";
+      print("object");
+      return true;
     } catch (e) {
       _rxUiError.value = "Erro ao carregar dados!";
+      return false;
     }
     _rxIsLoading.value = false;
   }
 
-  @override
   void validadeName(String value) {
     _name = value;
   }
 
-  @override
   void inicialization() async {
     String? t = await secureStorage.readSecureData('name');
     if (t != null) {

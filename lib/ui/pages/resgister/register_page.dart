@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../mixins/mixins.dart';
 import 'register.dart';
 
-class RegisterPage extends StatelessWidget
+class RegisterPage extends StatefulWidget {
+  RegisterPage({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage>
     with NavigationManager, UIErrorManager {
-  final RegisterPresenter presenter;
-  const RegisterPage({Key? key, required this.presenter}) : super(key: key);
+  RegisterController controller = RegisterController();
 
   @override
   Widget build(BuildContext context) {
-    handleNaviation(presenter.navigationStream);
-    handleUIError(context, presenter.uiErrorStream);
+    handleNaviation(controller.navigationStream);
+    handleUIError(context, controller.uiErrorStream);
     return Provider(
-      create: (context) => presenter,
+      create: (context) => controller,
       child: Scaffold(body: Builder(builder: (context) {
         return SafeArea(
           child: Builder(builder: (context) {
-            presenter.inicialization();
+            controller.inicialization();
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,14 +36,19 @@ class RegisterPage extends StatelessWidget
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 40),
-                    child: TextFieldRegister(onConfirm: presenter.register),
+                    child: TextFieldRegister(onConfirm: controller.register),
                   ),
                   const SizedBox(height: 40),
                   SizedBox(
                     width: 150,
                     height: 50,
                     child: ElevatedButton(
-                        onPressed: presenter.register,
+                        onPressed: () async {
+                          bool test = await controller.register();
+                          if (test) {
+                            Get.toNamed('/home');
+                          }
+                        },
                         child: const Text("Confirmar")),
                   ),
                   const SizedBox(height: 90),
@@ -88,7 +100,7 @@ class _TextFieldRegisterState extends State<TextFieldRegister> {
 
   @override
   Widget build(BuildContext context) {
-    var presenter = Provider.of<RegisterPresenter>(context);
+    var controller = Provider.of<RegisterController>(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -96,7 +108,7 @@ class _TextFieldRegisterState extends State<TextFieldRegister> {
           controller: _controller,
           style: Theme.of(context).textTheme.bodyMedium,
           onEditingComplete: widget.onConfirm,
-          onChanged: presenter.validadeName,
+          onChanged: controller.validadeName,
         ),
       ),
     );
