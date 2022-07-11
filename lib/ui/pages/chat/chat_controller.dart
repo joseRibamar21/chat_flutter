@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../data/helpers/helpers.dart';
 
+import '../../../data/usecase/usecase.dart';
 import '../../../domain/entities/entities.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -19,8 +20,10 @@ class ChatController extends GetxController {
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<bool>(false);
   final SecureStorage secureStorage = SecureStorage();
+  RoomsStorage _roomsStorage = RoomsStorage();
   late final String? _room;
   late final String? _password;
+  late final String? _roomLink;
 
   final Socket _socket = io.io(
     'http://143.244.150.213:3000',
@@ -42,9 +45,12 @@ class ChatController extends GetxController {
   void init(String room, String password, String name) async {
     //Primeiras acoes a serem executas
     /* if (nick != null && !isInit) { */
+
     nickG = name;
     _room = room;
     _password = password;
+    _roomLink =
+        _roomsStorage.getLinkRoom(RoomEntity(name: room, password: password));
 
     _inicialization();
     /* } */
@@ -216,4 +222,6 @@ class ChatController extends GetxController {
     _rxListMessages.value.removeWhere(
         (element) => element.text.id == messageEntity.text.message);
   }
+
+  String? get link => _roomLink;
 }

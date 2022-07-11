@@ -1,7 +1,8 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../chat_controller.dart';
 
@@ -74,6 +75,37 @@ class __ListSendersState extends State<_ListSenders> {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Divider(thickness: 3),
+          ),
+          Center(
+            child: Text(
+              "Toque no id para copiar",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            child: Center(
+              child: TextButton(
+                  onPressed: () {
+                    FlutterClipboard.copy(widget.controller.link ?? "")
+                        .then((value) {
+                      Navigator.pop(context);
+                      Future.delayed(const Duration(milliseconds: 100)).then(
+                          (value) => Fluttertoast.showToast(
+                              msg: "Copiado",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.grey[800],
+                              textColor: Colors.white,
+                              fontSize: 16.0));
+                    });
+                  },
+                  child: Text(
+                    "Id da sala: ${widget.controller.link}",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  )),
+            ),
           ),
           StreamBuilder<List<Map<String, dynamic>>>(
             stream: widget.controller.listSendersStream,

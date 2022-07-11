@@ -39,10 +39,10 @@ class _HomePageState extends State<HomePage> {
                   ];
                 }),
             title: const Text("Secreto"),
-            actions: [
-              /* IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.search_rounded)) */
-            ],
+            /* actions: [
+              IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.search_rounded))
+            ], */
           ),
           body: Builder(builder: (_) {
             controller.inicialization();
@@ -90,10 +90,15 @@ class _HomePageState extends State<HomePage> {
                             icon: Icons.group_add_rounded,
                             title: "Nova Reunião",
                           ),
-                          /* ElevatedButtonCustom(
-                              function: () {},
-                              icon: Icons.person_add_rounded,
-                              title: "Adicionar"), */
+                          ElevatedButtonCustom(
+                              function: () async {
+                                var t = await searchRoomDialog(context);
+                                if (t != null) {
+                                  controller.searchRoom(t);
+                                }
+                              },
+                              icon: Icons.person,
+                              title: "Adicionar Sala"),
                         ],
                       ),
                     ),

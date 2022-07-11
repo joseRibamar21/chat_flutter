@@ -22,6 +22,8 @@ class HomeController extends GetxController {
     var list = await roomsStorage.getRooms();
     if (list != null) {
       _rxListRoom.value = list.listRoom;
+    } else {
+      _rxListRoom.value = [];
     }
 
     _rxName.value = pre;
@@ -32,11 +34,28 @@ class HomeController extends GetxController {
     var list = await roomsStorage.getRooms();
     if (list != null) {
       _rxListRoom.value = list.listRoom;
+    } else {
+      _rxListRoom.value = [];
+    }
+  }
+
+  Future<void> searchRoom(String link) async {
+    var roomS = roomsStorage.getRoomFromLink(link);
+    if (roomS != null) {
+      saveRooms(roomS.name, roomS.password);
     }
   }
 
   Future<void> loadRooms() async {
     await roomsStorage.getRooms();
+  }
+
+  void deleteRoom(String name) async {
+    await roomsStorage.deleteRoom(name);
+    var list = await roomsStorage.getRooms();
+    if (list != null) {
+      _rxListRoom.value = list.listRoom;
+    }
   }
 
   String get nick => _rxName.value;
