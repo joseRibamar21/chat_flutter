@@ -13,11 +13,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   HomeController controller = HomeController();
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Provider(
       create: (_) => controller,
       child: WillPopScope(
@@ -84,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                             function: () async {
                               var t = await newRoomDialog(context);
                               if (t != null) {
-                                controller.saveRooms(t[0], t[1]);
+                                controller.saveRooms(t, null);
                               }
                             },
                             icon: Icons.group_add_rounded,
@@ -120,6 +122,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class ElevatedButtonCustom extends StatelessWidget {

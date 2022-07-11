@@ -22,7 +22,7 @@ Future<String?> searchRoomDialog(BuildContext context) async {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Confirmar"))
+                    child: const Text("Confirmar"))
               ],
             ),
           ),

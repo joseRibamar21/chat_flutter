@@ -37,8 +37,8 @@ class RoomsListView extends StatelessWidget {
                     },
                     itemBuilder: (context, index) {
                       return ListTile(
-                        onTap: () {
-                          Get.to(
+                        onTap: () async {
+                          await Get.to(
                               ChatPage(
                                   name: controller.nick,
                                   room: snapshot.data![index].name,
@@ -47,9 +47,10 @@ class RoomsListView extends StatelessWidget {
                         },
                         leading: IconButton(
                             onPressed: () {
-                              controller.deleteRoom(snapshot.data![index].name);
+                              controller.deleteRoom(snapshot.data![index].name,
+                                  snapshot.data![index].password);
                             },
-                            icon: Icon(Icons.lock_outline_rounded,
+                            icon: Icon(Icons.remove,
                                 color: Theme.of(context).iconTheme.color)),
                         trailing: Icon(Icons.arrow_forward_ios_rounded,
                             color: Theme.of(context).iconTheme.color),

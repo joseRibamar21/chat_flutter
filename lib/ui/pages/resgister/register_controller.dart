@@ -24,13 +24,13 @@ class RegisterController extends GetxController {
     try {
       await secureStorage.writeSecureData('name', _name);
       // _rxNavigateTo.value = "/home";
-      print("object");
+      _rxIsLoading.value = false;
       return true;
     } catch (e) {
       _rxUiError.value = "Erro ao carregar dados!";
+      _rxIsLoading.value = false;
       return false;
     }
-    _rxIsLoading.value = false;
   }
 
   void validadeName(String value) {

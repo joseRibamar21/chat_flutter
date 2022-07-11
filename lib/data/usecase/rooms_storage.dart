@@ -13,6 +13,7 @@ class RoomsStorage {
     try {
       RoomsEntity rooms = RoomsEntity(listRoom: []);
       String? data = await secureStorage.readSecureData('rooms');
+
       if (data != null) {
         rooms = RoomsModel.fromJson(jsonDecode(data)).toEntity();
       }
@@ -30,13 +31,14 @@ class RoomsStorage {
     return RoomsModel.fromJson(jsonDecode(data)).toEntity();
   }
 
-  Future<void> deleteRoom(String name) async {
+  Future<void> deleteRoom(String name, String password) async {
     try {
       RoomsEntity rooms = RoomsEntity(listRoom: []);
       String? data = await secureStorage.readSecureData('rooms');
       if (data != null) {
         rooms = RoomsModel.fromJson(jsonDecode(data)).toEntity();
-        rooms.listRoom.removeWhere((element) => element.name == name);
+        rooms.listRoom.removeWhere(
+            (element) => element.name == name && element.password == password);
       }
 
       var json = RoomsModel.fromEntity(rooms).toJson();
@@ -58,7 +60,6 @@ class RoomsStorage {
     if (room.isNotEmpty) {
       String link = encryptMessage.dencrypt(room);
       List<String> roomlink = link.split("-");
-      print(roomlink);
       RoomEntity roomEntity =
           RoomEntity(name: roomlink[0], password: roomlink[1]);
       return roomEntity;

@@ -20,7 +20,7 @@ class ChatController extends GetxController {
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<bool>(false);
   final SecureStorage secureStorage = SecureStorage();
-  RoomsStorage _roomsStorage = RoomsStorage();
+  RoomsStorage roomsStorage = RoomsStorage();
   late final String? _room;
   late final String? _password;
   late final String? _roomLink;
@@ -50,7 +50,7 @@ class ChatController extends GetxController {
     _room = room;
     _password = password;
     _roomLink =
-        _roomsStorage.getLinkRoom(RoomEntity(name: room, password: password));
+        roomsStorage.getLinkRoom(RoomEntity(name: room, password: password));
 
     _inicialization();
     /* } */

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:get/get.dart';
 
 import '../../../data/usecase/usecase.dart';
@@ -19,18 +21,28 @@ class HomeController extends GetxController {
 
   void inicialization() async {
     String pre = await secureStorage.readSecureData('name');
-    var list = await roomsStorage.getRooms();
-    if (list != null) {
-      _rxListRoom.value = list.listRoom;
-    } else {
-      _rxListRoom.value = [];
-    }
+    try {
+      var list = await roomsStorage.getRooms();
+      if (list != null) {
+        _rxListRoom.value = list.listRoom;
+      } else {
+        _rxListRoom.value = [];
+      }
+    } catch (e0) {}
 
+    _rxListRoom.refresh();
     _rxName.value = pre;
   }
 
-  Future<void> saveRooms(String name, String password) async {
-    await roomsStorage.saveRoom(name, password);
+  Future<void> saveRooms(String name, String? password) async {
+    var rng = Random();
+    String p;
+    if (password == null) {
+      p = rng.nextInt(999999999).toString();
+    } else {
+      p = password;
+    }
+    await roomsStorage.saveRoom(name, p);
     var list = await roomsStorage.getRooms();
     if (list != null) {
       _rxListRoom.value = list.listRoom;
@@ -50,8 +62,8 @@ class HomeController extends GetxController {
     await roomsStorage.getRooms();
   }
 
-  void deleteRoom(String name) async {
-    await roomsStorage.deleteRoom(name);
+  void deleteRoom(String name, String password) async {
+    await roomsStorage.deleteRoom(name, password);
     var list = await roomsStorage.getRooms();
     if (list != null) {
       _rxListRoom.value = list.listRoom;

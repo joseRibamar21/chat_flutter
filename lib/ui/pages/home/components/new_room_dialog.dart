@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-Future<List<dynamic>?> newRoomDialog(BuildContext context) async {
+Future<String?> newRoomDialog(BuildContext context) async {
   String? name;
-  String? password;
   await showDialog(
       context: context,
       builder: (context) {
@@ -48,25 +47,6 @@ Future<List<dynamic>?> newRoomDialog(BuildContext context) async {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        maxLength: 50,
-                        onChanged: (value) {
-                          password = value;
-                        },
-                        decoration: InputDecoration(
-                            label: Text(
-                          "Senha",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        )),
-                      ),
-                    ),
-                  ),
-                ),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -77,8 +57,8 @@ Future<List<dynamic>?> newRoomDialog(BuildContext context) async {
           ),
         );
       });
-  if (name != null && password != null) {
-    return [name, password];
+  if (name != null) {
+    return name;
   } else {
     return null;
   }

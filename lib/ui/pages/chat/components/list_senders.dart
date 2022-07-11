@@ -107,7 +107,7 @@ class __ListSendersState extends State<_ListSenders> {
                   )),
             ),
           ),
-          StreamBuilder<List<Map<String, dynamic>>>(
+          /* StreamBuilder<List<Map<String, dynamic>>>(
             stream: widget.controller.listSendersStream,
             builder: ((context, snapshot) {
               if (snapshot.hasData) {
@@ -152,7 +152,7 @@ class __ListSendersState extends State<_ListSenders> {
                 ),
               );
             }),
-          )
+          ) */
         ],
       );
     });
