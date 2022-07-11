@@ -20,15 +20,11 @@ class MyApp extends StatelessWidget {
       title: 'Secreto',
       debugShowCheckedModeBanner: false,
       theme: makeTheme2(),
-      initialRoute: "/home",
+      initialRoute: "/register",
       getPages: [
         GetPage(name: "/", page: () => const SplashPage()),
         GetPage(name: "/register", page: makeRegisterPage),
         GetPage(name: "/home", page: () => const HomePage()),
-        GetPage(
-            name: "/chat",
-            page: () => const ChatPage(),
-            fullscreenDialog: true),
       ],
     );
   }

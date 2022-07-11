@@ -24,12 +24,7 @@ class RoomsStorage {
   }
 
   Future<RoomsEntity?> getRooms() async {
-    try {
-      var data = await secureStorage.readSecureData('rooms');
-      return RoomsModel.fromJson(data).toEntity();
-    } catch (e) {
-      print(e);
-    }
-    return null;
+    var data = await secureStorage.readSecureData('rooms');
+    return RoomsModel.fromJson(jsonDecode(data)).toEntity();
   }
 }

@@ -19,6 +19,8 @@ class ChatController extends GetxController {
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<bool>(false);
   final SecureStorage secureStorage = SecureStorage();
+  late final String? _room;
+  late final String? _password;
 
   final Socket _socket = io.io(
     'http://143.244.150.213:3000',
@@ -37,17 +39,22 @@ class ChatController extends GetxController {
     _rxDesconect.value = true;
   }
 
-  void init(String? nick) async {
+  void init(String room, String password, String name) async {
     //Primeiras acoes a serem executas
     /* if (nick != null && !isInit) { */
-    nickG = await secureStorage.readSecureData('name');
+    nickG = name;
+    _room = room;
+    _password = password;
+
     _inicialization();
     /* } */
     //Abrir canal
 
-    _socket.emit('joinRoom', {"username": nickG, 'room': 'PHP'});
+    _socket.emit('joinRoom', {"username": nickG, 'room': '$_room+$_password '});
 
     _socket.on("message", (event) {
+      print(event);
+
       /// Pegar menssagem recebida
 
       MessageEntity? value = getSendMessage(event: event);

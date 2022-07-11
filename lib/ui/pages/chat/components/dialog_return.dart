@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<bool> showDialogReturn(BuildContext context) async {
+Future<bool> showDialogReturn(BuildContext context, String title) async {
   return await showDialog(
       context: context,
       builder: (context) {
@@ -10,8 +10,7 @@ Future<bool> showDialogReturn(BuildContext context) async {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Deseja sair desta sala?',
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text(title, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

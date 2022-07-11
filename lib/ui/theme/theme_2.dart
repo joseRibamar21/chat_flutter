@@ -72,6 +72,7 @@ ThemeData makeTheme2() {
       const ListTileThemeData(style: ListTileStyle.drawer);
 
   BottomSheetThemeData sheetThemeData = const BottomSheetThemeData(
+    backgroundColor: color2,
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20))),

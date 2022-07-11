@@ -5,7 +5,7 @@ class RoomsModel {
   final List<RoomEntity> listRoom;
   RoomsModel({required this.listRoom});
 
-  factory RoomsModel.fromJson(dynamic json) {
+  factory RoomsModel.fromJson(Map<String, dynamic> json) {
     return RoomsModel(
         listRoom: json['listRoom']
             .map<RoomEntity>((e) => RoomModel.fromJson(e).toEntity())

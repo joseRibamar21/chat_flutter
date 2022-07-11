@@ -44,4 +44,12 @@ class GetxRegisterPresenter extends GetxController
   void validadeName(String value) {
     _name = value;
   }
+
+  @override
+  void inicialization() async {
+    String? t = await secureStorage.readSecureData('name');
+    if (t != null) {
+      _rxNavigateTo.value = "/home";
+    }
+  }
 }

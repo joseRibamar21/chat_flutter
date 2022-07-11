@@ -6,4 +6,6 @@ abstract class RegisterPresenter {
   void register();
 
   void validadeName(String value);
+
+  void inicialization();
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 
@@ -8,7 +9,15 @@ import 'chat_controller.dart';
 import 'components/components.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+  final String name;
+  final String room;
+  final String password;
+  const ChatPage(
+      {Key? key,
+      required this.name,
+      required this.room,
+      required this.password})
+      : super(key: key);
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -19,13 +28,12 @@ class _ChatPageState extends State<ChatPage>
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
-  String? nick;
   ChatController controller = ChatController();
 
   @override
   void initState() {
-    nick = "Jose";
-    controller.init(nick);
+    controller.init(widget.room, widget.password, widget.name);
+
     WidgetsBinding.instance.addObserver(this);
     controller.timerDeleteMessages();
 
@@ -74,7 +82,7 @@ class _ChatPageState extends State<ChatPage>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return await showDialogReturn(context);
+        return await showDialogReturn(context, 'Deseja sair desta sala?');
       },
       child: BlockAuth(
         controller: _authController,
@@ -85,7 +93,7 @@ class _ChatPageState extends State<ChatPage>
                 FooterMessage(controller: _textController, sendMessage: _send),
             appBar: AppBar(
               toolbarHeight: 60,
-              title: const AppBarSender(),
+              title: AppBarSender(name: widget.name),
               actions: [
                 PopupMenuButton(
                     itemBuilder: (context) => [
@@ -100,7 +108,7 @@ class _ChatPageState extends State<ChatPage>
               handleDesconect(context, controller.desconectStream);
               return ListMessage(
                 stream: controller.listMessagesStream,
-                nick: nick ?? "",
+                nick: widget.name,
               );
             }),
           ),

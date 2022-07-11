@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import '../chat_controller.dart';
 
 class AppBarSender extends StatelessWidget {
-  const AppBarSender({Key? key}) : super(key: key);
+  final String name;
+  const AppBarSender({Key? key, required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class AppBarSender extends StatelessWidget {
                 });
           },
           title: Text(
-            Get.arguments['room'],
+            name,
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
           ),
