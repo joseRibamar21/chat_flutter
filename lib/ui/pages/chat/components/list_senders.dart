@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,7 @@ class AppBarSender extends StatelessWidget {
                 });
           },
           title: Text(
-            controller.nickG,
+            Get.arguments['room'],
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
           ),

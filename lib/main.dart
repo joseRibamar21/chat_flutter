@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/register", page: makeRegisterPage),
         GetPage(name: "/home", page: () => const HomePage()),
         GetPage(
-          name: "/chat",
-          page: () => const ChatPage(),
-        ),
+            name: "/chat",
+            page: () => const ChatPage(),
+            fullscreenDialog: true),
       ],
     );
   }

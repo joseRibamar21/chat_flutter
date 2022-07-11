@@ -1,25 +1,31 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../../../data/models/models.dart';
-import '../../../data/usecase/usecase.dart';
+import '../../../data/helpers/helpers.dart';
+
 import '../../../domain/entities/entities.dart';
+
+import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:socket_io_client/socket_io_client.dart';
+
+import '../../../infra/cache/cache.dart';
 
 class ChatController extends GetxController {
   final _rxListMessages = Rx<List<MessageEntity>>([]);
-  late Stream<dynamic> _channelStream;
-  late StreamSubscription<dynamic> _channelObs;
+
   late String nickG;
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<bool>(false);
+  final SecureStorage secureStorage = SecureStorage();
 
-  EncryptMessage encryptMessage = EncryptMessage();
-  WebSocketChannel? _channel =
-      WebSocketChannel.connect(Uri.parse('wss://wss.infatec.solutions'));
+  final Socket _socket = io.io(
+    'http://143.244.150.213:3000',
+    <String, dynamic>{
+      'transports': ['websocket']
+    },
+  );
 
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
   Stream<List<Map<String, dynamic>>> get listSendersStream => _rxSenders.stream;
@@ -32,89 +38,85 @@ class ChatController extends GetxController {
   }
 
   void init(String? nick) async {
-    _channelStream = _channel!.stream;
-
     //Primeiras acoes a serem executas
-    if (nick != null && !isInit) {
-      _inicialization(nick);
-    }
+    /* if (nick != null && !isInit) { */
+    nickG = await secureStorage.readSecureData('name');
+    _inicialization();
+    /* } */
     //Abrir canal
 
-    _channelObs = _channelStream.listen((event) async {
-      // Pegar menssagem recebida
-      var message = jsonDecode(event);
-      var teste = jsonDecode(message['body']);
-      if (teste['function'] != 5) {
-        try {
-          teste['message'] = teste['message'] != null
-              ? encryptMessage.dencrypt(teste['message'])
-              : null;
-        } finally {}
-      }
-      MessageEntity value = MessageEntity(
-          sender: message['sender'],
-          body: BodyModel.fromJson(teste).toEntity(),
-          sentAt: message['sentAt']);
+    _socket.emit('joinRoom', {"username": nickG, 'room': 'PHP'});
 
-      switch (value.body.function) {
-        // caso algue se desconect
-        case 0:
-          _rxSenders.value.removeWhere((e) => e["user"] == value.sender);
-          _rxSenders.refresh();
-          _rxListMessages.value = _rxListMessages.value..add(value);
-          _rxListMessages.refresh();
-          break;
-        // conectado
-        case 1:
-          if (value.sender != nickG) {
-            for (var element in _rxSenders.value) {
-              if (element['user'] == value.sender) {
-                element['status'] = 1;
-              }
-            }
+    _socket.on("message", (event) {
+      /// Pegar menssagem recebida
+
+      MessageEntity? value = getSendMessage(event: event);
+
+      if (value != null) {
+        switch (value.text.function) {
+          // caso algue se desconect
+          case 0:
+            _rxSenders.value.removeWhere((e) => e["user"] == value.username);
             _rxSenders.refresh();
-          }
-
-          _rxListMessages.value = _rxListMessages.value..add(value);
-          _rxListMessages.refresh();
-          break;
-        case 2:
-          _rxSenders.value.addIf(
-              nickG != value.sender, {"user": value.sender, "status": 1});
-          _rxSenders.refresh();
-          break;
-        // Caso possua um novo conectado
-        case 3:
-          _rxSenders.value = [];
-          _sendUserState(status: 2);
-
-          if (value.sender != nickG) {
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
-          }
-          break;
-        // Caso fique inativo
-        case 4:
-          if (value.sender != nickG) {
-            for (var element in _rxSenders.value) {
-              if (element['user'] == value.sender) {
-                element['status'] = 4;
+            break;
+          // conectado
+          case 1:
+            if (value.username != nickG) {
+              for (var element in _rxSenders.value) {
+                if (element['user'] == value.username) {
+                  element['status'] = 1;
+                }
               }
+              _rxSenders.refresh();
             }
+
+            _rxListMessages.value = _rxListMessages.value..add(value);
+            _rxListMessages.refresh();
+            break;
+          case 2:
+            _rxSenders.value.addIf(
+                nickG != value.username, {"user": value.username, "status": 1});
             _rxSenders.refresh();
-          }
-          break;
-        case 5:
-          _rxListMessages.value = _rxListMessages.value..add(value);
-          _rxListMessages.refresh();
-          _rxListMessages.value
-              .removeWhere((element) => element.body.id == value.body.message);
-          break;
-        default:
-          _rxListMessages.value = _rxListMessages.value..add(value);
-          _rxListMessages.refresh();
+            break;
+          // Caso possua um novo conectado
+          case 3:
+            _rxSenders.value = [];
+            _sendUserState(status: 2);
+
+            if (value.username != nickG) {
+              _rxListMessages.value = _rxListMessages.value..add(value);
+              _rxListMessages.refresh();
+            }
+            break;
+          // Caso fique inativo
+          case 4:
+            if (value.username != nickG) {
+              for (var element in _rxSenders.value) {
+                if (element['user'] == value.username) {
+                  element['status'] = 4;
+                }
+              }
+              _rxSenders.refresh();
+            }
+            break;
+          case 5:
+            _rxListMessages.value = _rxListMessages.value..add(value);
+            _rxListMessages.refresh();
+            _rxListMessages.value.removeWhere(
+                (element) => element.text.id == value.text.message);
+            break;
+          default:
+            _rxListMessages.value = _rxListMessages.value..add(value);
+            _rxListMessages.refresh();
+        }
       }
-    }, onDone: () => _rxDesconect.value = true);
+    });
+
+    _socket.onDisconnect((data) {
+      _rxDesconect.value = true;
+    });
   }
 
   /// Funcão para mandar uma mensagem.
@@ -122,8 +124,7 @@ class ChatController extends GetxController {
   /// Parâmetros: [value] será a mensagem a ser enviada.
   void send(String? value) {
     if (value!.isNotEmpty) {
-      var messageEncryted = encryptMessage.encrypt(value);
-      _sendUserState(status: 1, message: messageEncryted);
+      _sendUserState(status: 1, message: value);
     }
   }
 
@@ -134,9 +135,6 @@ class ChatController extends GetxController {
 
   /// Funcão que emite um sinal de retorno de visibilidade.
   void resume() {
-    if (_channelObs.isPaused) {
-      _channelObs.resume();
-    }
     _sendUserState(status: 1);
   }
 
@@ -145,25 +143,15 @@ class ChatController extends GetxController {
     _sendUserState(status: 4);
   }
 
-  void _inicialization(String nick) async {
-    //ATUALIZAR NICK
-    nickG = nick;
+  void _inicialization() async {
     //Mandar menssagem para todos verem sua disponibilidade
-    _sendUserState(status: 3);
+    //_socket.emit('chatMessage', {"username": 'Jose', 'text': "olaaa"});
     isInit = true;
     Future.delayed(const Duration(milliseconds: 10)).then((value) {
       _rxListMessages.value = _rxListMessages.value
-        ..add(
-          MessageEntity(
-            sender: 'SYSTEM',
-            sentAt: null,
-            body: BodyEntity(
-                id: "0",
-                message:
-                    "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala.",
-                function: 1),
-          ),
-        );
+        ..add(messageSystem(
+            "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala."));
+      _sendUserState(status: 3);
     });
   }
 
@@ -172,22 +160,14 @@ class ChatController extends GetxController {
       _sendUserState(status: 0);
       isInit = false;
     }
-    _channelObs.cancel();
-    _channel = null;
+
+    //_socket.ondisconnect();
   }
 
   void _sendUserState({required int status, String? message}) {
-    var body = jsonEncode(MessageModel(
-            sentAt: null,
-            sender: nickG,
-            body: BodyModel(
-                    id: nickG +
-                        DateTime.now().microsecondsSinceEpoch.toString(),
-                    message: message,
-                    function: status)
-                .toEntity())
-        .toJson());
-    _channel?.sink.add(body);
+    Map<String, dynamic> body =
+        prepareSendMessage(usarName: nickG, status: status, message: message);
+    _socket.emit('chatMessage', body);
   }
 
   List<Map<String, dynamic>> getlistSenders() {
@@ -200,7 +180,7 @@ class ChatController extends GetxController {
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       List<MessageEntity> list = [];
       for (var element in _rxListMessages.value) {
-        if (element.sentAt != null && (element.sentAt! <= timerDate)) {
+        if (element.time != null && (element.text.sendAt <= timerDate)) {
           list.add(element);
 
           /* sendRemoveMessage(id: element.body.id); */
@@ -209,9 +189,13 @@ class ChatController extends GetxController {
       }
       for (var element in list) {
         var t = MessageEntity(
-            sender: element.sender,
-            body: BodyEntity(id: null, message: element.body.id, function: 5),
-            sentAt: null);
+            username: element.username,
+            text: BodyEntity(
+                id: null,
+                message: element.text.id,
+                function: 5,
+                sendAt: DateTime.now().microsecondsSinceEpoch),
+            time: null);
         removeMessage(t);
       }
 
@@ -223,6 +207,6 @@ class ChatController extends GetxController {
     _rxListMessages.value = _rxListMessages.value..add(messageEntity);
     _rxListMessages.refresh();
     _rxListMessages.value.removeWhere(
-        (element) => element.body.id == messageEntity.body.message);
+        (element) => element.text.id == messageEntity.text.message);
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../data/usecase/autentication_local.dart';
@@ -24,7 +24,7 @@ class _ChatPageState extends State<ChatPage>
 
   @override
   void initState() {
-    nick = Get.arguments['nick'];
+    nick = "Jose";
     controller.init(nick);
     WidgetsBinding.instance.addObserver(this);
     controller.timerDeleteMessages();
@@ -34,7 +34,7 @@ class _ChatPageState extends State<ChatPage>
 
   @override
   void dispose() async {
-    controller.disp();
+    await controller.disp();
     controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _authController.dispose();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../mixins/mixins.dart';
 import 'register.dart';
@@ -12,46 +13,49 @@ class RegisterPage extends StatelessWidget
   Widget build(BuildContext context) {
     handleNaviation(presenter.navigationStream);
     handleUIError(context, presenter.uiErrorStream);
-    return Scaffold(body: Builder(builder: (context) {
-      return SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 60),
-              Text("Digite um nome!",
-                  style: Theme.of(context).textTheme.titleMedium),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                child: TextFieldRegister(onConfirm: presenter.register),
-              ),
-              const SizedBox(height: 40),
-              SizedBox(
-                width: 150,
-                height: 50,
-                child: ElevatedButton(
-                    onPressed: presenter.register,
-                    child: const Text("Confirmar")),
-              ),
-              const SizedBox(height: 90),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Column(
-                  children: [
-                    const Divider(),
-                    Text(
-                        "Para aumentar sua segurança, tenha cadastrado uma biometria em seu celular!",
-                        style: Theme.of(context).textTheme.bodySmall)
-                  ],
+    return Provider(
+      create: (context) => presenter,
+      child: Scaffold(body: Builder(builder: (context) {
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 60),
+                Text("Digite um nome!",
+                    style: Theme.of(context).textTheme.titleMedium),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                  child: TextFieldRegister(onConfirm: presenter.register),
                 ),
-              )
-            ],
+                const SizedBox(height: 40),
+                SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: ElevatedButton(
+                      onPressed: presenter.register,
+                      child: const Text("Confirmar")),
+                ),
+                const SizedBox(height: 90),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  child: Column(
+                    children: [
+                      const Divider(),
+                      Text(
+                          "Para aumentar sua segurança, tenha cadastrado uma biometria em seu celular!",
+                          style: Theme.of(context).textTheme.bodySmall)
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      );
-    }));
+        );
+      })),
+    );
   }
 }
 
@@ -81,6 +85,7 @@ class _TextFieldRegisterState extends State<TextFieldRegister> {
 
   @override
   Widget build(BuildContext context) {
+    var presenter = Provider.of<RegisterPresenter>(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -88,6 +93,7 @@ class _TextFieldRegisterState extends State<TextFieldRegister> {
           controller: _controller,
           style: Theme.of(context).textTheme.bodyMedium,
           onEditingComplete: widget.onConfirm,
+          onChanged: presenter.validadeName,
         ),
       ),
     );

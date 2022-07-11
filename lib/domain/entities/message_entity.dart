@@ -1,9 +1,9 @@
 import 'entities.dart';
 
 class MessageEntity {
-  final String sender;
-  final BodyEntity body;
-  final int? sentAt;
+  final String username;
+  final BodyEntity text;
+  final String? time;
   MessageEntity(
-      {required this.sender, required this.body, required this.sentAt});
+      {required this.username, required this.text, required this.time});
 }

@@ -4,25 +4,24 @@ import '../../domain/entities/entities.dart';
 import 'models.dart';
 
 class MessageModel {
-  final String sender;
-  final BodyEntity body;
-  final int? sentAt;
+  final String username;
+  final BodyEntity text;
+  final String? time;
   MessageModel(
-      {required this.sender, required this.body, required this.sentAt});
+      {required this.username, required this.text, required this.time});
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
-        sender: json['message'],
-        sentAt: json['sentAt'],
-        body: BodyModel.fromJson(jsonDecode(json["body"])).toEntity());
+        username: json['username'],
+        time: json['time'],
+        text: BodyModel.fromJson(jsonDecode(json["text"])).toEntity());
   }
 
   Map<String, dynamic> toJson() => {
-        "sender": sender,
-        "body": jsonEncode(BodyModel.fromEntity(body).toJson()),
-        "sentAt": sentAt
+        "username": username,
+        "text": jsonEncode(BodyModel.fromEntity(text).toJson()),
       };
 
   MessageEntity toEntity() =>
-      MessageEntity(sender: sender, body: body, sentAt: sentAt);
+      MessageEntity(username: username, text: text, time: time);
 }

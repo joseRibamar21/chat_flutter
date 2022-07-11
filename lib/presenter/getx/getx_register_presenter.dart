@@ -3,11 +3,13 @@
 import 'package:get/get.dart';
 
 import '../../domain/usecase/usecase.dart';
+import '../../infra/cache/cache.dart';
 import '../../ui/pages/resgister/register.dart';
 
 class GetxRegisterPresenter extends GetxController
     implements RegisterPresenter {
   final LocalPreferences preferences;
+  final SecureStorage secureStorage = SecureStorage();
 
   GetxRegisterPresenter({required this.preferences});
 
@@ -30,12 +32,12 @@ class GetxRegisterPresenter extends GetxController
   void register() async {
     _rxIsLoading.value = true;
     try {
-      preferences.setName(name: _name);
+      await secureStorage.writeSecureData('name', _name);
+      _rxNavigateTo.value = "/home";
     } catch (e) {
       _rxUiError.value = "Erro ao carregar dados!";
     }
     _rxIsLoading.value = false;
-    _rxNavigateTo.value = "/home";
   }
 
   @override

@@ -18,9 +18,13 @@ class ListMessageState extends State<ListMessage> {
   late ScrollController _scrollController;
   late List<MessageEntity> list = [
     MessageEntity(
-        sentAt: DateTime.now().millisecondsSinceEpoch,
-        sender: "SYSTEM_SPACE",
-        body: BodyEntity(message: "", function: 1, id: '0'))
+        time: DateTime.now().millisecondsSinceEpoch.toString(),
+        username: "SYSTEM_SPACE",
+        text: BodyEntity(
+            message: "",
+            function: 1,
+            id: '0',
+            sendAt: DateTime.now().millisecondsSinceEpoch))
   ];
   late StreamSubscription _streamSubscription;
   late GlobalKey<AnimatedListState> animatedKey;
@@ -31,9 +35,9 @@ class ListMessageState extends State<ListMessage> {
     animatedKey = GlobalKey<AnimatedListState>();
     _streamSubscription = widget.stream.listen((event) {
       /// Para excluir algo da lista
-      if (event[event.length - 1].body.function == 5) {
+      if (event[event.length - 1].text.function == 5) {
         int index = list.indexWhere((element) =>
-            element.body.id == event[event.length - 1].body.message);
+            element.text.id == event[event.length - 1].text.message);
         list.removeAt(index);
         if (index != -1) {
           if (animatedKey.currentState != null) {
@@ -81,7 +85,7 @@ class ListMessageState extends State<ListMessage> {
       key: animatedKey,
       itemBuilder: (context, index, animation) {
         return SlideTransition(
-          position: (list[index].sender == widget.nick)
+          position: (list[index].username == widget.nick)
               ? Tween<Offset>(
                   begin: const Offset(1, 0),
                   end: Offset.zero,
@@ -92,11 +96,11 @@ class ListMessageState extends State<ListMessage> {
                 ).animate(animation),
           child: ChatItem(
             key: Key(index.toString()),
-            id: list[index].body.id ?? "",
-            menssage: list[index].body.message ?? "",
-            sender: list[index].sender,
-            isSentder: (list[index].sender == widget.nick),
-            connection: list[index].body.function,
+            id: list[index].text.id ?? "",
+            menssage: list[index].text.message ?? "",
+            sender: list[index].username,
+            isSentder: (list[index].username == widget.nick),
+            connection: list[index].text.function,
           ),
         );
       },

@@ -12,7 +12,8 @@ class LocalSharedPreferences implements LocalStoragePreferences {
   Future<bool> saveData(Map<String, dynamic> json) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_name, jsonEncode(json));
+      await prefs.setString(_name, "json.toString()");
+
       return true;
     } catch (e) {
       return false;
@@ -24,7 +25,9 @@ class LocalSharedPreferences implements LocalStoragePreferences {
   Future<Map<String, dynamic>?> getData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+
       var data = prefs.getString(_name);
+
       return jsonDecode(data ?? "");
     } catch (e) {
       return {};

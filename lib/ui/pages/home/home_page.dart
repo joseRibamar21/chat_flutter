@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomePage extends StatelessWidget {
+import 'home_controller.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  HomeController controller = HomeController();
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +22,32 @@ class HomePage extends StatelessWidget {
             itemBuilder: (_) {
               return [const PopupMenuItem(child: Text("Configurações"))];
             }),
-        title: const Text("Chat"),
+        title: const Text("Secreto"),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded))
         ],
       ),
       body: Builder(builder: (_) {
+        controller.inicialization();
         return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              StreamBuilder<String>(
+                  stream: controller.nameStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Codinome: ${snapshot.data}",
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
+                  }),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: SizedBox(
@@ -67,7 +92,8 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ListTile(
                       onTap: () {
-                        Get.toNamed('/chat');
+                        Get.toNamed('/chat',
+                            arguments: {'room': 'Sala Segura 1'});
                       },
                       leading: Icon(Icons.lock_outline_rounded,
                           color: Theme.of(context).iconTheme.color),

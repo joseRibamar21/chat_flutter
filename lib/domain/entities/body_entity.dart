@@ -2,7 +2,12 @@ class BodyEntity {
   final String? id;
   final String? message;
   final int function;
-  BodyEntity({required this.id, required this.message, required this.function});
+  final int sendAt;
+  BodyEntity(
+      {required this.id,
+      required this.message,
+      required this.function,
+      required this.sendAt});
 }
 
 /* 
