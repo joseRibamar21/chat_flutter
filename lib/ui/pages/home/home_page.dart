@@ -24,7 +24,9 @@ class _HomePageState extends State<HomePage> {
             }),
         title: const Text("Secreto"),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search_rounded))
+          IconButton(
+              onPressed: controller.saveRooms,
+              icon: const Icon(Icons.search_rounded))
         ],
       ),
       body: Builder(builder: (_) {
