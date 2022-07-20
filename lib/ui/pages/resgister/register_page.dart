@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../mixins/mixins.dart';
+import 'components/components.dart';
 import 'register.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -22,61 +23,58 @@ class _RegisterPageState extends State<RegisterPage>
     handleUIError(context, controller.uiErrorStream);
     return Provider(
       create: (context) => controller,
-      child: Scaffold(body: Builder(builder: (context) {
-        return SafeArea(
-          child: Builder(builder: (context) {
-            controller.inicialization();
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 60),
-                  Text("Digite um nome!",
-                      style: Theme.of(context).textTheme.titleMedium),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 40),
-                    child: TextFieldRegister(onConfirm: controller.register),
+      child: Scaffold(
+        body: Builder(
+          builder: (context) {
+            return SafeArea(
+              child: Builder(builder: (context) {
+                controller.inicialization();
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 60),
+                      Text("Digite um nome!",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      SizedBox(
+                        height: 60,
+                        width: 700,
+                        child: TextFieldRegister(
+                            onConfirm: () {},
+                            onChange: controller.validadeName),
+                      ),
+                      const SizedBox(height: 40),
+                      const SizedBox(height: 90),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        child: Column(
+                          children: const [
+                            Divider(),
+                            /* Text(
+                                "Para aumentar sua segurança, tenha cadastrado uma biometria em seu celular!",
+                                style: Theme.of(context).textTheme.bodySmall) */
+                          ],
+                        ),
+                      ),
+                      const OptionsRegister()
+                    ],
                   ),
-                  const SizedBox(height: 40),
-                  SizedBox(
-                    width: 150,
-                    height: 50,
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          bool test = await controller.register();
-                          if (test) {
-                            Get.toNamed('/home');
-                          }
-                        },
-                        child: const Text("Confirmar")),
-                  ),
-                  const SizedBox(height: 90),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Column(
-                      children: [
-                        const Divider(),
-                        Text(
-                            "Para aumentar sua segurança, tenha cadastrado uma biometria em seu celular!",
-                            style: Theme.of(context).textTheme.bodySmall)
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                );
+              }),
             );
-          }),
-        );
-      })),
+          },
+        ),
+      ),
     );
   }
 }
 
 class TextFieldRegister extends StatefulWidget {
   final Function() onConfirm;
-  const TextFieldRegister({Key? key, required this.onConfirm})
+  final Function(String value) onChange;
+  const TextFieldRegister(
+      {Key? key, required this.onConfirm, required this.onChange})
       : super(key: key);
 
   @override
@@ -108,7 +106,7 @@ class _TextFieldRegisterState extends State<TextFieldRegister> {
           controller: _controller,
           style: Theme.of(context).textTheme.bodyMedium,
           onEditingComplete: widget.onConfirm,
-          onChanged: controller.validadeName,
+          onChanged: widget.onChange,
         ),
       ),
     );

@@ -2,6 +2,7 @@
 
 import 'package:get/get.dart';
 
+import '../../../data/usecase/usecase.dart';
 import '../../../infra/cache/cache.dart';
 
 class RegisterController extends GetxController {
@@ -10,8 +11,10 @@ class RegisterController extends GetxController {
   final _rxNavigateTo = Rx<String>("");
   final _rxUiError = Rx<String>("");
   final _rxIsLoading = Rx<bool>(false);
+  RoomsStorage _roomsStorage = RoomsStorage();
 
   String _name = "";
+  String _room = "";
 
   Stream<bool> get isLoading => _rxIsLoading.stream;
 
@@ -37,10 +40,21 @@ class RegisterController extends GetxController {
     _name = value;
   }
 
+  void validadeLink(String value) {
+    _room = value;
+  }
+
+  void enterRoom() {
+    if (_room != null && _name != null) {
+      var getRoom = _roomsStorage.getRoomFromLink(_name);
+      Get.offAndToNamed("/chat/$_name/${getRoom!.name}/${getRoom.password}");
+    }
+  }
+
   void inicialization() async {
-    String? t = await secureStorage.readSecureData('name');
+    /* String? t = await secureStorage.readSecureData('name');
     if (t != null) {
       _rxNavigateTo.value = "/home";
-    }
+    } */
   }
 }
