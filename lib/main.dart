@@ -22,7 +22,11 @@ class MyApp extends StatelessWidget {
       initialRoute: "/register",
       getPages: [
         GetPage(name: "/", page: () => const SplashPage()),
-        GetPage(name: "/register", page: () => RegisterPage()),
+        GetPage(name: "/register", page: () => const RegisterPage()),
+        GetPage(
+            name: "/chat/:name/:room/:password",
+            page: () => ChatPage(),
+            fullscreenDialog: true),
         GetPage(name: "/home", page: () => const HomePage()),
       ],
     );

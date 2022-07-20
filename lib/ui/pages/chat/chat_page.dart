@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 
@@ -8,15 +9,7 @@ import 'chat_controller.dart';
 import 'components/components.dart';
 
 class ChatPage extends StatefulWidget {
-  final String name;
-  final String room;
-  final String password;
-  const ChatPage(
-      {Key? key,
-      required this.name,
-      required this.room,
-      required this.password})
-      : super(key: key);
+  const ChatPage({Key? key}) : super(key: key);
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -31,7 +24,7 @@ class _ChatPageState extends State<ChatPage>
 
   @override
   void initState() {
-    controller.init(widget.room, widget.password, widget.name);
+    controller.init();
 
     WidgetsBinding.instance.addObserver(this);
     controller.timerDeleteMessages();
@@ -83,33 +76,36 @@ class _ChatPageState extends State<ChatPage>
       onWillPop: () async {
         return await showDialogReturn(context, 'Deseja sair desta sala?');
       },
-      child: BlockAuth(
-        controller: _authController,
-        body: Provider(
-          create: (context) => controller,
-          child: Scaffold(
-            bottomSheet:
-                FooterMessage(controller: _textController, sendMessage: _send),
-            appBar: AppBar(
-              toolbarHeight: 60,
-              title: AppBarSender(name: widget.name),
-              actions: [
-                PopupMenuButton(
-                    itemBuilder: (context) => [
-                          PopupMenuItem(
-                            onTap: () {},
-                            child: const Text("Configurações"),
-                          )
-                        ])
-              ],
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+        child: BlockAuth(
+          controller: _authController,
+          body: Provider(
+            create: (context) => controller,
+            child: Scaffold(
+              bottomSheet: FooterMessage(
+                  controller: _textController, sendMessage: _send),
+              appBar: AppBar(
+                toolbarHeight: 60,
+                title: AppBarSender(name: Get.parameters['room'] ?? "Sala"),
+                actions: [
+                  PopupMenuButton(
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                              onTap: () {},
+                              child: const Text("Configurações"),
+                            )
+                          ])
+                ],
+              ),
+              body: Builder(builder: (context) {
+                handleDesconect(context, controller.desconectStream);
+                return ListMessage(
+                  stream: controller.listMessagesStream,
+                  nick: Get.parameters['name'] ?? "",
+                );
+              }),
             ),
-            body: Builder(builder: (context) {
-              handleDesconect(context, controller.desconectStream);
-              return ListMessage(
-                stream: controller.listMessagesStream,
-                nick: widget.name,
-              );
-            }),
           ),
         ),
       ),

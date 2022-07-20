@@ -15,7 +15,7 @@ import '../../../infra/cache/cache.dart';
 class ChatController extends GetxController {
   final _rxListMessages = Rx<List<MessageEntity>>([]);
 
-  late String nickG;
+  late String? nickG;
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<bool>(false);
@@ -25,7 +25,7 @@ class ChatController extends GetxController {
   late final String? _password;
   late final String? _roomLink;
 
-  final Socket _socket = io.io(
+  Socket _socket = io.io(
     'http://143.244.150.213:3000',
     <String, dynamic>{
       'transports': ['websocket']
@@ -42,20 +42,33 @@ class ChatController extends GetxController {
     _rxDesconect.value = true;
   }
 
-  void init(String room, String password, String name) async {
+  void init() async {
     //Primeiras acoes a serem executas
     /* if (nick != null && !isInit) { */
 
-    nickG = name;
-    _room = room;
-    _password = password;
-    _roomLink =
-        roomsStorage.getLinkRoom(RoomEntity(name: room, password: password));
+    nickG = Get.parameters['name'];
+    _room = Get.parameters['room'];
+    _password = Get.parameters['password'];
+    _roomLink = roomsStorage
+        .getLinkRoom(RoomEntity(name: _room!, password: _password!));
 
     _inicialization();
     /* } */
     //Abrir canal
+    print(_socket.id);
 
+    if (_socket.id == null) {
+      _socket = io.io(
+        'http://143.244.150.213:3000',
+        <String, dynamic>{
+          'transports': ['websocket']
+        },
+      );
+    }
+
+    if (_socket.id == null) {
+      _rxDesconect.value = true;
+    }
     _socket.emit('joinRoom', {"username": nickG, 'room': '$_room+$_password '});
 
     _socket.on("message", (event) {
@@ -179,7 +192,7 @@ class ChatController extends GetxController {
 
   void _sendUserState({required int status, String? message}) {
     Map<String, dynamic> body =
-        prepareSendMessage(usarName: nickG, status: status, message: message);
+        prepareSendMessage(usarName: nickG!, status: status, message: message);
     _socket.emit('chatMessage', body);
   }
 
