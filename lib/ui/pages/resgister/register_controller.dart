@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field
+import 'dart:math';
 
 import 'package:get/get.dart';
 
@@ -45,9 +45,20 @@ class RegisterController extends GetxController {
   }
 
   void enterRoom() {
+    print(_room);
     if (_room != null && _name != null) {
-      var getRoom = _roomsStorage.getRoomFromLink(_name);
-      Get.offAndToNamed("/chat/$_name/${getRoom!.name}/${getRoom.password}");
+      var getRoom = _roomsStorage.getRoomFromLink(_room);
+      Get.toNamed("/chat/$_name/${getRoom!.name}/${getRoom.password}");
+    }
+  }
+
+  void newRoom() {
+    if (_name != null) {
+      var rng = Random();
+      String p;
+      p = rng.nextInt(999999999).toString();
+
+      Get.toNamed("/chat/$_name/Privado/$p");
     }
   }
 

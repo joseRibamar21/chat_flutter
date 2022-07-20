@@ -11,12 +11,8 @@ class EncryptMessage {
   }
 
   String dencrypt(String message) {
-    try {
-      final encrypter = Encrypter(AES(_key));
-      final decrypted = encrypter.decrypt64(message, iv: _iv);
-      return decrypted;
-    } catch (e) {
-      return "Error";
-    }
+    final encrypter = Encrypter(AES(_key));
+    final decrypted = encrypter.decrypt64(message, iv: _iv);
+    return decrypted;
   }
 }

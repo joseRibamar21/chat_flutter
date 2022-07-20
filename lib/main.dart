@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
             name: "/chat/:name/:room/:password",
             page: () => ChatPage(),
             fullscreenDialog: true),
-        GetPage(name: "/home", page: () => const HomePage()),
       ],
     );
   }

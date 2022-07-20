@@ -43,16 +43,15 @@ class _Option1 extends StatelessWidget {
                     height: 60,
                     width: 500,
                     child: TextFieldRegister(
-                        onConfirm: () {}, onChange: (value) {}),
+                        onConfirm: controller.enterRoom,
+                        onChange: controller.validadeLink),
                   ),
                 ),
                 SizedBox(
                   width: 150,
                   height: 50,
                   child: ElevatedButton(
-                      onPressed: () async {
-                        bool test = false;
-                      },
+                      onPressed: controller.enterRoom,
                       child: const Text("Confirmar")),
                 )
               ],
@@ -73,7 +72,8 @@ class _Option1 extends StatelessWidget {
                   width: 150,
                   height: 50,
                   child: ElevatedButton(
-                      onPressed: () async {}, child: const Text("Confirmar")),
+                      onPressed: controller.newRoom,
+                      child: const Text("Gerar sala")),
                 ),
               ],
             ),

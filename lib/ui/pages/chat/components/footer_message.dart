@@ -26,11 +26,8 @@ class FooterMessage extends StatelessWidget {
                   autofocus: false,
                   controller: controller,
                   cursorColor: Colors.white,
-                  keyboardType: TextInputType.multiline,
                   autocorrect: true,
                   enableSuggestions: true,
-                  maxLines: 4,
-                  minLines: 1,
                   toolbarOptions: const ToolbarOptions(
                       copy: true, cut: true, selectAll: true, paste: true),
                   onEditingComplete: sendMessage,
