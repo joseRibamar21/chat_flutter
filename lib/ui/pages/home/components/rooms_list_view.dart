@@ -37,13 +37,9 @@ class RoomsListView extends StatelessWidget {
                     },
                     itemBuilder: (context, index) {
                       return ListTile(
-                        onTap: () async {
-                          await Get.to(
-                              ChatPage(
-                                  name: controller.nick,
-                                  room: snapshot.data![index].name,
-                                  password: snapshot.data![index].password),
-                              fullscreenDialog: true);
+                        onTap: () {
+                          Get.toNamed(
+                              "/chat/${controller.nick}/${snapshot.data![index].name}/${snapshot.data![index].password}");
                         },
                         leading: IconButton(
                             onPressed: () {
