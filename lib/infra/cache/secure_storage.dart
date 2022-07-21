@@ -1,19 +1,19 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_storage/get_storage.dart';
 
 class SecureStorage {
-  final _storage = const FlutterSecureStorage();
+  final _storage = GetStorage('rooms');
   Future writeSecureData(String key, String value) async {
-    var writeData = await _storage.write(key: key, value: value);
+    var writeData = await _storage.write(key, value);
     return writeData;
   }
 
   Future readSecureData(String key) async {
-    var readData = await _storage.read(key: key);
+    var readData = await _storage.read(key);
     return readData;
   }
 
   Future deleteSecureData(String key) async {
-    var deleteData = await _storage.delete(key: key);
+    var deleteData = await _storage.remove(key);
     return deleteData;
   }
 }

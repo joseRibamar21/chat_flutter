@@ -41,7 +41,7 @@ class _ChatPageState extends State<ChatPage>
 
   @override
   void dispose() async {
-    await controller.disp();
+    controller.disp();
     controller.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _authController.dispose();

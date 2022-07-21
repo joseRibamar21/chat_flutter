@@ -25,7 +25,7 @@ class ChatController extends GetxController {
   late final String? _password;
   late final String? _roomLink;
 
-  final Socket _socket = io.io(
+  Socket socket = io.io(
     'http://143.244.150.213:3000',
     <String, dynamic>{
       'transports': ['websocket']
@@ -53,12 +53,22 @@ class ChatController extends GetxController {
         roomsStorage.getLinkRoom(RoomEntity(name: room, password: password));
 
     _inicialization();
+
+    if (socket.id == null) {
+      socket = io.io(
+        'http://143.244.150.213:3000',
+        <String, dynamic>{
+          'transports': ['websocket']
+        },
+      );
+    } else {
+      _rxDesconect.value = true;
+    }
     /* } */
     //Abrir canal
+    socket.emit('joinRoom', {"username": nickG, 'room': '$_room+$_password '});
 
-    _socket.emit('joinRoom', {"username": nickG, 'room': '$_room+$_password '});
-
-    _socket.on("message", (event) {
+    socket.on("message", (event) {
       print(event);
 
       /// Pegar menssagem recebida
@@ -127,7 +137,7 @@ class ChatController extends GetxController {
       }
     });
 
-    _socket.onDisconnect((data) {
+    socket.onDisconnect((data) {
       _rxDesconect.value = true;
     });
   }
@@ -158,7 +168,7 @@ class ChatController extends GetxController {
 
   void _inicialization() async {
     //Mandar menssagem para todos verem sua disponibilidade
-    //_socket.emit('chatMessage', {"username": 'Jose', 'text': "olaaa"});
+    //socket.emit('chatMessage', {"username": 'Jose', 'text': "olaaa"});
     isInit = true;
     Future.delayed(const Duration(milliseconds: 10)).then((value) {
       _rxListMessages.value = _rxListMessages.value
@@ -171,16 +181,18 @@ class ChatController extends GetxController {
   Future<void> disp() async {
     if (isInit) {
       _sendUserState(status: 0);
+
+      socket.on("disconnect", (data) => {});
       isInit = false;
     }
 
-    //_socket.ondisconnect();
+    //socket.ondisconnect();
   }
 
   void _sendUserState({required int status, String? message}) {
     Map<String, dynamic> body =
         prepareSendMessage(usarName: nickG, status: status, message: message);
-    _socket.emit('chatMessage', body);
+    socket.emit('chatMessage', body);
   }
 
   List<Map<String, dynamic>> getlistSenders() {
