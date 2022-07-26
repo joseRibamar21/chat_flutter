@@ -46,19 +46,22 @@ class RegisterController extends GetxController {
 
   void enterRoom() {
     print(_room);
+    String nameT = _name.replaceAll(" ", "_");
     if (_room != null && _name != null) {
       var getRoom = _roomsStorage.getRoomFromLink(_room);
-      Get.toNamed("/chat/$_name/${getRoom!.name}/${getRoom.password}");
+      Get.toNamed("/chat/$nameT/${getRoom!.name}/${getRoom.password}");
     }
   }
 
   void newRoom() {
+    print(_name);
+    String nameT = _name.replaceAll(" ", "_");
     if (_name != null) {
       var rng = Random();
       String p;
       p = rng.nextInt(999999999).toString();
 
-      Get.toNamed("/chat/$_name/Privado/$p");
+      Get.toNamed("/chat/$nameT/Privado/$p");
     }
   }
 
