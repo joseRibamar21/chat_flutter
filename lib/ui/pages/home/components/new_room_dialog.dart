@@ -27,6 +27,12 @@ Future<String?> newRoomDialog(BuildContext context) async {
                     ],
                   ),
                 ),
+                Text(
+                    "Devido a criptografia, não utilize caracteres especiais no seu nome e no nome das salas!",
+                    style: Theme.of(context).textTheme.titleSmall,
+                    textAlign: TextAlign.center),
+
+                    
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(16.0),

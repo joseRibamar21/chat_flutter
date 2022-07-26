@@ -66,8 +66,7 @@ class ChatController extends GetxController {
     }
     /* } */
     //Abrir canal
-    print(socket.id);
-
+    socket.connect();
     if (socket.id == null) {
       socket = io.io(
         'http://143.244.150.213:3000',
@@ -75,6 +74,7 @@ class ChatController extends GetxController {
           'transports': ['websocket']
         },
       );
+      socket.connect();
     }
 
     if (socket.id == null) {
@@ -196,7 +196,7 @@ class ChatController extends GetxController {
     if (isInit) {
       _sendUserState(status: 0);
 
-      socket.on("disconnect", (data) => {});
+      socket.close();
       isInit = false;
     }
 

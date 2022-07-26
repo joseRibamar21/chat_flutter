@@ -33,6 +33,11 @@ class _RegisterPageState extends State<RegisterPage>
                   const SizedBox(height: 60),
                   Text("Digite um nome!",
                       style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 10),
+                  Text(
+                      "Devido a criptografia, não utilize caracteres especiais no seu nome e no nome das salas!",
+                      style: Theme.of(context).textTheme.titleSmall,
+                      textAlign: TextAlign.center),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 40),

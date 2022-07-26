@@ -22,7 +22,7 @@ class RegisterController extends GetxController {
   Future<bool> register() async {
     _rxIsLoading.value = true;
     try {
-      await secureStorage.writeSecureData('name', _name);
+      await secureStorage.writeSecureData('name', _name.replaceAll(" ", "_"));
       // _rxNavigateTo.value = "/home";
       _rxIsLoading.value = false;
       return true;

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../domain/entities/entities.dart';
-import '../../pages.dart';
 import '../home_controller.dart';
 
 class RoomsListView extends StatelessWidget {
@@ -38,7 +37,7 @@ class RoomsListView extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: () {
-                          Get.toNamed(
+                          Get.offAndToNamed(
                               "/chat/${controller.nick}/${snapshot.data![index].name}/${snapshot.data![index].password}");
                         },
                         leading: IconButton(

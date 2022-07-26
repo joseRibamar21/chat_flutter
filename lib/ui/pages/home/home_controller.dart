@@ -36,13 +36,17 @@ class HomeController extends GetxController {
 
   Future<void> saveRooms(String name, String? password) async {
     var rng = Random();
+    var nName = name;
+    try {
+      nName = name.replaceAll(" ", "_");
+    } catch (e) {}
     String p;
     if (password == null) {
       p = rng.nextInt(999999999).toString();
     } else {
       p = password;
     }
-    await roomsStorage.saveRoom(name, p);
+    await roomsStorage.saveRoom(nName, p);
     var list = await roomsStorage.getRooms();
     if (list != null) {
       _rxListRoom.value = list.listRoom;
