@@ -35,7 +35,7 @@ class GetxRegisterPresenter extends GetxController
       _rxIsLoading.value = false;
       return true;
     } catch (e) {
-      _rxUiError.value = "Erro ao carregar dados!";
+      _rxUiError.value = "Erro ao salvar dados!";
       _rxIsLoading.value = false;
       return false;
     }
@@ -64,9 +64,13 @@ class GetxRegisterPresenter extends GetxController
 
   @override
   void inicialization() async {
-    String? t = await secureStorage.readSecureData('name');
-    if (t != null) {
-      _rxNavigateTo.value = "/home";
+    try {
+      String? t = await secureStorage.readSecureData('name');
+      if (t != null) {
+        _rxNavigateTo.value = "/home";
+      }
+    } catch (e) {
+      _rxUiError.value = "Erro ao carregar dados!";
     }
   }
 

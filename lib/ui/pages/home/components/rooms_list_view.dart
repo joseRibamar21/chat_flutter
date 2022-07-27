@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../domain/entities/entities.dart';
-import '../home_controller.dart';
+import '../home.dart';
 
 class RoomsListView extends StatelessWidget {
   const RoomsListView({
@@ -12,7 +11,7 @@ class RoomsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Provider.of<HomeController>(context);
+    var controller = Provider.of<HomePresenter>(context);
     return StreamBuilder<List<RoomEntity>>(
         stream: controller.listRoomStream,
         builder: (context, snapshot) {
@@ -37,8 +36,8 @@ class RoomsListView extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: () {
-                          Get.offAndToNamed(
-                              "/chat/${controller.nick}/${snapshot.data![index].name}/${snapshot.data![index].password}");
+                          /*  Get.offAndToNamed(
+                              "/chat/${controller.nick}/${snapshot.data![index].name}/${snapshot.data![index].password}"); */
                         },
                         leading: IconButton(
                             onPressed: () {

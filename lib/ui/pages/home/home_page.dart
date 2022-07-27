@@ -4,24 +4,17 @@ import 'package:provider/provider.dart';
 
 import '../chat/components/components.dart';
 import 'components/components.dart';
-import 'home_controller.dart';
+import 'home.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  final HomePresenter presenter;
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage>
-    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
-  HomeController controller = HomeController();
+  const HomePage({super.key, required this.presenter});
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Provider(
-      create: (_) => controller,
+      create: (_) => presenter,
       child: WillPopScope(
         onWillPop: () async {
           return await showDialogReturn(
@@ -41,19 +34,15 @@ class _HomePageState extends State<HomePage>
                   ];
                 }),
             title: const Text("Secreto"),
-            /* actions: [
-              IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.search_rounded))
-            ], */
           ),
           body: Builder(builder: (_) {
-            controller.inicialization();
+            presenter.inicialization();
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   StreamBuilder<String>(
-                      stream: controller.nameStream,
+                      stream: presenter.nameStream,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Column(
@@ -86,7 +75,7 @@ class _HomePageState extends State<HomePage>
                             function: () async {
                               var t = await newRoomDialog(context);
                               if (t != null) {
-                                controller.saveRooms(t, null);
+                                presenter.saveRooms(t, null);
                               }
                             },
                             icon: Icons.group_add_rounded,
@@ -96,7 +85,7 @@ class _HomePageState extends State<HomePage>
                               function: () async {
                                 var t = await searchRoomDialog(context);
                                 if (t != null) {
-                                  controller.searchRoom(t);
+                                  presenter.searchRoom(t);
                                 }
                               },
                               icon: Icons.person,
@@ -122,9 +111,6 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class ElevatedButtonCustom extends StatelessWidget {
