@@ -99,6 +99,7 @@ ThemeData makeTheme2() {
     scaffoldBackgroundColor: color3,
     textButtonTheme: textButtonThemeData,
     textTheme: textTheme,
+    errorColor: Colors.redAccent,
     useMaterial3: true,
   );
 }
