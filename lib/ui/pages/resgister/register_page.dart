@@ -25,7 +25,7 @@ class RegisterPage extends StatelessWidget
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 60),
-                  Text("Digite um nome!",
+                  Text("Digite um codinome!",
                       style: Theme.of(context).textTheme.titleMedium),
                   Padding(
                     padding:
