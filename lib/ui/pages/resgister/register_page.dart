@@ -6,7 +6,7 @@ import 'components/components.dart';
 import 'register.dart';
 
 class RegisterPage extends StatelessWidget
-    with NavigationManagerLogin, UIErrorManager {
+    with NavigationManager, UIErrorManager {
   final RegisterPresenter presenter;
   const RegisterPage({Key? key, required this.presenter}) : super(key: key);
 

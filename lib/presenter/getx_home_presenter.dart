@@ -8,19 +8,26 @@ import '../ui/pages/home/home.dart';
 class GetxHomePresenter extends GetxController implements HomePresenter {
   final SecureStorage secureStorage;
   final LocalRoom localRoom;
-  GetxHomePresenter({required this.secureStorage, required this.localRoom});
+  final EncryterMessage encryterMessage;
+  GetxHomePresenter(
+      {required this.secureStorage,
+      required this.localRoom,
+      required this.encryterMessage});
 
   final _rxUiError = Rx<String>("");
   final _rxName = Rx<String>("");
   final _rxListRoom = Rx<List<RoomEntity>>([]);
   final _rxIsLoading = Rx<bool>(false);
-  final _rxNavigateTo = Rx<String>("");
+  final _rxNavigateTo = Rx<String?>("");
 
   @override
   Stream<String> get nameStream => _rxName.stream;
 
   @override
   Stream<List<RoomEntity>> get listRoomStream => _rxListRoom.stream;
+
+  @override
+  Stream<String?> get navigatorStream => _rxNavigateTo.stream;
 
   @override
   void inicialization() async {
@@ -77,9 +84,16 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
 
   @override
   Future<void> searchRoom(String link) async {
-    /* var roomS = localRoom.getRoomFromLink(link);
+    var roomS = encryterMessage.getRoomLink(link);
     if (roomS != null) {
       saveRooms(roomS.name, roomS.password);
-    } */
+    }
+  }
+
+  @override
+  void goChat(RoomEntity room) {
+    _rxNavigateTo.value = null;
+    _rxNavigateTo.value =
+        "/chat/${_rxName.value}/${room.name}/${room.password}";
   }
 }

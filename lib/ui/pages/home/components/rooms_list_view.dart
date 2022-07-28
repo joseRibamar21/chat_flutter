@@ -11,9 +11,9 @@ class RoomsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Provider.of<HomePresenter>(context);
+    var presenter = Provider.of<HomePresenter>(context);
     return StreamBuilder<List<RoomEntity>>(
-        stream: controller.listRoomStream,
+        stream: presenter.listRoomStream,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -35,13 +35,10 @@ class RoomsListView extends StatelessWidget {
                     },
                     itemBuilder: (context, index) {
                       return ListTile(
-                        onTap: () {
-                          /*  Get.offAndToNamed(
-                              "/chat/${controller.nick}/${snapshot.data![index].name}/${snapshot.data![index].password}"); */
-                        },
+                        onTap: () => presenter.goChat(snapshot.data![index]),
                         leading: IconButton(
                             onPressed: () {
-                              controller.deleteRoom(snapshot.data![index].name,
+                              presenter.deleteRoom(snapshot.data![index].name,
                                   snapshot.data![index].password);
                             },
                             icon: Icon(Icons.remove,

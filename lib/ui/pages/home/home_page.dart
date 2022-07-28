@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
+import '../../mixins/mixins.dart';
 import '../chat/components/components.dart';
 import 'components/components.dart';
 import 'home.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget with NavigationManager {
   final HomePresenter presenter;
 
   const HomePage({super.key, required this.presenter});
@@ -37,6 +38,7 @@ class HomePage extends StatelessWidget {
           ),
           body: Builder(builder: (_) {
             presenter.inicialization();
+            handleNaviationPush(presenter.navigatorStream);
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
