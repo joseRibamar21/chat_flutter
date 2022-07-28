@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../chat_controller.dart';
+import '../chat.dart';
 
 class AppBarSender extends StatelessWidget {
   final String name;
@@ -12,7 +12,7 @@ class AppBarSender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Provider.of<ChatController>(context);
+    var controller = Provider.of<ChatPresenter>(context);
     return SizedBox(
       height: 60,
       child: ListTile(
@@ -44,7 +44,7 @@ class AppBarSender extends StatelessWidget {
 }
 
 class _ListSenders extends StatefulWidget {
-  final ChatController controller;
+  final ChatPresenter controller;
 
   const _ListSenders({
     Key? key,
@@ -60,7 +60,7 @@ class __ListSendersState extends State<_ListSenders> {
 
   @override
   void initState() {
-    _list = widget.controller.getlistSenders();
+    //_list = widget.controller.getlistSenders();
     setState(() {});
     super.initState();
   }

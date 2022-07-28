@@ -17,7 +17,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   final _rxUiError = Rx<String>("");
   final _rxName = Rx<String>("");
   final _rxListRoom = Rx<List<RoomEntity>>([]);
-  final _rxIsLoading = Rx<bool>(false);
+  //final _rxIsLoading = Rx<bool>(false);
   final _rxNavigateTo = Rx<String?>("");
 
   @override
@@ -33,12 +33,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   void inicialization() async {
     try {
       String pre = await secureStorage.readSecureData('name');
-      var list = await localRoom.listRoom();
-      if (list != null) {
-        _rxListRoom.value = list.listRoom;
-      } else {
-        _rxListRoom.value = [];
-      }
+      await loadRooms();
       _rxName.value = pre;
     } catch (e) {
       _rxUiError.value = 'Error ao carregar dados';
@@ -61,6 +56,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Future<void> loadRooms() async {
     try {
       var list = await localRoom.listRoom();
+      print(list.listRoom);
       if (list != null) {
         _rxListRoom.value = list.listRoom;
       } else {

@@ -7,7 +7,11 @@ String socketUrl = 'http://143.244.150.213:3000';
 
 SocketClient makeSocketIO() {
   return SocketIOAdapater(
-      socket: io.io(socketUrl, <String, dynamic>{
-    'transports': ['websocket']
-  }));
+    socket: io.io(
+      socketUrl,
+      <String, dynamic>{
+        'transports': ['websocket']
+      },
+    ),
+  );
 }

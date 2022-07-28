@@ -7,14 +7,15 @@ import '../../../data/helpers/helpers.dart';
 import '../../../data/usecase/usecase.dart';
 import '../../../domain/entities/entities.dart';
 
-import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:socket_io_client/socket_io_client.dart';
-
 import '../../../infra/cache/cache.dart';
+import '../data/socket/socket.dart';
+import '../ui/pages/chat/chat.dart';
 
-class ChatController extends GetxController {
+class GetxChatPresenter extends GetxController implements ChatPresenter {
+  final SocketClient socket;
+  GetxChatPresenter({required this.socket});
+
   final _rxListMessages = Rx<List<MessageEntity>>([]);
-
   late String? nickG;
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
@@ -25,15 +26,11 @@ class ChatController extends GetxController {
   late final String? _password;
   late final String? _roomLink;
 
-  Socket socket = io.io(
-    'http://143.244.150.213:3000',
-    <String, dynamic>{
-      'transports': ['websocket']
-    },
-  );
-
+  @override
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
+  @override
   Stream<List<Map<String, dynamic>>> get listSendersStream => _rxSenders.stream;
+  @override
   Stream<bool> get desconectStream => _rxDesconect.stream;
   late Timer timer;
   late int timerDate;
@@ -42,7 +39,8 @@ class ChatController extends GetxController {
     _rxDesconect.value = true;
   }
 
-  void init() async {
+  @override
+  void inicialization() async {
     //Primeiras acoes a serem executas
     /* if (nick != null && !isInit) { */
 
@@ -54,37 +52,18 @@ class ChatController extends GetxController {
 
     _inicialization();
 
-    if (socket.id == null) {
-      socket = io.io(
-        'http://143.244.150.213:3000',
-        <String, dynamic>{
-          'transports': ['websocket']
-        },
-      );
+    if (socket.isConnect) {
+      socket.connectRoom('$_room+$_password', nickG);
     } else {
-      _rxDesconect.value = true;
-    }
-    /* } */
-    //Abrir canal
-    socket.connect();
-    if (socket.id == null) {
-      socket = io.io(
-        'http://143.244.150.213:3000',
-        <String, dynamic>{
-          'transports': ['websocket']
-        },
-      );
-      socket.connect();
+      bool tryReconnect = await socket.reconnect();
+      if (tryReconnect) {
+        socket.connectRoom('$_room+$_password', nickG);
+      } else {
+        _rxDesconect.value = true;
+      }
     }
 
-    if (socket.id == null) {
-      _rxDesconect.value = true;
-    }
-    socket.emit('joinRoom', {"username": nickG, 'room': '$_room+$_password '});
-
-    socket.on("message", (event) {
-      print(event);
-
+    socket.listenMessagens((event) {
       /// Pegar menssagem recebida
 
       MessageEntity? value = getSendMessage(event: event);
@@ -151,14 +130,15 @@ class ChatController extends GetxController {
       }
     });
 
-    socket.onDisconnect((data) {
-      _rxDesconect.value = true;
+    socket.listenDesconect((p0) {
+      if (p0 != null) _rxDesconect.value = true;
     });
   }
 
   /// Funcão para mandar uma mensagem.
   ///
   /// Parâmetros: [value] será a mensagem a ser enviada.
+  @override
   void send(String? value) {
     if (value!.isNotEmpty) {
       _sendUserState(status: 1, message: value);
@@ -166,16 +146,19 @@ class ChatController extends GetxController {
   }
 
   /// Função para apagar uma mensagem para todos
+  @override
   void sendRemoveMessage({required String id}) async {
     _sendUserState(message: id, status: 5);
   }
 
   /// Funcão que emite um sinal de retorno de visibilidade.
+  @override
   void resume() {
     _sendUserState(status: 1);
   }
 
   /// Funcão que emite um sinal de visibilidade inativa.
+  @override
   void inactive() {
     _sendUserState(status: 4);
   }
@@ -192,11 +175,12 @@ class ChatController extends GetxController {
     });
   }
 
+  @override
   Future<void> disp() async {
     if (isInit) {
       _sendUserState(status: 0);
 
-      socket.close();
+      socket.desconect();
       isInit = false;
     }
 
@@ -206,7 +190,7 @@ class ChatController extends GetxController {
   void _sendUserState({required int status, String? message}) {
     Map<String, dynamic> body =
         prepareSendMessage(usarName: nickG!, status: status, message: message);
-    socket.emit('chatMessage', body);
+    socket.sendMenssage(body);
   }
 
   List<Map<String, dynamic>> getlistSenders() {

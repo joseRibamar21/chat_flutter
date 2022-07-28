@@ -7,7 +7,7 @@ class SocketIOAdapater implements SocketClient {
   SocketIOAdapater({required this.socket});
 
   @override
-  void connectRoom(String room, String user) {
+  void connectRoom(String room, dynamic user) {
     socket.emit('joinRoom', {"username": user, 'room': room});
   }
 
@@ -53,7 +53,10 @@ class SocketIOAdapater implements SocketClient {
   }
 
   @override
-  void sendMenssage(String value) {
+  void sendMenssage(Map<String, dynamic> value) {
     socket.emit('chatMessage', value);
   }
+
+  @override
+  bool get isConnect => socket.connected;
 }

@@ -5,11 +5,13 @@ import 'package:provider/provider.dart';
 
 import '../../../data/usecase/autentication_local.dart';
 import '../../mixins/mixins.dart';
-import 'chat_controller.dart';
+import 'chat.dart';
 import 'components/components.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+  final ChatPresenter presenter;
+
+  const ChatPage({Key? key, required this.presenter}) : super(key: key);
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -20,22 +22,18 @@ class _ChatPageState extends State<ChatPage>
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
-  ChatController controller = ChatController();
 
   @override
   void initState() {
-    controller.init();
-
+    widget.presenter.inicialization();
     WidgetsBinding.instance.addObserver(this);
-    controller.timerDeleteMessages();
 
     super.initState();
   }
 
   @override
   void dispose() async {
-    controller.disp();
-    controller.dispose();
+    widget.presenter.disp();
     WidgetsBinding.instance.removeObserver(this);
     _authController.dispose();
     _textController.dispose();
@@ -46,7 +44,7 @@ class _ChatPageState extends State<ChatPage>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        controller.resume();
+        widget.presenter.resume();
         Future.delayed(const Duration(milliseconds: 40)).then((value) async {
           if (await _authenticationLocal.varifyCanAuthentican()) {
             _authController.verify(true);
@@ -54,10 +52,10 @@ class _ChatPageState extends State<ChatPage>
         });
         break;
       case AppLifecycleState.inactive:
-        controller.inactive();
+        widget.presenter.inactive();
         break;
       case AppLifecycleState.detached:
-        controller.disp();
+        widget.presenter.disp();
         break;
       default:
     }
@@ -65,7 +63,7 @@ class _ChatPageState extends State<ChatPage>
 
   void _send() {
     if (_textController.text.isNotEmpty) {
-      controller.send(_textController.text);
+      widget.presenter.send(_textController.text);
       _textController.text = "";
     }
   }
@@ -81,7 +79,7 @@ class _ChatPageState extends State<ChatPage>
         child: BlockAuth(
           controller: _authController,
           body: Provider(
-            create: (context) => controller,
+            create: (context) => widget.presenter,
             child: Scaffold(
               bottomSheet: FooterMessage(
                   controller: _textController, sendMessage: _send),
@@ -99,9 +97,9 @@ class _ChatPageState extends State<ChatPage>
                 ],
               ),
               body: Builder(builder: (context) {
-                handleDesconect(context, controller.desconectStream);
+                handleDesconect(context, widget.presenter.desconectStream);
                 return ListMessage(
-                  stream: controller.listMessagesStream,
+                  stream: widget.presenter.listMessagesStream,
                   nick: Get.parameters['name'] ?? "",
                 );
               }),

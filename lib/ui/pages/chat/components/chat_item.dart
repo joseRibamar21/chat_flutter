@@ -1,7 +1,6 @@
+import 'package:chat_flutter/ui/pages/chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../chat_controller.dart';
 
 class ChatItem extends StatelessWidget {
   final String id;
@@ -102,7 +101,7 @@ class _BalloonChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Provider.of<ChatController>(context);
+    var controller = Provider.of<ChatPresenter>(context);
     return Padding(
       padding: isSentder
           ? const EdgeInsets.only(left: 30, right: 10)
