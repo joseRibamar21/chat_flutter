@@ -11,4 +11,5 @@ abstract class HomePresenter {
   Future<void> loadRooms();
   void deleteRoom(String name, String password);
   void goChat(RoomEntity room);
+  void goRegister();
 }

@@ -96,4 +96,10 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     _rxNavigateTo.value =
         "/chat/${_rxName.value}/${room.name}/${room.password}";
   }
+
+  @override
+  void goRegister() {
+    preferences.reset();
+    Get.offAndToNamed('/register');
+  }
 }

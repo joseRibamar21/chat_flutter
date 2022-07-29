@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget with NavigationManager {
           appBar: AppBar(
             title: const Text("Secreto"),
             leading: IconButton(
-                onPressed: () => Get.offAllNamed('/register'),
+                onPressed: presenter.goRegister,
                 icon: const Icon(Icons.exit_to_app_rounded)),
           ),
           body: Builder(builder: (_) {
