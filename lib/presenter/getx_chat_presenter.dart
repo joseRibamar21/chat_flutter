@@ -247,4 +247,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   @override
   String? get link => _roomLink;
+
+  @override
+  String? get nameRoomlink => _rxRoomName.value;
 }

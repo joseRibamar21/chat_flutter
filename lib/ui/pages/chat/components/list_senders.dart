@@ -102,7 +102,34 @@ class __ListSendersState extends State<_ListSenders> {
                     });
                   },
                   child: Text(
-                    "Id da sala: ${widget.controller.link}",
+                    "Copiar codigo da sala",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  )),
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+            child: Center(
+              child: TextButton(
+                  onPressed: () {
+                    FlutterClipboard.copy(
+                            "https://143.244.167.43/#/chat/${widget.controller.nameRoomlink}/${widget.controller.link}")
+                        .then((value) {
+                      Navigator.pop(context);
+                      Future.delayed(const Duration(milliseconds: 100)).then(
+                          (value) => Fluttertoast.showToast(
+                              msg: "Copiado",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.grey[800],
+                              textColor: Colors.white,
+                              fontSize: 16.0));
+                    });
+                  },
+                  child: Text(
+                    "Copiar link da sala",
                     style: Theme.of(context).textTheme.titleSmall,
                   )),
             ),
