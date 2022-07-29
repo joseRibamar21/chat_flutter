@@ -33,20 +33,17 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   void inicialization() async {
     try {
       String pre = await secureStorage.readSecureData('name');
-      await loadRooms();
       _rxName.value = pre;
     } catch (e) {
       _rxUiError.value = 'Error ao carregar dados';
       _rxNavigateTo.value = "/register";
     }
-
-    _rxListRoom.refresh();
   }
 
   @override
   void deleteRoom(String name, String password) async {
     await localRoom.delete(RoomEntity(name: name, password: password));
-    var list = await localRoom.listRoom();
+    var list = await localRoom.listOfRooms();
     if (list != null) {
       _rxListRoom.value = list.listRoom;
     }
@@ -55,10 +52,10 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   Future<void> loadRooms() async {
     try {
-      var list = await localRoom.listRoom();
-      print(list.listRoom);
+      var list = await localRoom.listOfRooms();
       if (list != null) {
         _rxListRoom.value = list.listRoom;
+        _rxListRoom.refresh();
       } else {
         _rxListRoom.value = [];
       }
@@ -71,7 +68,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Future<void> saveRooms(String name, String? password) async {
     try {
       await localRoom.newRoom(name);
-      var list = await localRoom.listRoom();
+      var list = await localRoom.listOfRooms();
       _rxListRoom.value = list.listRoom;
     } catch (e) {
       _rxUiError.value = "Erro ao salvar sala";

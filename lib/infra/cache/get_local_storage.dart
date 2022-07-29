@@ -10,6 +10,7 @@ class GetLocalStorage implements LocalStorage {
   @override
   Future<bool> save(String value) async {
     try {
+      await storage.initStorage;
       await storage.write(key, value);
       return true;
     } catch (e) {
@@ -20,16 +21,18 @@ class GetLocalStorage implements LocalStorage {
   @override
   Future<dynamic> read() async {
     try {
+      await storage.initStorage;
       var readData = await storage.read(key);
       return readData;
     } catch (e) {
-      return null;
+      rethrow;
     }
   }
 
   @override
   Future<bool> delete() async {
     try {
+      await storage.initStorage;
       await storage.remove(key);
       return true;
     } catch (e) {

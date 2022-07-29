@@ -40,7 +40,7 @@ class GetLocalRooms implements LocalRoom {
   }
 
   @override
-  Future<RoomsEntity?> listRoom() async {
+  Future<RoomsEntity?> listOfRooms() async {
     try {
       var data = await storage.read();
       print(data);

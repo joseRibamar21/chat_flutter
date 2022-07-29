@@ -30,14 +30,21 @@ class HomePage extends StatelessWidget with NavigationManager {
                     PopupMenuItem(
                         child: const Text("Sair"),
                         onTap: () {
-                          Get.back();
+                          Get.offNamed('/register');
                         })
                   ];
                 }),
             title: const Text("Secreto"),
+            actions: [
+              IconButton(
+                  onPressed: presenter.loadRooms,
+                  icon: Icon(Icons.account_balance_sharp))
+            ],
           ),
           body: Builder(builder: (_) {
             presenter.inicialization();
+            Future.delayed(
+                const Duration(milliseconds: 100), presenter.loadRooms);
             handleNaviationPush(presenter.navigatorStream);
             return SingleChildScrollView(
               child: Column(

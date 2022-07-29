@@ -5,7 +5,7 @@ abstract class LocalRoom {
 
   Future<bool> save(RoomEntity room);
 
-  Future<dynamic> listRoom();
+  Future<dynamic> listOfRooms();
 
   Future<bool> delete(RoomEntity room);
 
