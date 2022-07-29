@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../register.dart';
+
+class GenerateRooomBottomLogin extends StatelessWidget {
+  const GenerateRooomBottomLogin({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var presenter = Provider.of<RegisterPresenterWeb>(context);
+    return SizedBox(
+      width: 150,
+      height: 50,
+      child: StreamBuilder<bool>(
+          stream: presenter.isValidStream,
+          builder: (context, snapshot) {
+            return ElevatedButton(
+                onPressed: snapshot.hasData && snapshot.data!
+                    ? presenter.goToChatGenerate
+                    : null,
+                child: const Text("Gerar uma sala"));
+          }),
+    );
+  }
+}

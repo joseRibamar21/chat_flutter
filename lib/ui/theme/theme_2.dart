@@ -15,7 +15,7 @@ ThemeData makeTheme2() {
 
   TextTheme textTheme = const TextTheme(
     titleLarge:
-        TextStyle(fontSize: 20, color: textColor, fontWeight: FontWeight.w500),
+        TextStyle(fontSize: 24, color: textColor, fontWeight: FontWeight.bold),
     titleMedium:
         TextStyle(fontSize: 18, color: textColor, fontWeight: FontWeight.w500),
     titleSmall:

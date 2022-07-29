@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/register",
       getPages: [
         GetPage(name: "/", page: () => const SplashPage()),
-        GetPage(name: "/register", page: makeRegisterPage),
+        GetPage(name: "/register", page: () => makeRegisterPage(context)),
         GetPage(
             name: "/chat/:nick/:link",
             page: makeChatPage,

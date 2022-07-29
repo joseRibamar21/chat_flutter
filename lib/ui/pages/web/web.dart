@@ -1,0 +1,1 @@
+export 'resgister/register.dart';
