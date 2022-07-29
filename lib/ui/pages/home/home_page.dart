@@ -18,28 +18,14 @@ class HomePage extends StatelessWidget with NavigationManager {
       create: (_) => presenter,
       child: WillPopScope(
         onWillPop: () async {
-          return await showDialogReturn(
-              context, "Deseja voltar para a pagina de registro?");
+          return await showDialogReturn(context, "Deseja sair do app?");
         },
         child: Scaffold(
           appBar: AppBar(
-            leading: PopupMenuButton(
-                icon: const Icon(Icons.more_vert_rounded),
-                itemBuilder: (_) {
-                  return [
-                    PopupMenuItem(
-                        child: const Text("Sair"),
-                        onTap: () {
-                          Get.offNamed('/register');
-                        })
-                  ];
-                }),
             title: const Text("Secreto"),
-            actions: [
-              IconButton(
-                  onPressed: presenter.loadRooms,
-                  icon: Icon(Icons.account_balance_sharp))
-            ],
+            leading: IconButton(
+                onPressed: () => Get.offAllNamed('/register'),
+                icon: const Icon(Icons.exit_to_app_rounded)),
           ),
           body: Builder(builder: (_) {
             presenter.inicialization();

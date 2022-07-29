@@ -9,10 +9,13 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   final SecureStorage secureStorage;
   final LocalRoom localRoom;
   final EncryterMessage encryterMessage;
+  final LocalPreferences preferences;
+
   GetxHomePresenter(
       {required this.secureStorage,
       required this.localRoom,
-      required this.encryterMessage});
+      required this.encryterMessage,
+      required this.preferences});
 
   final _rxUiError = Rx<String>("");
   final _rxName = Rx<String>("");
@@ -32,8 +35,12 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   void inicialization() async {
     try {
-      String pre = await secureStorage.readSecureData('name');
-      _rxName.value = pre;
+      PreferencesEntity p = await preferences.getData();
+      if (p.nick.isNotEmpty) {
+        _rxName.value = p.nick;
+      } else {
+        throw "Error";
+      }
     } catch (e) {
       _rxUiError.value = 'Error ao carregar dados';
       _rxNavigateTo.value = "/register";

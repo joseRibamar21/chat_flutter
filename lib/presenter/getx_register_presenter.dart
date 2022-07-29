@@ -1,11 +1,16 @@
 import 'package:get/get.dart';
 
 import '../../../infra/cache/cache.dart';
+import '../domain/entities/entities.dart';
+import '../domain/usecase/usecase.dart';
 import '../ui/pages/resgister/register.dart';
 
 class GetxRegisterPresenter extends GetxController
     implements RegisterPresenter {
+  final LocalPreferences preferences;
   final SecureStorage secureStorage = SecureStorage();
+
+  GetxRegisterPresenter({required this.preferences});
 
   final _rxNavigateTo = Rx<String>("");
   final _rxUiError = Rx<String>("");
@@ -29,16 +34,11 @@ class GetxRegisterPresenter extends GetxController
   @override
   Future<bool> register() async {
     _rxIsLoading.value = true;
-    try {
-      await secureStorage.writeSecureData('name', _name.replaceAll(" ", "_"));
-      _rxNavigateTo.value = "/home";
-      _rxIsLoading.value = false;
-      return true;
-    } catch (e) {
-      _rxUiError.value = "Erro ao salvar dados!";
-      _rxIsLoading.value = false;
-      return false;
-    }
+
+    await preferences.setName(name: _name);
+    _rxNavigateTo.value = "/home";
+    _rxIsLoading.value = false;
+    return true;
   }
 
   @override
@@ -65,8 +65,8 @@ class GetxRegisterPresenter extends GetxController
   @override
   void inicialization() async {
     try {
-      String? t = await secureStorage.readSecureData('name');
-      if (t != null) {
+      PreferencesEntity p = await preferences.getData();
+      if (p.nick.isNotEmpty) {
         _rxNavigateTo.value = "/home";
       }
     } catch (e) {

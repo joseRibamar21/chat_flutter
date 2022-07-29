@@ -4,5 +4,10 @@ class PreferencesEntity {
 
   /// Tempo padrao do timer de apagar as mensagens
   final int timer;
-  PreferencesEntity({required this.nick, required this.timer});
+
+  /// Tema que inicializará com o app;
+  final int theme;
+
+  PreferencesEntity(
+      {required this.nick, required this.timer, required this.theme});
 }

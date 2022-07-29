@@ -4,16 +4,17 @@ import 'package:get/get.dart';
 
 import '../../../data/helpers/helpers.dart';
 
-import '../../../data/usecase/usecase.dart';
 import '../../../domain/entities/entities.dart';
 
 import '../../../infra/cache/cache.dart';
 import '../data/socket/socket.dart';
+import '../domain/usecase/usecase.dart';
 import '../ui/pages/chat/chat.dart';
 
 class GetxChatPresenter extends GetxController implements ChatPresenter {
   final SocketClient socket;
-  GetxChatPresenter({required this.socket});
+  final EncryterMessage encryterMessage;
+  GetxChatPresenter({required this.socket, required this.encryterMessage});
 
   final _rxListMessages = Rx<List<MessageEntity>>([]);
   late String? nickG;
@@ -21,7 +22,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<bool>(false);
   final SecureStorage secureStorage = SecureStorage();
-  RoomsStorage roomsStorage = RoomsStorage();
+
   late final String? _room;
   late final String? _password;
   late final String? _roomLink;
@@ -47,7 +48,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     nickG = Get.parameters['name'];
     _room = Get.parameters['room'];
     _password = Get.parameters['password'];
-    _roomLink = roomsStorage
+    _roomLink = encryterMessage
         .getLinkRoom(RoomEntity(name: _room!, password: _password!));
 
     _inicialization();

@@ -12,4 +12,5 @@ Widget makeHomePage() {
 HomePresenter makeGetxHomePresenter() => GetxHomePresenter(
     localRoom: makeGetLocalRooms(),
     secureStorage: SecureStorage(),
-    encryterMessage: makeEncryptRoomMask());
+    encryterMessage: makeEncryptRoomMask(),
+    preferences: makeGetPreferencesStorage());
