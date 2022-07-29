@@ -71,7 +71,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       if (tryReconnect) {
         socket.connectRoom('${_rxRoomName.value}+$_password', nickG);
       } else {
-        //_rxDesconect.value = "Conexão com servidor perdida!";
+        _rxDesconect.value = "Conexão com servidor perdida!";
       }
     }
 
