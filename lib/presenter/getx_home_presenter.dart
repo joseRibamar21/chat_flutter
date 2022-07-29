@@ -48,8 +48,12 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  void deleteRoom(String name, String password) async {
-    await localRoom.delete(RoomEntity(name: name, password: password));
+  void deleteRoom(
+    String name,
+    String password,
+  ) async {
+    await localRoom
+        .delete(RoomEntity(name: name, password: password, master: ""));
     var list = await localRoom.listOfRooms();
     if (list != null) {
       _rxListRoom.value = list.listRoom;
@@ -72,9 +76,13 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  Future<void> saveRooms(String name, String? password) async {
+  Future<void> saveRooms(String name, String? password, String? master) async {
     try {
-      await localRoom.newRoom(name);
+      if (master != null) {
+        await localRoom.newRoom(name, master);
+      } else {
+        await localRoom.newRoom(name, _rxName.value);
+      }
       var list = await localRoom.listOfRooms();
       _rxListRoom.value = list.listRoom;
     } catch (e) {
@@ -86,15 +94,15 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Future<void> searchRoom(String link) async {
     var roomS = encryterMessage.getRoomLink(link);
     if (roomS != null) {
-      saveRooms(roomS.name, roomS.password);
+      saveRooms(roomS.name, roomS.password, roomS.master);
     }
   }
 
   @override
   void goChat(RoomEntity room) {
+    var roomS = encryterMessage.getLinkRoom(room);
     _rxNavigateTo.value = null;
-    _rxNavigateTo.value =
-        "/chat/${_rxName.value}/${room.name}/${room.password}";
+    _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS";
   }
 
   @override

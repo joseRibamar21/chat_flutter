@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
-
 import '../../../domain/entities/entities.dart';
 import '../../../domain/usecase/usecase.dart';
 import '../../models/models.dart';
@@ -18,8 +16,6 @@ class GetPreferencesStorage implements LocalPreferences {
     } catch (e) {
       if (await reset()) {
         var data = jsonDecode(await storage.read());
-        print("AKIIIIIIIIIIIIIIIIII");
-        print(data);
         return PreferencesModel.fromJson(data).toEntity();
       } else {
         throw "Error ao receber dados preferencias";

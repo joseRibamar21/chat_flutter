@@ -50,7 +50,7 @@ class GetLocalRooms implements LocalRoom {
   }
 
   @override
-  Future<bool> newRoom(String nameRoom) async {
+  Future<bool> newRoom(String nameRoom, String master) async {
     try {
       var rng = Random();
       var nName = nameRoom;
@@ -62,7 +62,8 @@ class GetLocalRooms implements LocalRoom {
       if (data != null) {
         rooms = RoomsModel.fromJson(jsonDecode(data)).toEntity();
       }
-      rooms.listRoom.add(RoomEntity(name: nName, password: password));
+      rooms.listRoom
+          .add(RoomEntity(name: nName, password: password, master: master));
       var json = RoomsModel.fromEntity(rooms).toJson();
       await storage.save(jsonEncode(json));
       return true;

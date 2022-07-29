@@ -56,7 +56,7 @@ class _ListSenders extends StatefulWidget {
 }
 
 class __ListSendersState extends State<_ListSenders> {
-  List<Map<String, dynamic>> _list = [];
+  //List<Map<String, dynamic>> _list = [];
 
   @override
   void initState() {

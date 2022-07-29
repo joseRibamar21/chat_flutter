@@ -6,7 +6,7 @@ abstract class HomePresenter {
   Stream<String?> get navigatorStream;
 
   void inicialization();
-  Future<void> saveRooms(String name, String? password);
+  Future<void> saveRooms(String name, String? password, String? master);
   Future<void> searchRoom(String link);
   Future<void> loadRooms();
   void deleteRoom(String name, String password);

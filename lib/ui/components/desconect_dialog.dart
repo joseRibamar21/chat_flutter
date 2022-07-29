@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showDesconect(BuildContext context) {
+void showDesconect(BuildContext context, String title) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -10,7 +10,7 @@ void showDesconect(BuildContext context) {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("O tempo da sua conexão expirou!",
+            Text(title,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 20),

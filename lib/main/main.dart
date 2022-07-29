@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/", page: () => const SplashPage()),
         GetPage(name: "/register", page: makeRegisterPage),
         GetPage(
-            name: "/chat/:name/:room/:password",
+            name: "/chat/:nick/:link",
             page: makeChatPage,
             fullscreenDialog: true),
         GetPage(name: "/home", page: makeHomePage),

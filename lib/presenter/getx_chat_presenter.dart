@@ -20,10 +20,9 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   late String? nickG;
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
-  final _rxDesconect = Rx<bool>(false);
+  final _rxDesconect = Rx<String?>("");
+  final _rxRoomName = Rx<String?>("");
   final SecureStorage secureStorage = SecureStorage();
-
-  late final String? _room;
   late final String? _password;
   late final String? _roomLink;
 
@@ -32,35 +31,47 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   Stream<List<Map<String, dynamic>>> get listSendersStream => _rxSenders.stream;
   @override
-  Stream<bool> get desconectStream => _rxDesconect.stream;
+  Stream<String?> get desconectStream => _rxDesconect.stream;
+
+  @override
+  Stream<String?> get roomNameString => _rxRoomName.stream;
+
   late Timer timer;
   late int timerDate;
 
-  void desconect() {
-    _rxDesconect.value = true;
-  }
-
   @override
   void inicialization() async {
-    //Primeiras acoes a serem executas
-    /* if (nick != null && !isInit) { */
+    RoomEntity? linkCapture;
 
-    nickG = Get.parameters['name'];
-    _room = Get.parameters['room'];
-    _password = Get.parameters['password'];
-    _roomLink = encryterMessage
-        .getLinkRoom(RoomEntity(name: _room!, password: _password!));
+    try {
+      linkCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
+    } catch (e) {
+      _rxDesconect.value = "Sala indisponível!";
+    }
+
+    if (linkCapture == null) {
+      _rxDesconect.value = "Sala indisponível!";
+    }
+
+    nickG = Get.parameters['nick'];
+    _rxRoomName.value = linkCapture!.name;
+    _password = linkCapture.password;
+    _roomLink = encryterMessage.getLinkRoom(RoomEntity(
+        name: _rxRoomName.value!,
+        password: _password!,
+        master: linkCapture.master));
 
     _inicialization();
 
     if (socket.isConnect) {
-      socket.connectRoom('$_room+$_password', nickG);
+      socket.connectRoom(
+          '${_rxRoomName.value}+$_password+${linkCapture.master}', nickG);
     } else {
       bool tryReconnect = await socket.reconnect();
       if (tryReconnect) {
-        socket.connectRoom('$_room+$_password', nickG);
+        socket.connectRoom('${_rxRoomName.value}+$_password', nickG);
       } else {
-        _rxDesconect.value = true;
+        //_rxDesconect.value = "Conexão com servidor perdida!";
       }
     }
 
@@ -132,7 +143,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     });
 
     socket.listenDesconect((p0) {
-      if (p0 != null) _rxDesconect.value = true;
+      if (p0 != null) _rxDesconect.value = "Conexão com servidor perdida!";
     });
   }
 
@@ -234,5 +245,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
         (element) => element.text.id == messageEntity.text.message);
   }
 
+  @override
   String? get link => _roomLink;
 }

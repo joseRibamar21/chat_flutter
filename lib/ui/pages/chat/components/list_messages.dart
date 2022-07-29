@@ -84,8 +84,6 @@ class ListMessageState extends State<ListMessage> {
       initialItemCount: list.length,
       key: animatedKey,
       itemBuilder: (context, index, animation) {
-        print(list[index].username);
-        print(widget.nick);
         return SlideTransition(
           position: (list[index].username == widget.nick)
               ? Tween<Offset>(

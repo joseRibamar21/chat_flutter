@@ -1,34 +1,35 @@
-import 'package:encrypt/encrypt.dart';
+import 'dart:convert';
 
 import '../../../domain/entities/entities.dart';
 import '../../../domain/usecase/usecase.dart';
 
 class EncrypterRoom implements EncryterMessage {
-  final _key = Key.fromUtf8('mya32alengthakey123123123123.123');
-  final _iv = IV.fromLength(16);
+  Codec<String, String> stringToBase64 = utf8.fuse(base64);
 
   String? _mask(String message) {
-    final encrypter = Encrypter(AES(_key));
-    final encrypted = encrypter.encrypt(message, iv: _iv);
-    return encrypted.base64;
+    try {
+      return stringToBase64.encode(message);
+    } catch (e) {
+      return "Error ao gerar url!";
+    }
   }
 
   String _unmask(String message) {
     try {
-      final encrypter = Encrypter(AES(_key));
-      final decrypted = encrypter.decrypt64(message, iv: _iv);
-      return decrypted;
+      return stringToBase64.decode(message);
     } catch (e) {
-      return "Error";
+      return "Error ao ler url";
     }
   }
 
   @override
   String? getLinkRoom(RoomEntity room) {
-    if (room.name.isNotEmpty && room.password.isNotEmpty) {
-      return _mask("${room.name}-${room.password}");
+    if (room.name.isNotEmpty &&
+        room.password.isNotEmpty &&
+        room.master.isNotEmpty) {
+      return _mask("${room.master}.${room.name}.${room.password}");
     } else {
-      return "";
+      return "Erro ao gerar link, dados inválidos";
     }
   }
 
@@ -36,9 +37,9 @@ class EncrypterRoom implements EncryterMessage {
   RoomEntity? getRoomLink(String room) {
     if (room.isNotEmpty) {
       String link = _unmask(room);
-      List<String> roomlink = link.split("-");
-      RoomEntity roomEntity =
-          RoomEntity(name: roomlink[0], password: roomlink[1]);
+      List<String> roomlink = link.split(".");
+      RoomEntity roomEntity = RoomEntity(
+          master: roomlink[0], name: roomlink[1], password: roomlink[2]);
       return roomEntity;
     } else {
       return null;

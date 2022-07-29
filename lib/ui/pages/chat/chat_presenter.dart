@@ -3,7 +3,8 @@ import '../../../domain/entities/entities.dart';
 abstract class ChatPresenter {
   Stream<List<MessageEntity>> get listMessagesStream;
   Stream<List<Map<String, dynamic>>> get listSendersStream;
-  Stream<bool> get desconectStream;
+  Stream<String?> get roomNameString;
+  Stream<String?> get desconectStream;
 
   void inicialization();
 

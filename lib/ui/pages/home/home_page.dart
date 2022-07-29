@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../mixins/mixins.dart';
@@ -70,7 +69,7 @@ class HomePage extends StatelessWidget with NavigationManager {
                             function: () async {
                               var t = await newRoomDialog(context);
                               if (t != null) {
-                                presenter.saveRooms(t, null);
+                                presenter.saveRooms(t, null, null);
                               }
                             },
                             icon: Icons.group_add_rounded,
