@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../../data/socket/socket.dart';
@@ -8,12 +9,14 @@ class SocketIOAdapater implements SocketClient {
 
   @override
   void connectRoom(String room, dynamic user) {
+    print(room);
     socket.emit('joinRoom', {"username": user, 'room': room});
   }
 
   @override
   bool desconect() {
     socket.close();
+    socket.dispose();
     if (socket.id == null) {
       return true;
     } else {
@@ -24,13 +27,23 @@ class SocketIOAdapater implements SocketClient {
   @override
   void listenDesconect(Function(dynamic) error) {
     socket.onError((data) {
+      print(data.toString() + "Error");
       error.call(data);
+    });
+
+    socket.onConnectError((data) {
+      print(data.toString() + "ConnectError");
+      error.call(data);
+    });
+    socket.onConnect((data) {
+      print(data.toString() + "Connect");
     });
   }
 
   @override
   void listenMessagens(Function(dynamic) message) {
     socket.on('message', (data) {
+      print(data);
       message.call(data);
     });
   }
@@ -38,7 +51,9 @@ class SocketIOAdapater implements SocketClient {
   @override
   Future<bool> reconnect() async {
     int count = 0;
-
+    if (kDebugMode) {
+      print("Reconnect");
+    }
     while (socket.id == null) {
       if (count >= 5) return false;
       if (socket.connected) {
@@ -59,4 +74,9 @@ class SocketIOAdapater implements SocketClient {
 
   @override
   bool get isConnect => socket.connected;
+
+  @override
+  void init() {
+    socket.connect();
+  }
 }

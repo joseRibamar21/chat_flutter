@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-Future<bool> showDialogReturn(BuildContext context, String title) async {
+Future<bool> showDialogReturn(BuildContext contextDialog, String title) async {
   return await showDialog(
-      context: context,
+      context: contextDialog,
       builder: (context) {
         return Dialog(
           child: Padding(

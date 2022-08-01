@@ -25,5 +25,10 @@ abstract class ChatPresenter {
   void disp();
 
   String? get link;
+
   String? get nameRoomlink;
+
+  String? get nick;
+
+  Future<void> verifyConnection();
 }

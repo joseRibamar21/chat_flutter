@@ -53,6 +53,8 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       _rxDesconect.value = "Sala indisponível!";
     }
 
+    socket.init();
+
     nickG = Get.parameters['nick'];
     _rxRoomName.value = linkCapture!.name;
     _password = linkCapture.password;
@@ -63,16 +65,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
     _inicialization();
 
-    if (socket.isConnect) {
+    if (!socket.isConnect) {
+      print("Connect");
       socket.connectRoom(
           '${_rxRoomName.value}+$_password+${linkCapture.master}', nickG);
-    } else {
-      bool tryReconnect = await socket.reconnect();
-      if (tryReconnect) {
-        socket.connectRoom('${_rxRoomName.value}+$_password', nickG);
-      } else {
-        _rxDesconect.value = "Conexão com servidor perdida!";
-      }
     }
 
     socket.listenMessagens((event) {
@@ -192,7 +188,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     if (isInit) {
       _sendUserState(status: 0);
 
-      socket.desconect();
+      print(socket.desconect());
       isInit = false;
     }
 
@@ -250,4 +246,19 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   @override
   String? get nameRoomlink => _rxRoomName.value;
+
+  @override
+  String? get nick => nickG;
+
+  @override
+  Future<void> verifyConnection() async {
+    if (!socket.isConnect) {
+      bool tryReconnect = await socket.reconnect();
+
+      if (!tryReconnect) {
+        disp();
+        _rxDesconect.value = "Conexão com servidor perdida!";
+      }
+    }
+  }
 }

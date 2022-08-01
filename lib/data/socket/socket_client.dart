@@ -1,4 +1,5 @@
 abstract class SocketClient {
+  void init();
   bool desconect();
   Future<bool> reconnect();
 

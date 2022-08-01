@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,12 +24,13 @@ class _ChatPageState extends State<ChatPage>
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
+  late Timer timer;
 
   @override
   void initState() {
     widget.presenter.inicialization();
     WidgetsBinding.instance.addObserver(this);
-
+    timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) {});
     super.initState();
   }
 
@@ -85,22 +88,14 @@ class _ChatPageState extends State<ChatPage>
                   controller: _textController, sendMessage: _send),
               appBar: AppBar(
                 toolbarHeight: 60,
-                title: AppBarSender(name: Get.parameters['room'] ?? "Sala"),
-                actions: [
-                  PopupMenuButton(
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
-                              onTap: () {},
-                              child: const Text("Configurações"),
-                            )
-                          ])
-                ],
+                title:
+                    AppBarSender(name: widget.presenter.nameRoomlink ?? "Sala"),
               ),
               body: Builder(builder: (context) {
                 handleDesconect(context, widget.presenter.desconectStream);
                 return ListMessage(
                   stream: widget.presenter.listMessagesStream,
-                  nick: Get.parameters['name'] ?? "",
+                  nick: Get.parameters['nick'] ?? "",
                 );
               }),
             ),
