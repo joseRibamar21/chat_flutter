@@ -12,4 +12,6 @@ abstract class HomePresenter {
   void deleteRoom(String name, String password);
   void goChat(RoomEntity room);
   void goRegister();
+  void filterRoom(String value);
+  void returnFilterRoom();
 }

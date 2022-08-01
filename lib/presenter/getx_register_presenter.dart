@@ -34,7 +34,8 @@ class GetxRegisterPresenter extends GetxController
   @override
   Future<bool> register() async {
     _rxIsLoading.value = true;
-
+    _name = _name.trim();
+    _name = _name.replaceAll(" ", "_");
     await preferences.setName(name: _name);
     _rxNavigateTo.value = "/home";
     _rxIsLoading.value = false;

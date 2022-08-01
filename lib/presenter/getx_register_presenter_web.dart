@@ -56,12 +56,17 @@ class GetxRegisterPresenterWeb extends GetxController
   }
 
   @override
-  void goToChatGenerate() {}
+  void goToChatGenerate() {
+    _name = _name.trim();
+    _name = _name.replaceAll(" ", "_");
+  }
 
   @override
   void goToChatLink() {
     _rxNavigateTo.value = null;
     _rxUiError.value = null;
+    _name = _name.trim();
+    _name = _name.replaceAll(" ", "_");
     try {
       var room = encryterMessage.getRoomLink(_link);
       if (room != null) {

@@ -20,6 +20,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   final _rxUiError = Rx<String>("");
   final _rxName = Rx<String>("");
   final _rxListRoom = Rx<List<RoomEntity>>([]);
+  final _rxListRoomCopy = Rx<List<RoomEntity>>([]);
   //final _rxIsLoading = Rx<bool>(false);
   final _rxNavigateTo = Rx<String?>("");
 
@@ -67,6 +68,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       if (list != null) {
         _rxListRoom.value = list.listRoom;
         _rxListRoom.refresh();
+        _rxListRoomCopy.value = list.listRoom;
       } else {
         _rxListRoom.value = [];
       }
@@ -109,5 +111,22 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   void goRegister() {
     preferences.reset();
     Get.offAndToNamed('/register');
+  }
+
+  @override
+  void filterRoom(String value) {
+    if (value != "") {
+      _rxListRoom.value = _rxListRoomCopy.value.where((element) {
+        return element.name.toUpperCase().contains(value.toUpperCase());
+      }).toList();
+    } else {
+      _rxListRoom.value = _rxListRoomCopy.value.toList();
+    }
+    _rxListRoom.refresh();
+  }
+
+  @override
+  void returnFilterRoom() {
+    _rxListRoom.value = _rxListRoomCopy.value.toList();
   }
 }
