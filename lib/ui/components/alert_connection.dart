@@ -53,29 +53,14 @@ class _CustomAlertConnectionState extends State<CustomAlertConnection> {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: 0.7,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        color: Colors.white,
-        height: !_open ? 0 : 40,
-        width: double.maxFinite,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              "Não conectado! ",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  decoration: TextDecoration.none),
-            ),
-            Icon(
-              Icons.wifi_off_outlined,
-              color: Colors.white,
-            )
-          ],
-        ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      color: Theme.of(context).errorColor,
+      height: !_open ? 0 : 60,
+      width: double.maxFinite,
+      child: Center(
+        child: Text("Não conectado com a internet! ",
+            style: Theme.of(context).textTheme.titleSmall),
       ),
     );
   }

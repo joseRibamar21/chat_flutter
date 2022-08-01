@@ -57,7 +57,10 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
         .delete(RoomEntity(name: name, password: password, master: ""));
     var list = await localRoom.listOfRooms();
     if (list != null) {
-      _rxListRoom.value = list.listRoom;
+      _rxListRoom.value.removeWhere(
+          (element) => element.name == name && element.password == password);
+      _rxListRoom.refresh();
+      _rxListRoomCopy.value = list.listRoom;
     }
   }
 
@@ -86,7 +89,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
         await localRoom.newRoom(name, _rxName.value);
       }
       var list = await localRoom.listOfRooms();
-      _rxListRoom.value = list.listRoom;
+      _rxListRoomCopy.value = list.listRoom;
     } catch (e) {
       _rxUiError.value = "Erro ao salvar sala";
     }

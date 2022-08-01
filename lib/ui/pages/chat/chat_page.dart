@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/usecase/autentication_local.dart';
+import '../../components/components.dart';
 import '../../mixins/mixins.dart';
 import 'chat.dart';
 import 'components/components.dart';
@@ -93,9 +94,14 @@ class _ChatPageState extends State<ChatPage>
               ),
               body: Builder(builder: (context) {
                 handleDesconect(context, widget.presenter.desconectStream);
-                return ListMessage(
-                  stream: widget.presenter.listMessagesStream,
-                  nick: Get.parameters['nick'] ?? "",
+                return Stack(
+                  children: [
+                    ListMessage(
+                      stream: widget.presenter.listMessagesStream,
+                      nick: Get.parameters['nick'] ?? "",
+                    ),
+                    const CustomAlertConnection(),
+                  ],
                 );
               }),
             ),
