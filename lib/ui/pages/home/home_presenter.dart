@@ -4,6 +4,7 @@ abstract class HomePresenter {
   Stream<String> get nameStream;
   Stream<List<RoomEntity>> get listRoomStream;
   Stream<String?> get navigatorStream;
+  Stream<bool> get isSeachingStream;
 
   void inicialization();
   Future<void> saveRooms(String name, String? password, String? master);
@@ -14,4 +15,6 @@ abstract class HomePresenter {
   void goRegister();
   void filterRoom(String value);
   void returnFilterRoom();
+
+  void seaching(bool value);
 }

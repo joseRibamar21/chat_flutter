@@ -21,8 +21,11 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   final _rxName = Rx<String>("");
   final _rxListRoom = Rx<List<RoomEntity>>([]);
   final _rxListRoomCopy = Rx<List<RoomEntity>>([]);
-  //final _rxIsLoading = Rx<bool>(false);
+  final _rxIsSearching = Rx<bool>(false);
   final _rxNavigateTo = Rx<String?>("");
+
+  @override
+  Stream<bool> get isSeachingStream => _rxIsSearching.stream;
 
   @override
   Stream<String> get nameStream => _rxName.stream;
@@ -89,7 +92,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
         await localRoom.newRoom(name, _rxName.value);
       }
       var list = await localRoom.listOfRooms();
-      _rxListRoomCopy.value = list.listRoom;
+      _rxListRoom.value = list.listRoom;
     } catch (e) {
       _rxUiError.value = "Erro ao salvar sala";
     }
@@ -99,8 +102,10 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Future<void> searchRoom(String link) async {
     var roomS = encryterMessage.getRoomLink(link);
     if (roomS != null) {
-      saveRooms(roomS.name, roomS.password, roomS.master);
+      await localRoom.save(roomS);
     }
+    var list = await localRoom.listOfRooms();
+    _rxListRoom.value = list.listRoom;
   }
 
   @override
@@ -131,5 +136,11 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   void returnFilterRoom() {
     _rxListRoom.value = _rxListRoomCopy.value.toList();
+    _rxIsSearching.value = false;
+  }
+
+  @override
+  void seaching(bool value) {
+    _rxIsSearching.value = value;
   }
 }

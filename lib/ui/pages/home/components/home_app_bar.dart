@@ -37,6 +37,7 @@ class _HomeAppBarState extends State<HomeAppBar>
   void _handleOnPressed() {
     setState(() {
       isPlaying = !isPlaying;
+      widget.presenter.seaching(isPlaying);
       if (isPlaying) {
         _animationController.forward();
         _myWidgetAnimatio = SizedBox(
