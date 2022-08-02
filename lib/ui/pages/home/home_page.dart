@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with NavigationManager, KeyboardManager {
-  Future<void> _askPermissions(String routeName) async {
+  /*  Future<void> _askPermissions(String routeName) async {
     PermissionStatus permissionStatus = await _getContactPermission();
     if (permissionStatus == PermissionStatus.granted) {
       if (routeName != null) {
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage>
           SnackBar(content: Text('Contact data not available on device'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage>
               title: HomeAppBar(
             presenter: widget.presenter,
           )),
-          floatingActionButton: FloatingActionButton(
+          /*  floatingActionButton: FloatingActionButton(
               onPressed: () async {
                 List<Contact> contacts = await ContactsService.getContacts();
                 try {
@@ -79,10 +79,10 @@ class _HomePageState extends State<HomePage>
                 }
                 print(contacts.toString());
               },
-              child: const Icon(Icons.contacts_rounded)),
+              child: const Icon(Icons.contacts_rounded)), */
           body: Builder(builder: (_) {
             widget.presenter.inicialization();
-            _askPermissions("");
+
             Future.delayed(
                 const Duration(milliseconds: 100), widget.presenter.loadRooms);
             handleNaviationPush(widget.presenter.navigatorStream);

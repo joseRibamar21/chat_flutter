@@ -9,14 +9,14 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       body: Builder(builder: (context) {
         Future.delayed(const Duration(milliseconds: 1500))
-            .then((value) => Get.offAndToNamed('/home'));
+            .then((value) => Get.offAndToNamed('/register'));
         return Container(
           height: double.maxFinite,
           width: double.maxFinite,
           color: const Color(0xFF1D356C),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Image.asset("lib/ui/assets/imgs/logo.png",
+            child: Image.asset("lib/ui/assets/imgs/icon.png",
                 fit: BoxFit.fitWidth),
           ),
         );

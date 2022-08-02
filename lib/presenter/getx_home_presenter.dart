@@ -93,6 +93,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       }
       var list = await localRoom.listOfRooms();
       _rxListRoom.value = list.listRoom;
+      _rxListRoomCopy.value = list.listRoom;
     } catch (e) {
       _rxUiError.value = "Erro ao salvar sala";
     }
@@ -106,6 +107,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     }
     var list = await localRoom.listOfRooms();
     _rxListRoom.value = list.listRoom;
+    _rxListRoomCopy.value = list.listRoom;
   }
 
   @override

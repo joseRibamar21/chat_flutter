@@ -106,31 +106,29 @@ class _BalloonChat extends StatelessWidget {
       padding: isSentder
           ? const EdgeInsets.only(left: 30, right: 10)
           : const EdgeInsets.only(right: 30, left: 10),
-      child: PopupMenuButton(
+      child: /* PopupMenuButton(
         itemBuilder: (context) => [
           PopupMenuItem(
               onTap: () => controller.sendRemoveMessage(id: id),
               child: const Text("Apagar"))
         ],
-        child: Card(
-          color: isSentder
-              ? Theme.of(context).cardColor
-              : Theme.of(context).cardTheme.color,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: isSentder
-                ? Text(menssage)
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        Text(sender,
-                            style: Theme.of(context).textTheme.bodyLarge),
-                        const SizedBox(height: 5),
-                        Text(menssage)
-                      ]),
-          ),
+        child: */
+          Card(
+        color: isSentder
+            ? Theme.of(context).cardColor
+            : Theme.of(context).cardTheme.color,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: isSentder
+              ? Text(menssage)
+              : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(sender, style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 5),
+                  Text(menssage)
+                ]),
         ),
       ),
+      /*   ), */
     );
   }
 }
