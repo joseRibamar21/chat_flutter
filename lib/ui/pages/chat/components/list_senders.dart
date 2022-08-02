@@ -114,7 +114,7 @@ class __ListSendersState extends State<_ListSenders> {
               child: TextButton(
                   onPressed: () {
                     FlutterClipboard.copy(
-                            "https://143.244.167.43/#/chat/${widget.controller.nameRoomlink}/${widget.controller.link}")
+                            "143.244.167.43/#/chat/${widget.controller.nameRoomlink}/${widget.controller.link}")
                         .then((value) {
                       Navigator.pop(context);
                       Future.delayed(const Duration(milliseconds: 100)).then(
