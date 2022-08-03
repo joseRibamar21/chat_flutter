@@ -66,9 +66,9 @@ class _HomePageState extends State<HomePage>
               title: HomeAppBar(
             presenter: widget.presenter,
           )),
-          /*  floatingActionButton: FloatingActionButton(
+          floatingActionButton: FloatingActionButton(
               onPressed: () async {
-                List<Contact> contacts = await ContactsService.getContacts();
+                /* List<Contact> contacts = await ContactsService.getContacts();
                 try {
                   var t = await showSearch(
                       context: context,
@@ -77,9 +77,9 @@ class _HomePageState extends State<HomePage>
                 } catch (error) {
                   print(error);
                 }
-                print(contacts.toString());
+                print(contacts.toString()); */
               },
-              child: const Icon(Icons.contacts_rounded)), */
+              child: const Icon(Icons.contacts_rounded)),
           body: Builder(builder: (_) {
             widget.presenter.inicialization();
 

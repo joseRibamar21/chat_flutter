@@ -43,6 +43,7 @@ class GetLocalRooms implements LocalRoom {
   Future<RoomsEntity?> listOfRooms() async {
     try {
       var data = await storage.read();
+      print(data);
       return RoomsModel.fromJson(jsonDecode(data)).toEntity();
     } catch (e) {
       return null;
@@ -50,7 +51,8 @@ class GetLocalRooms implements LocalRoom {
   }
 
   @override
-  Future<bool> newRoom(String nameRoom, String master) async {
+  Future<bool> newRoom(
+      String nameRoom, String master, String expirateAt) async {
     try {
       var rng = Random();
       var nName = nameRoom;
@@ -62,8 +64,14 @@ class GetLocalRooms implements LocalRoom {
       if (data != null) {
         rooms = RoomsModel.fromJson(jsonDecode(data)).toEntity();
       }
-      rooms.listRoom
-          .add(RoomEntity(name: nName, password: password, master: master));
+      rooms.listRoom.add(
+        RoomEntity(
+          name: nName,
+          password: password,
+          master: master,
+          expirateAt: expirateAt,
+        ),
+      );
       var json = RoomsModel.fromEntity(rooms).toJson();
       await storage.save(jsonEncode(json));
       return true;
@@ -87,6 +95,22 @@ class GetLocalRooms implements LocalRoom {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  @override
+  Future<RoomEntity?> refreshTime(RoomEntity room, String time) async {
+    try {
+      var list = await listOfRooms();
+      int i = list!.listRoom.indexWhere((element) =>
+          element.name == room.name && element.password == element.password);
+      list.listRoom[i].expirateAt = time;
+      var json = RoomsModel.fromEntity(list).toJson();
+      await storage.save(jsonEncode(json));
+
+      return list.listRoom[i];
+    } catch (e) {
+      return null;
     }
   }
 }

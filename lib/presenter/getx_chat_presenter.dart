@@ -23,7 +23,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   final _rxDesconect = Rx<String?>("");
   final _rxRoomName = Rx<String?>("");
   final SecureStorage secureStorage = SecureStorage();
-  late final String? _password;
+  late RoomEntity _roomEntity;
   late final String? _roomLink;
 
   @override
@@ -46,10 +46,12 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     try {
       linkCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
     } catch (e) {
+      await disp();
       _rxDesconect.value = "Sala indisponível!";
     }
 
     if (linkCapture == null) {
+      await disp();
       _rxDesconect.value = "Sala indisponível!";
     }
 
@@ -57,18 +59,19 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
     nickG = Get.parameters['nick'];
     _rxRoomName.value = linkCapture!.name;
-    _password = linkCapture.password;
+    _roomEntity = linkCapture;
     _roomLink = encryterMessage.getLinkRoom(RoomEntity(
         name: _rxRoomName.value!,
-        password: _password!,
-        master: linkCapture.master));
+        password: _roomEntity.password,
+        master: linkCapture.master,
+        expirateAt: linkCapture.expirateAt));
 
     _inicialization();
 
     if (!socket.isConnect) {
-      print("Connect");
       socket.connectRoom(
-          '${_rxRoomName.value}+$_password+${linkCapture.master}', nickG);
+          '${_rxRoomName.value}+${_roomEntity.password}+${linkCapture.master}',
+          nickG);
     }
 
     socket.listenMessagens((event) {
@@ -138,8 +141,11 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       }
     });
 
-    socket.listenDesconect((p0) {
-      if (p0 != null) _rxDesconect.value = "Conexão com servidor perdida!";
+    socket.listenDesconect((p0) async {
+      if (p0 != null) {
+        await disp();
+        _rxDesconect.value = "Conexão com servidor perdida!";
+      }
     });
   }
 
@@ -258,6 +264,17 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       if (!tryReconnect) {
         disp();
         _rxDesconect.value = "Conexão com servidor perdida!";
+      }
+    }
+  }
+
+  @override
+  void verifyExpirateRoom() {
+    if (_roomEntity.expirateAt != null) {
+      if (DateTime.now().millisecondsSinceEpoch >
+          int.parse(_roomEntity.expirateAt ?? "0")) {
+        disp();
+        _rxDesconect.value = "Sala expirada!";
       }
     }
   }

@@ -26,7 +26,7 @@ class GetPreferencesStorage implements LocalPreferences {
   @override
   Future<bool> reset() async {
     try {
-      await storage.save(jsonEncode({"nick": "", "timer": 60, "theme": 1}));
+      await storage.save(jsonEncode({"nick": "", "timer": 60000, "theme": 1}));
       return true;
     } catch (e) {
       return false;

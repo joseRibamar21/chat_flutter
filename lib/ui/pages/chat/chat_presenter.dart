@@ -31,4 +31,6 @@ abstract class ChatPresenter {
   String? get nick;
 
   Future<void> verifyConnection();
+
+  void verifyExpirateRoom();
 }

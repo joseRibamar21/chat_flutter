@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../domain/entities/entities.dart';
 import '../../../domain/usecase/usecase.dart';
+import '../../err/err.dart';
 
 class EncrypterRoom implements EncryterMessage {
   Codec<String, String> stringToBase64 = utf8.fuse(base64);
@@ -27,7 +28,8 @@ class EncrypterRoom implements EncryterMessage {
     if (room.name.isNotEmpty &&
         room.password.isNotEmpty &&
         room.master.isNotEmpty) {
-      return _mask("${room.master}.${room.name}.${room.password}");
+      return _mask(
+          "${room.master}.${room.name}.${room.password}.${room.expirateAt}");
     } else {
       return "Erro ao gerar link, dados inválidos";
     }
@@ -38,9 +40,16 @@ class EncrypterRoom implements EncryterMessage {
     if (room.isNotEmpty) {
       String link = _unmask(room);
       List<String> roomlink = link.split(".");
-      RoomEntity roomEntity = RoomEntity(
-          master: roomlink[0], name: roomlink[1], password: roomlink[2]);
-      return roomEntity;
+      try {
+        RoomEntity roomEntity = RoomEntity(
+            master: roomlink[0],
+            name: roomlink[1],
+            password: roomlink[2],
+            expirateAt: roomlink[3]);
+        return roomEntity;
+      } catch (e) {
+        throw InternalErros.invalidadeData;
+      }
     } else {
       return null;
     }

@@ -23,6 +23,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   final _rxListRoomCopy = Rx<List<RoomEntity>>([]);
   final _rxIsSearching = Rx<bool>(false);
   final _rxNavigateTo = Rx<String?>("");
+  late PreferencesEntity _preferencesEntity;
 
   @override
   Stream<bool> get isSeachingStream => _rxIsSearching.stream;
@@ -39,9 +40,9 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   void inicialization() async {
     try {
-      PreferencesEntity p = await preferences.getData();
-      if (p.nick.isNotEmpty) {
-        _rxName.value = p.nick;
+      _preferencesEntity = await preferences.getData();
+      if (_preferencesEntity.nick.isNotEmpty) {
+        _rxName.value = _preferencesEntity.nick;
       } else {
         throw "Error";
       }
@@ -56,8 +57,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     String name,
     String password,
   ) async {
-    await localRoom
-        .delete(RoomEntity(name: name, password: password, master: ""));
+    await localRoom.delete(RoomEntity(
+        name: name, password: password, master: "", expirateAt: null));
     var list = await localRoom.listOfRooms();
     if (list != null) {
       _rxListRoom.value.removeWhere(
@@ -87,9 +88,17 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Future<void> saveRooms(String name, String? password, String? master) async {
     try {
       if (master != null) {
-        await localRoom.newRoom(name, master);
+        await localRoom.newRoom(
+            name,
+            master,
+            (_preferencesEntity.timer + DateTime.now().millisecondsSinceEpoch)
+                .toString());
       } else {
-        await localRoom.newRoom(name, _rxName.value);
+        await localRoom.newRoom(
+            name,
+            _rxName.value,
+            (_preferencesEntity.timer + DateTime.now().millisecondsSinceEpoch)
+                .toString());
       }
       var list = await localRoom.listOfRooms();
       _rxListRoom.value = list.listRoom;
@@ -111,10 +120,31 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  void goChat(RoomEntity room) {
-    var roomS = encryterMessage.getLinkRoom(room);
+  void goChat(RoomEntity room) async {
     _rxNavigateTo.value = null;
-    _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS";
+    /* var roomS = encryterMessage.getLinkRoom(room);
+    _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS"; */
+
+    ///Se a sala ainda não expirou
+    if (int.parse(room.expirateAt ?? "0") >
+        DateTime.now().millisecondsSinceEpoch) {
+      var roomS = encryterMessage.getLinkRoom(room);
+      _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS";
+    } else {
+      //Atualiza a sala com o novo valor
+      RoomEntity? roomT = await localRoom.refreshTime(
+          room,
+          (DateTime.now().millisecondsSinceEpoch + _preferencesEntity.timer)
+              .toString());
+      if (roomT != null) {
+        ///Se a sala expirou mas deu certo atualizar
+        var roomS = encryterMessage.getLinkRoom(roomT);
+        _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS";
+      } else {
+        _rxUiError.value = "Sala expirada";
+        deleteRoom(room.name, room.password);
+      }
+    }
   }
 
   @override
