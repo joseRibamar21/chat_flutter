@@ -3,11 +3,14 @@ abstract class RegisterPresenter {
   Stream<bool> get isValidStream;
   Stream<String> get navigationStream;
   Stream<String?> get nameErrorStream;
+  Stream<String?> get passwordErrorStream;
   Stream<String> get uiErrorStream;
 
   Future<bool> register();
 
   void validadeName(String value);
+
+  void validadePassword(String value);
 
   void inicialization();
 }

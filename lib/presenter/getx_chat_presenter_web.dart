@@ -5,20 +5,15 @@ import 'package:get/get.dart';
 import '../../../data/helpers/helpers.dart';
 
 import '../../../domain/entities/entities.dart';
-
 import '../../../infra/cache/cache.dart';
 import '../data/socket/socket.dart';
 import '../domain/usecase/usecase.dart';
-import '../ui/pages/chat/chat.dart';
+import '../ui/pages/web/web.dart';
 
-class GetxChatPresenter extends GetxController implements ChatPresenter {
+class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   final SocketClient socket;
   final EncryterMessage encryterMessage;
-  final LocalPreferences preferences;
-  GetxChatPresenter(
-      {required this.socket,
-      required this.encryterMessage,
-      required this.preferences});
+  GetxChatWebPresenter({required this.socket, required this.encryterMessage});
 
   final _rxListMessages = Rx<List<MessageEntity>>([]);
   late String? nickG;
@@ -29,7 +24,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   final SecureStorage secureStorage = SecureStorage();
   late RoomEntity _roomEntity;
   late final String? _roomLink;
-  late PreferencesEntity _preferencesEntity;
 
   @override
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
@@ -47,7 +41,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   void inicialization() async {
     RoomEntity? linkCapture;
-    _preferencesEntity = await preferences.getData();
 
     try {
       linkCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
@@ -199,7 +192,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   Future<void> disp() async {
     if (isInit) {
       _sendUserState(status: 0);
-
       isInit = false;
     }
 
@@ -282,13 +274,5 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
         _rxDesconect.value = "Sala expirada!";
       }
     }
-  }
-
-  @override
-  bool validadePassword(String password) {
-    if (_preferencesEntity.password == password) {
-      return true;
-    }
-    return false;
   }
 }

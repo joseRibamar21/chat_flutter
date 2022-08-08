@@ -43,7 +43,6 @@ class GetLocalRooms implements LocalRoom {
   Future<RoomsEntity?> listOfRooms() async {
     try {
       var data = await storage.read();
-      print(data);
       return RoomsModel.fromJson(jsonDecode(data)).toEntity();
     } catch (e) {
       return null;

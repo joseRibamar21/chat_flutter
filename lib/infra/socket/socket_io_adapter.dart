@@ -9,7 +9,6 @@ class SocketIOAdapater implements SocketClient {
 
   @override
   void connectRoom(String room, dynamic user) {
-    print(room);
     socket.emit('joinRoom', {"username": user, 'room': room});
   }
 
@@ -27,23 +26,18 @@ class SocketIOAdapater implements SocketClient {
   @override
   void listenDesconect(Function(dynamic) error) {
     socket.onError((data) {
-      print(data.toString() + "Error");
       error.call(data);
     });
 
     socket.onConnectError((data) {
-      print(data.toString() + "ConnectError");
       error.call(data);
     });
-    socket.onConnect((data) {
-      print(data.toString() + "Connect");
-    });
+    socket.onConnect((data) {});
   }
 
   @override
   void listenMessagens(Function(dynamic) message) {
     socket.on('message', (data) {
-      print(data);
       message.call(data);
     });
   }

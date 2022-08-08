@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 
-import '../components/components.dart';
-
 class CitiesDelegate extends SearchDelegate<Contact?> {
   late List<Contact> contacts = [];
 
@@ -38,7 +36,7 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
   @override
   Widget buildResults(BuildContext context) {
     List<Contact>? suggestion;
-    if (contacts != null) {
+    if (contacts.isEmpty) {
       suggestion = _seachContact(query, contacts);
     }
     return ListView.builder(
@@ -59,10 +57,10 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<Contact> suggestion = [];
-    if (contacts != null) {
+    if (contacts.isEmpty) {
       suggestion = _seachContact(query, contacts);
     }
-    return contacts == null
+    return contacts.isEmpty
         ? initiList()
         : ListView.builder(
             itemCount: suggestion.length,
@@ -90,14 +88,14 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
               "Aguarde...",
               style: Theme.of(context).textTheme.bodyText1,
             ));
-            break;
+
           case ConnectionState.none:
             return Center(
                 child: Text(
               "Erro ao carregar dados.",
               style: Theme.of(context).textTheme.bodyText1,
             ));
-            break;
+
           case ConnectionState.done:
             contacts = snapshot.data!;
             return ListView.builder(
@@ -112,7 +110,6 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
                         style: Theme.of(context).textTheme.bodyText1),
                   );
                 });
-            break;
           default:
         }
         return Center(
@@ -125,7 +122,7 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
   }
 
   List<Contact> _seachContact(String state, List<Contact> list) {
-    if (state == null) {
+    if (state.isEmpty) {
       state = '';
     }
     List<Contact> resp = [];

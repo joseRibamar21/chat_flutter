@@ -17,4 +17,6 @@ abstract class HomePresenter {
   void returnFilterRoom();
 
   void seaching(bool value);
+
+  bool validadePassword(String password);
 }

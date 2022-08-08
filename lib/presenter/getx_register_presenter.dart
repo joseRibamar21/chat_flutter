@@ -16,9 +16,11 @@ class GetxRegisterPresenter extends GetxController
   final _rxUiError = Rx<String>("");
   final _rxValid = Rx<bool>(false);
   final _rxNameError = Rx<String?>("");
+  final _rxPasswordError = Rx<String?>("");
   final _rxIsLoading = Rx<bool>(false);
 
   String _name = "";
+  String _password = "";
 
   @override
   Stream<bool> get isLoading => _rxIsLoading.stream;
@@ -30,13 +32,18 @@ class GetxRegisterPresenter extends GetxController
   Stream<String> get uiErrorStream => _rxUiError.stream;
   @override
   Stream<String?> get nameErrorStream => _rxNameError.stream;
+  @override
+  Stream<String?> get passwordErrorStream => _rxPasswordError.stream;
 
   @override
   Future<bool> register() async {
     _rxIsLoading.value = true;
     _name = _name.trim();
     _name = _name.replaceAll(" ", "_");
+    _password = _password.trim();
+    _password = _password.replaceAll(" ", "");
     await preferences.setName(name: _name);
+    await preferences.setPassword(password: _password);
     _rxNavigateTo.value = "/home";
     _rxIsLoading.value = false;
     return true;
@@ -67,7 +74,7 @@ class GetxRegisterPresenter extends GetxController
   void inicialization() async {
     try {
       PreferencesEntity p = await preferences.getData();
-      if (p.nick.isNotEmpty) {
+      if (p.nick.isNotEmpty && p.password.isNotEmpty) {
         _rxNavigateTo.value = "/home";
       }
     } catch (e) {
@@ -77,7 +84,32 @@ class GetxRegisterPresenter extends GetxController
 
   _isFormValid() {
     _rxValid.value = _name.isNotEmpty &&
+        _password.isNotEmpty &&
         _rxNameError.value == null &&
+        _rxPasswordError.value == null &&
         !(_rxIsLoading.value == true);
+  }
+
+  @override
+  void validadePassword(String value) {
+    _password = value;
+
+    int? validade = int.tryParse(value);
+
+    if (validade == null) {
+      _rxPasswordError.value = "Apenas valores interios!";
+    } else {
+      if (_password.length < 3) {
+        _rxPasswordError.value = "A senha deve ter mais que 2 dígitos!";
+      } else {
+        if (_password.length > 7) {
+          _rxPasswordError.value = "O codinome deve no máximo 6 caracteres!";
+        } else {
+          _rxPasswordError.value = null;
+        }
+      }
+    }
+    _password.replaceAll(" ", "_");
+    _isFormValid();
   }
 }

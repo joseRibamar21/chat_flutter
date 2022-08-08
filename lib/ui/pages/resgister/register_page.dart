@@ -21,41 +21,34 @@ class RegisterPage extends StatelessWidget
           child: Builder(builder: (context) {
             presenter.inicialization();
             return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 60),
-                  Text("Digite um codinome!",
-                      style: Theme.of(context).textTheme.titleMedium),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10, left: 20, right: 20),
-                    child: Text(
-                        "Devido a criptografia, não utilize caracteres especiais no seu nome e no nome das salas!",
-                        style: Theme.of(context).textTheme.titleSmall,
-                        textAlign: TextAlign.center),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 40),
-                    child: TextFieldRegister(onConfirm: presenter.register),
-                  ),
-                  const SizedBox(height: 40),
-                  const RegisterButtonLogin(),
-                  const SizedBox(height: 90),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Column(
-                      children: [
-                        const Divider(),
-                        Text(
-                            "Para aumentar sua segurança, tenha cadastrado uma biometria em seu celular!",
-                            style: Theme.of(context).textTheme.bodySmall)
-                      ],
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 60),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Text("Codinome",
+                          style: Theme.of(context).textTheme.titleMedium),
                     ),
-                  )
-                ],
+                    TextFieldRegister(onConfirm: () {}),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Text("Senha",
+                          style: Theme.of(context).textTheme.titleMedium),
+                    ),
+                    TextPasswordFieldRegister(onConfirm: () {}),
+                    const SizedBox(height: 40),
+                    const Center(child: RegisterButtonLogin()),
+                    const SizedBox(height: 90),
+                    const Divider(),
+                    Text(
+                        "Para aumentar sua segurança, tenha cadastrado uma biometria em seu celular!",
+                        style: Theme.of(context).textTheme.bodySmall)
+                  ],
+                ),
               ),
             );
           }),

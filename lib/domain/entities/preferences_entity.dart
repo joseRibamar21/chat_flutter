@@ -2,6 +2,8 @@ class PreferencesEntity {
   /// Nome Fantasia do usuario
   final String nick;
 
+  final String password;
+
   /// Tempo padrao do timer de apagar as mensagens
   final int timer;
 
@@ -9,5 +11,8 @@ class PreferencesEntity {
   final int theme;
 
   PreferencesEntity(
-      {required this.nick, required this.timer, required this.theme});
+      {required this.nick,
+      required this.password,
+      required this.timer,
+      required this.theme});
 }

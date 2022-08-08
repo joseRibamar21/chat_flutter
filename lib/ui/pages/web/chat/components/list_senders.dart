@@ -12,7 +12,7 @@ class AppBarSender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Provider.of<ChatPresenter>(context);
+    var controller = Provider.of<ChatWebPresenter>(context);
     return SizedBox(
       height: 60,
       child: ListTile(
@@ -30,17 +30,11 @@ class AppBarSender extends StatelessWidget {
                   return _ListSenders(controller: controller);
                 });
           },
-          title: StreamBuilder<String?>(
-              stream: controller.roomNameString,
-              builder: (context, snapshot) {
-                return Text(
-                  snapshot.data ?? "Sala",
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                );
-              }),
+          title: Text(
+            name,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+          ),
           subtitle: const Text(
             "Lista de presentes",
             style: TextStyle(color: Colors.white, fontSize: 14),
@@ -50,7 +44,7 @@ class AppBarSender extends StatelessWidget {
 }
 
 class _ListSenders extends StatefulWidget {
-  final ChatPresenter controller;
+  final ChatWebPresenter controller;
 
   const _ListSenders({
     Key? key,

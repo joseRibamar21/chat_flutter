@@ -122,8 +122,6 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   void goChat(RoomEntity room) async {
     _rxNavigateTo.value = null;
-    /* var roomS = encryterMessage.getLinkRoom(room);
-    _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS"; */
 
     ///Se a sala ainda não expirou
     if (int.parse(room.expirateAt ?? "0") >
@@ -174,5 +172,13 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   void seaching(bool value) {
     _rxIsSearching.value = value;
+  }
+
+  @override
+  bool validadePassword(String password) {
+    if (_preferencesEntity.password == password) {
+      return true;
+    }
+    return false;
   }
 }

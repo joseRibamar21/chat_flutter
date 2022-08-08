@@ -26,7 +26,8 @@ class GetPreferencesStorage implements LocalPreferences {
   @override
   Future<bool> reset() async {
     try {
-      await storage.save(jsonEncode({"nick": "", "timer": 60000, "theme": 1}));
+      await storage.save(jsonEncode(
+          {"nick": "", "timer": 600000, "theme": 1, "password": ""}));
       return true;
     } catch (e) {
       return false;
@@ -79,5 +80,34 @@ class GetPreferencesStorage implements LocalPreferences {
         return false;
       }
     }
+  }
+
+  @override
+  Future<bool> setPassword({required String password}) async {
+    try {
+      var data = jsonDecode(await storage.read());
+      data!['password'] = password;
+      await storage.save(jsonEncode(data));
+      return true;
+    } catch (e) {
+      if (await reset()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  @override
+  Future<bool> verifyPassword({required String password}) async {
+    try {
+      var data = jsonDecode(await storage.read());
+      if (data!['password'] == password) {
+        return true;
+      }
+    } catch (e) {
+      return false;
+    }
+    return false;
   }
 }

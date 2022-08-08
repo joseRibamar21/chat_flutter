@@ -1,6 +1,6 @@
-import '../../../domain/entities/entities.dart';
+import '../../../../domain/entities/entities.dart';
 
-abstract class ChatPresenter {
+abstract class ChatWebPresenter {
   Stream<List<MessageEntity>> get listMessagesStream;
   Stream<List<Map<String, dynamic>>> get listSendersStream;
   Stream<String?> get roomNameString;
@@ -33,6 +33,4 @@ abstract class ChatPresenter {
   Future<void> verifyConnection();
 
   void verifyExpirateRoom();
-
-  bool validadePassword(String password);
 }

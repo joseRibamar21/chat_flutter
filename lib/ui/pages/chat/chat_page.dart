@@ -31,7 +31,7 @@ class _ChatPageState extends State<ChatPage>
   void initState() {
     widget.presenter.inicialization();
     WidgetsBinding.instance.addObserver(this);
-    timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       widget.presenter.verifyExpirateRoom();
     });
     super.initState();
@@ -83,6 +83,7 @@ class _ChatPageState extends State<ChatPage>
       child: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: BlockAuth(
+          validadePassword: widget.presenter.validadePassword,
           controller: _authController,
           body: Provider(
             create: (context) => widget.presenter,

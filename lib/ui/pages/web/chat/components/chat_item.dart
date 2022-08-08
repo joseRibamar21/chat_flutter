@@ -99,7 +99,7 @@ class _BalloonChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*  var controller = Provider.of<ChatPresenter>(context); */
+    /* var controller = Provider.of<ChatPresenter>(context); */
     return Padding(
       padding: isSentder
           ? const EdgeInsets.only(left: 30, right: 10)
