@@ -40,15 +40,11 @@ class _BlockAuthState extends State<BlockAuth> {
   var flagBlock = true;
 
   Future<void> testeFinger() async {
-    try {
-      block = await authLocal.varifyAuthentican();
-      widget.controller.verify(block);
-    } catch (e) {
-      print(e);
-    }
+    block = await authLocal.varifyAuthentican();
+    widget.controller.verify(block);
   }
 
-  Future<String?> _testePassword(String password) async {
+  String? _testePassword(String password) {
     if (widget.validadePassword.call(password)) {
       widget.controller.verify(false);
       return null;
@@ -95,11 +91,11 @@ class _BlockAuthState extends State<BlockAuth> {
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              const SizedBox(height: 50),
+                              const SizedBox(height: 30),
                               Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: Text(
-                                  'Ops! não foi possivel se autenticar?',
+                                  'Senha do App',
                                   style: Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
@@ -139,7 +135,7 @@ class _BlockAuthState extends State<BlockAuth> {
 }
 
 class PasswordNumberWidget extends StatefulWidget {
-  final Future<String?> Function(String password) validade;
+  final String? Function(String password) validade;
   const PasswordNumberWidget({Key? key, required this.validade})
       : super(key: key);
 
@@ -150,10 +146,11 @@ class PasswordNumberWidget extends StatefulWidget {
 class PasswordNumberWidgetState extends State<PasswordNumberWidget> {
   List<int> password = [];
   String passwordView = "";
+  String? errorText;
   void _tapKeyboard(int value) {
     switch (value) {
       case -2:
-        widget.validade(passwordView.replaceAll(" ", ""));
+        errorText = widget.validade(passwordView.replaceAll(" ", ""));
         break;
       case -1:
         password.removeLast();
@@ -177,7 +174,8 @@ class PasswordNumberWidgetState extends State<PasswordNumberWidget> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding:
+              const EdgeInsets.only(top: 32, left: 32, right: 32, bottom: 4),
           child: SizedBox(
             width: 300,
             height: 100,
@@ -196,6 +194,8 @@ class PasswordNumberWidgetState extends State<PasswordNumberWidget> {
             ),
           ),
         ),
+        _ErrorTextPassword(errorText: errorText),
+        const SizedBox(height: 30),
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -273,6 +273,23 @@ class PasswordNumberWidgetState extends State<PasswordNumberWidget> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ErrorTextPassword extends StatelessWidget {
+  final String? errorText;
+
+  const _ErrorTextPassword({required this.errorText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      errorText ?? "",
+      style: TextStyle(
+          color: Theme.of(context).errorColor,
+          fontSize: 16,
+          decoration: TextDecoration.none),
     );
   }
 }
