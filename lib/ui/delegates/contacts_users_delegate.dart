@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 
-class CitiesDelegate extends SearchDelegate<Contact?> {
+class ContactsDelegate extends SearchDelegate<String> {
   late List<Contact> contacts = [];
 
-  CitiesDelegate({required this.contacts});
+  ContactsDelegate();
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -28,7 +28,7 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
     return IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, null);
+        close(context, "");
       },
     );
   }
@@ -36,19 +36,20 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
   @override
   Widget buildResults(BuildContext context) {
     List<Contact>? suggestion;
-    if (contacts.isEmpty) {
+    if (contacts.isNotEmpty) {
       suggestion = _seachContact(query, contacts);
     }
-    return ListView.builder(
+    return ListView.separated(
       itemCount: suggestion?.length ?? 0,
+      separatorBuilder: (context, index) => const Divider(),
       itemBuilder: (context, index) {
         return ListTile(
           onTap: () => close(
             context,
-            suggestion![index],
+            suggestion![index].givenName ?? "",
           ),
           title: Text(suggestion![index].givenName ?? '',
-              style: Theme.of(context).textTheme.bodyText1),
+              style: Theme.of(context).textTheme.titleSmall),
         );
       },
     );
@@ -57,21 +58,22 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<Contact> suggestion = [];
-    if (contacts.isEmpty) {
+    if (contacts.isNotEmpty) {
       suggestion = _seachContact(query, contacts);
     }
     return contacts.isEmpty
         ? initiList()
-        : ListView.builder(
+        : ListView.separated(
             itemCount: suggestion.length,
+            separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () => close(
                   context,
-                  suggestion[index],
+                  suggestion[index].givenName ?? "",
                 ),
                 title: Text(suggestion[index].givenName ?? '',
-                    style: Theme.of(context).textTheme.bodyText1),
+                    style: Theme.of(context).textTheme.titleSmall),
               );
             },
           );
@@ -79,7 +81,10 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
 
   Widget initiList() {
     return FutureBuilder<List<Contact>>(
-      future: ContactsService.getContacts(),
+      future: ContactsService.getContacts(
+          iOSLocalizedLabels: false,
+          androidLocalizedLabels: false,
+          photoHighResolution: false),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -98,16 +103,19 @@ class CitiesDelegate extends SearchDelegate<Contact?> {
 
           case ConnectionState.done:
             contacts = snapshot.data!;
-            return ListView.builder(
+            return ListView.separated(
                 itemCount: contacts.length,
+                separatorBuilder: (context, index) {
+                  return const Divider();
+                },
                 itemBuilder: (context, index) {
                   return ListTile(
                     onTap: () => close(
                       context,
-                      snapshot.data![index],
+                      snapshot.data![index].givenName ?? "",
                     ),
                     title: Text(snapshot.data![index].givenName ?? "Error",
-                        style: Theme.of(context).textTheme.bodyText1),
+                        style: Theme.of(context).textTheme.titleSmall),
                   );
                 });
           default:

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/usecase/usecase.dart';
 import '../../components/components.dart';
+import '../../delegates/delegates.dart';
 import '../../mixins/mixins.dart';
 import '../chat/components/components.dart';
 import 'components/components.dart';
@@ -19,7 +19,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with NavigationManager, KeyboardManager, WidgetsBindingObserver {
+    with
+        NavigationManager,
+        KeyboardManager,
+        WidgetsBindingObserver,
+        UIErrorManager {
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
 
@@ -32,7 +36,7 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
-      case AppLifecycleState.resumed:
+      case AppLifecycleState.paused:
         Future.delayed(const Duration(milliseconds: 40)).then((value) async {
           if (await _authenticationLocal.varifyCanAuthentican()) {
             _authController.verify(true);
@@ -66,23 +70,10 @@ class _HomePageState extends State<HomePage>
                 title: HomeAppBar(
               presenter: widget.presenter,
             )),
-            floatingActionButton: FloatingActionButton(
-                onPressed: () async {
-                  /* List<Contact> contacts = await ContactsService.getContacts();
-                  try {
-                    var t = await showSearch(
-                        context: context,
-                        delegate: CitiesDelegate(contacts: contacts));
-                    print(t!.toMap());
-                  } catch (error) {
-                    print(error);
-                  }
-                  print(contacts.toString()); */
-                },
-                child: const Icon(Icons.contacts_rounded)),
+            floatingActionButton: const HomeFloatActionBottonCustom(),
             body: Builder(builder: (_) {
               widget.presenter.inicialization();
-
+              handleUIError(context, widget.presenter.uiErrorStream);
               Future.delayed(const Duration(milliseconds: 100),
                   widget.presenter.loadRooms);
               handleNaviationPush(widget.presenter.navigatorStream);
@@ -112,5 +103,32 @@ class _HomePageState extends State<HomePage>
         ),
       ),
     );
+  }
+}
+
+class HomeFloatActionBottonCustom extends StatefulWidget {
+  const HomeFloatActionBottonCustom({Key? key}) : super(key: key);
+
+  @override
+  State<HomeFloatActionBottonCustom> createState() =>
+      _HomeFloatActionBottonCustomState();
+}
+
+class _HomeFloatActionBottonCustomState
+    extends State<HomeFloatActionBottonCustom> {
+  @override
+  Widget build(BuildContext context) {
+    var presenter = Provider.of<HomePresenter>(context);
+    return FloatingActionButton(
+        onPressed: () async {
+          presenter.requiredContacts(() async {
+            String? t = await showSearch(
+                context: context, delegate: ContactsDelegate());
+            if (t!.isNotEmpty) {
+              presenter.saveRooms(t, null);
+            }
+          });
+        },
+        child: const Icon(Icons.contacts_rounded));
   }
 }

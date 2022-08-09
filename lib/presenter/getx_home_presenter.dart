@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../domain/entities/entities.dart';
 import '../domain/usecase/usecase.dart';
 import '../infra/cache/cache.dart';
+import '../ui/components/permissions/permissions.dart';
 import '../ui/pages/home/home.dart';
 
 class GetxHomePresenter extends GetxController implements HomePresenter {
@@ -17,7 +18,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       required this.encryterMessage,
       required this.preferences});
 
-  final _rxUiError = Rx<String>("");
+  final _rxUiError = Rx<String?>("");
   final _rxName = Rx<String>("");
   final _rxListRoom = Rx<List<RoomEntity>>([]);
   final _rxListRoomCopy = Rx<List<RoomEntity>>([]);
@@ -36,6 +37,9 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
 
   @override
   Stream<String?> get navigatorStream => _rxNavigateTo.stream;
+
+  @override
+  Stream<String?> get uiErrorStream => _rxUiError.stream;
 
   @override
   void inicialization() async {
@@ -85,7 +89,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  Future<void> saveRooms(String name, String? password, String? master) async {
+  Future<void> saveRooms(String name, String? master) async {
     try {
       if (master != null) {
         await localRoom.newRoom(
@@ -180,5 +184,24 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       return true;
     }
     return false;
+  }
+
+  @override
+  void requiredContacts(Function f) async {
+    bool confirm = false;
+    bool teste = await wasAllowedContacts();
+    _rxUiError.value = null;
+    if (teste) {
+      print("AKIIIIIIIIIII 1");
+      await f.call();
+    } else {
+      print("AKIIIIIIIIIII 2");
+      confirm = await askPermissions();
+      print(confirm);
+    }
+
+    if (!confirm) {
+      _rxUiError.value = "É nescessario permissão á lista de contatos!";
+    }
   }
 }

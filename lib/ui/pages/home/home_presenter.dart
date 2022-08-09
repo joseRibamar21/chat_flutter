@@ -5,9 +5,10 @@ abstract class HomePresenter {
   Stream<List<RoomEntity>> get listRoomStream;
   Stream<String?> get navigatorStream;
   Stream<bool> get isSeachingStream;
+  Stream<String?> get uiErrorStream;
 
   void inicialization();
-  Future<void> saveRooms(String name, String? password, String? master);
+  Future<void> saveRooms(String name, String? master);
   Future<void> searchRoom(String link);
   Future<void> loadRooms();
   void deleteRoom(String name, String password);
@@ -15,6 +16,7 @@ abstract class HomePresenter {
   void goRegister();
   void filterRoom(String value);
   void returnFilterRoom();
+  void requiredContacts(Function f);
 
   void seaching(bool value);
 
