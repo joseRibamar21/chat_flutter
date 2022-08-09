@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class SplashPage extends StatelessWidget {
-  const SplashPage({Key? key}) : super(key: key);
+import '../../mixins/mixins.dart';
+import 'splash.dart';
+
+class SplashPage extends StatelessWidget with NavigationManager {
+  final SplashPresenter presenter;
+  const SplashPage({Key? key, required this.presenter}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(builder: (context) {
-        Future.delayed(const Duration(milliseconds: 1500))
-            .then((value) => Get.offAndToNamed('/register'));
+        presenter.inicialization();
+        handleNaviationLogin(presenter.toNavigationStream);
+
         return Container(
           height: double.maxFinite,
           width: double.maxFinite,
-          color: const Color(0xFF1D356C),
+          color: Theme.of(context).primaryColor,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
             child: Image.asset("lib/ui/assets/imgs/icon.png",
-                fit: BoxFit.fitWidth),
+                fit: BoxFit.fitWidth,
+                color: Theme.of(context).secondaryHeaderColor),
           ),
         );
       }),

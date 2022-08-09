@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import './factory/pages/pages.dart';
-import '../ui/pages/pages.dart';
 import '../ui/theme/theme.dart';
 
 void inicialization() {
@@ -20,9 +19,9 @@ class MyApp extends StatelessWidget {
       title: 'Secreto',
       debugShowCheckedModeBanner: false,
       theme: makeTheme2(),
-      initialRoute: "/register",
+      initialRoute: "/",
       getPages: [
-        GetPage(name: "/", page: () => const SplashPage()),
+        GetPage(name: "/", page: makeSplashPage),
         GetPage(name: "/register", page: () => makeRegisterPage(context)),
         GetPage(
             name: "/chat/:nick/:link",

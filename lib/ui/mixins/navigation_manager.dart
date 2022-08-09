@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 
 mixin NavigationManager {
-  void handleNaviationLogin(Stream<String> stream) {
+  void handleNaviationLogin(Stream<String?> stream) {
     stream.listen((event) {
-      Get.offNamed(event);
+      if (event != null) {
+        Get.offNamed(event);
+      }
     });
   }
 
