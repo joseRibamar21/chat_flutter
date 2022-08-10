@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../presenter/presenter.dart';
 import '../../../../ui/pages/splash/splash.dart';
+import '../../usecases/usescases.dart';
 
 Widget makeSplashPage() {
   return SplashPage(
@@ -10,5 +11,5 @@ Widget makeSplashPage() {
 }
 
 SplashPresenter makeGetxSplashPresenter() {
-  return GetxSplashPresenter();
+  return GetxSplashPresenter(preferences: makeGetPreferencesStorage());
 }

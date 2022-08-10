@@ -147,6 +147,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
         deleteRoom(room.name, room.password);
       }
     }
+
+    loadRooms();
   }
 
   @override
@@ -192,16 +194,20 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     bool teste = await wasAllowedContacts();
     _rxUiError.value = null;
     if (teste) {
-      print("AKIIIIIIIIIII 1");
       await f.call();
     } else {
-      print("AKIIIIIIIIIII 2");
       confirm = await askPermissions();
-      print(confirm);
     }
 
-    if (!confirm) {
+    if (!confirm && !teste) {
       _rxUiError.value = "É nescessario permissão á lista de contatos!";
     }
+  }
+
+  @override
+  String getLinkRoom(RoomEntity room) {
+    var roomS = encryterMessage.getLinkRoom(room);
+    String link = "143.244.167.43/#/chat/${room.name}/$roomS";
+    return link;
   }
 }
