@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 class AuthenticationLocal {
@@ -29,8 +28,8 @@ class AuthenticationLocal {
               sensitiveTransaction: true,
               useErrorDialogs: false,
               stickyAuth: true));
-    } on PlatformException {
-      throw false;
+    } catch (e) {
+      return true;
     }
     return !didAuthenticate;
   }
