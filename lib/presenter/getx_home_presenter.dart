@@ -115,23 +115,27 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
 
   @override
   Future<void> enterRoom(String link) async {
+    _rxNavigateTo.value = null;
     try {
       List<String> list = link.split("/");
-      print(list.length);
-      print(list);
       if (list.length == 1) {
         var roomS = encryterMessage.getRoomLink(list[0]);
         if (roomS != null) {
-          print("Akiiiiiiiiiiiiiiii");
-          print(roomS.name);
           _rxNavigateTo.value = "/chat/${_rxName.value}/${list[0]}";
         }
       } else {
-        var roomS = encryterMessage.getRoomLink(list[5]);
-        _rxNavigateTo.value = "/chat/${list[4]}/$roomS";
+        var roomS = encryterMessage.getRoomLink(list[4]);
+        if (roomS != null) {
+          if (roomS.master == _rxName.value) {
+            _rxUiError.value =
+                "Você não pode entrar na sua sala como convidado!";
+          } else {
+            _rxNavigateTo.value = "/chat/${list[3]}/${list[4]}";
+          }
+        }
       }
     } catch (e) {
-      _rxUiError.value = "Sala não encontrada";
+      _rxUiError.value = "Sala não encontrada!";
     }
 
     var roomS = encryterMessage.getRoomLink(link);

@@ -38,16 +38,20 @@ class RoomsListView extends StatelessWidget {
                       return ListTile(
                         onTap: () => presenter.goChat(snapshot.data![index]),
                         onLongPress: () {
-                          _showOptionsRoom(context, delete: () {
-                            Navigator.pop(context);
-                            presenter.deleteRoom(snapshot.data![index].name,
-                                snapshot.data![index].password);
-                          }, shareLink: (() async {
-                            Navigator.pop(context);
-                            await Share.share(
-                                presenter.getLinkRoom(snapshot.data![index]),
-                                subject: "Secreto");
-                          }));
+                          _showOptionsRoom(
+                            context,
+                            delete: () {
+                              Navigator.pop(context);
+                              presenter.deleteRoom(snapshot.data![index].name,
+                                  snapshot.data![index].password);
+                            },
+                            shareLink: (() async {
+                              Navigator.pop(context);
+                              await Share.share(
+                                  presenter.getLinkRoom(snapshot.data![index]),
+                                  subject: "Secreto");
+                            }),
+                          );
                         },
                         trailing: Icon(Icons.arrow_forward_ios_rounded,
                             color: Theme.of(context).iconTheme.color),
