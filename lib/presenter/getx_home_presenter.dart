@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../data/helpers/helpers.dart';
 import '../domain/entities/entities.dart';
 import '../domain/usecase/usecase.dart';
 import '../infra/cache/cache.dart';
@@ -113,14 +114,30 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  Future<void> searchRoom(String link) async {
+  Future<void> enterRoom(String link) async {
+    try {
+      List<String> list = link.split("/");
+      print(list.length);
+      print(list);
+      if (list.length == 1) {
+        var roomS = encryterMessage.getRoomLink(list[0]);
+        if (roomS != null) {
+          print("Akiiiiiiiiiiiiiiii");
+          print(roomS.name);
+          _rxNavigateTo.value = "/chat/${_rxName.value}/${list[0]}";
+        }
+      } else {
+        var roomS = encryterMessage.getRoomLink(list[5]);
+        _rxNavigateTo.value = "/chat/${list[4]}/$roomS";
+      }
+    } catch (e) {
+      _rxUiError.value = "Sala não encontrada";
+    }
+
     var roomS = encryterMessage.getRoomLink(link);
     if (roomS != null) {
-      await localRoom.save(roomS);
+      _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS";
     }
-    var list = await localRoom.listOfRooms();
-    _rxListRoom.value = list.listRoom;
-    _rxListRoomCopy.value = list.listRoom;
   }
 
   @override
@@ -207,7 +224,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   String getLinkRoom(RoomEntity room) {
     var roomS = encryterMessage.getLinkRoom(room);
-    String link = "143.244.167.43/#/chat/${room.name}/$roomS";
+    String link = "$chatLinkConst/${room.name}/$roomS";
     return link;
   }
 }

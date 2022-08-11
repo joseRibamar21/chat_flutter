@@ -45,17 +45,17 @@ class _HomeListOptionsRoomsState extends State<HomeListOptionsRooms> {
                             }
                           },
                           icon: Icons.group_add_rounded,
-                          title: "Nova Reunião",
+                          title: "Criar Sala",
                         ),
                         _ElevatedButtonCustom(
                             function: () async {
                               var t = await searchRoomDialog(context);
                               if (t != null) {
-                                presenter.searchRoom(t);
+                                presenter.enterRoom(t);
                               }
                             },
-                            icon: Icons.person,
-                            title: "Adicionar Sala"),
+                            icon: Icons.meeting_room_rounded,
+                            title: "Entrar em uma sala"),
                       ],
                     ),
                   ),
