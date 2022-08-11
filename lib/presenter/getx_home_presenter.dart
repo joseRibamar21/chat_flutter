@@ -137,11 +137,6 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     } catch (e) {
       _rxUiError.value = "Sala não encontrada!";
     }
-
-    var roomS = encryterMessage.getRoomLink(link);
-    if (roomS != null) {
-      _rxNavigateTo.value = "/chat/${_rxName.value}/$roomS";
-    }
   }
 
   @override
@@ -175,6 +170,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   void goRegister() {
     preferences.reset();
+    localRoom.deleteAll();
     Get.offAndToNamed('/register');
   }
 
@@ -228,7 +224,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   String getLinkRoom(RoomEntity room) {
     var roomS = encryterMessage.getLinkRoom(room);
-    String link = "$chatLinkConst/${room.name}/$roomS";
+    String link = "143.244.167.43/#/chat/${room.name}/$roomS";
+    print(link);
     return link;
   }
 }
