@@ -67,15 +67,27 @@ class GetxRegisterPresenterWeb extends GetxController
     _rxUiError.value = null;
     _name = _name.trim();
     _name = _name.replaceAll(" ", "_");
+    _rxNavigateTo.value = null;
     try {
-      var room = encryterMessage.getRoomLink(_link);
-      if (room != null) {
-        _rxNavigateTo.value = _rxNavigateTo.value = "/chat/$_name/$_link";
+      List<String> list = _link.split("/");
+      if (list.length == 1) {
+        var roomS = encryterMessage.getRoomLink(list[0]);
+        if (roomS != null) {
+          _rxNavigateTo.value = "/chat/$_name/${list[0]}";
+        }
       } else {
-        _rxUiError.value = "Sala inválida ou expirada!";
+        var roomS = encryterMessage.getRoomLink(list[4]);
+        if (roomS != null) {
+          if (roomS.master == _name) {
+            _rxUiError.value =
+                "Você não pode entrar na sua sala como convidado!";
+          } else {
+            _rxNavigateTo.value = "/chat/$_name/${list[4]}";
+          }
+        }
       }
     } catch (e) {
-      _rxUiError.value = "Sala inválida ou expirada!";
+      _rxUiError.value = "Sala não encontrada!";
     }
   }
 

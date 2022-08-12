@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 
-import '../data/helpers/helpers.dart';
 import '../domain/entities/entities.dart';
 import '../domain/usecase/usecase.dart';
 import '../infra/cache/cache.dart';
@@ -225,7 +224,6 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   String getLinkRoom(RoomEntity room) {
     var roomS = encryterMessage.getLinkRoom(room);
     String link = "143.244.167.43/#/chat/${room.name}/$roomS";
-    print(link);
     return link;
   }
 }

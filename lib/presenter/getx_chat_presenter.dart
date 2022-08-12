@@ -76,7 +76,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
     if (!socket.isConnect) {
       socket.connectRoom(
-          '${_rxRoomName.value}+${_roomEntity.password}+${linkCapture.master}',
+          '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
           nickG);
     }
 

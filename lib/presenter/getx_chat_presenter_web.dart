@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chat_flutter/ui/pages/web/chat/chat.dart';
 import 'package:get/get.dart';
 
 import '../../../data/helpers/helpers.dart';
@@ -10,6 +9,7 @@ import '../../../domain/entities/entities.dart';
 import '../../../infra/cache/cache.dart';
 import '../data/socket/socket.dart';
 import '../domain/usecase/usecase.dart';
+import '../ui/pages/web/web.dart';
 
 class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   final SocketClient socket;
@@ -17,14 +17,14 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   GetxChatWebPresenter({required this.socket, required this.encryterMessage});
 
   final _rxListMessages = Rx<List<MessageEntity>>([]);
+  late String? nickG;
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<String?>("");
   final _rxRoomName = Rx<String?>("");
   final SecureStorage secureStorage = SecureStorage();
-  late RoomEntity? _roomEntity;
+  late RoomEntity _roomEntity;
   late final String? _roomLink;
-  late PreferencesEntity _preferencesEntity;
 
   @override
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
@@ -32,6 +32,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   Stream<List<Map<String, dynamic>>> get listSendersStream => _rxSenders.stream;
   @override
   Stream<String?> get desconectStream => _rxDesconect.stream;
+
   @override
   Stream<String?> get roomNameString => _rxRoomName.stream;
 
@@ -40,41 +41,41 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
 
   @override
   void inicialization() async {
-    print(Get.parameters['link']);
-    print(Get.parameters['nick']);
+    RoomEntity? linkCapture;
+
     try {
-      _roomEntity = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
+      linkCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
     } catch (e) {
       await disp();
       _rxDesconect.value = "Sala indisponível!";
     }
 
-    if (_roomEntity == null) {
+    if (linkCapture == null) {
       await disp();
       _rxDesconect.value = "Sala indisponível!";
     }
 
     socket.init();
 
-    _rxRoomName.value = Get.parameters['nick'];
-    _roomEntity = _roomEntity;
+    nickG = Get.parameters['nick'];
+    _rxRoomName.value = linkCapture!.name;
+    _roomEntity = linkCapture;
     _roomLink = encryterMessage.getLinkRoom(RoomEntity(
         name: _rxRoomName.value!,
-        password: _roomEntity!.password,
-        master: _roomEntity!.master,
-        expirateAt: _roomEntity!.expirateAt));
+        password: _roomEntity.password,
+        master: linkCapture.master,
+        expirateAt: linkCapture.expirateAt));
 
     _inicialization();
 
     if (!socket.isConnect) {
       socket.connectRoom(
-          '${_roomEntity!.name}+${_roomEntity!.password}+${_roomEntity!.master}+${_roomEntity!.expirateAt}',
-          _rxRoomName.value);
+          '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
+          nickG);
     }
 
     socket.listenMessagens((event) {
       /// Pegar menssagem recebida
-      print(event);
 
       MessageEntity? value = getSendMessage(event: event);
 
@@ -89,7 +90,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             break;
           // conectado
           case 1:
-            if (value.username != _rxRoomName.value) {
+            if (value.username != nickG) {
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
                   element['status'] = 1;
@@ -102,8 +103,8 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             _rxListMessages.refresh();
             break;
           case 2:
-            _rxSenders.value.addIf(_rxRoomName.value != value.username,
-                {"user": value.username, "status": 1});
+            _rxSenders.value.addIf(
+                nickG != value.username, {"user": value.username, "status": 1});
             _rxSenders.refresh();
             break;
           // Caso possua um novo conectado
@@ -111,14 +112,14 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             _rxSenders.value = [];
             _sendUserState(status: 2);
 
-            if (value.username != _rxRoomName.value) {
+            if (value.username != nickG) {
               _rxListMessages.value = _rxListMessages.value..add(value);
               _rxListMessages.refresh();
             }
             break;
           // Caso fique inativo
           case 4:
-            if (value.username != _rxRoomName.value) {
+            if (value.username != nickG) {
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
                   element['status'] = 4;
@@ -200,8 +201,8 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   }
 
   void _sendUserState({required int status, String? message}) {
-    Map<String, dynamic> body = prepareSendMessage(
-        usarName: _rxRoomName.value!, status: status, message: message);
+    Map<String, dynamic> body =
+        prepareSendMessage(usarName: nickG!, status: status, message: message);
     socket.sendMenssage(body);
   }
 
@@ -252,7 +253,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   String? get nameRoomlink => _rxRoomName.value;
 
   @override
-  String? get nick => _rxRoomName.value;
+  String? get nick => nickG;
 
   @override
   Future<void> verifyConnection() async {
@@ -268,9 +269,9 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
 
   @override
   void verifyExpirateRoom() {
-    if (_roomEntity?.expirateAt != null) {
+    if (_roomEntity.expirateAt != null) {
       if (DateTime.now().millisecondsSinceEpoch >
-          int.parse(_roomEntity?.expirateAt ?? "0")) {
+          int.parse(_roomEntity.expirateAt ?? "0")) {
         disp();
         _rxDesconect.value = "Sala expirada!";
       }
