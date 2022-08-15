@@ -58,8 +58,9 @@ class RoomsListView extends StatelessWidget {
                         title: Text(snapshot.data![index].name),
                         subtitle: Text(
                           _formatDate(
-                            DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                snapshot.data![index].expirateAt ?? "0")),
+                            DateTime.fromMillisecondsSinceEpoch(int.tryParse(
+                                    snapshot.data![index].expirateAt ?? "0") ??
+                                0),
                           ),
                         ),
                       );
