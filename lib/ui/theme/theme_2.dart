@@ -69,7 +69,7 @@ ThemeData makeTheme2() {
   );
 
   ListTileThemeData listTileThemedata =
-      const ListTileThemeData(style: ListTileStyle.drawer);
+      const ListTileThemeData(style: ListTileStyle.list, iconColor: textColor);
 
   BottomSheetThemeData sheetThemeData = const BottomSheetThemeData(
     backgroundColor: color2,
@@ -79,7 +79,7 @@ ThemeData makeTheme2() {
   );
 
   TextButtonThemeData textButtonThemeData = TextButtonThemeData(
-      style: TextButton.styleFrom(textStyle: textTheme.bodyMedium));
+      style: TextButton.styleFrom(textStyle: textTheme.titleSmall));
 
   return ThemeData(
     appBarTheme: appBarTheme,
