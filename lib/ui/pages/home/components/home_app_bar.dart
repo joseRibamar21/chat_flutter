@@ -18,8 +18,8 @@ class _HomeAppBarState extends State<HomeAppBar>
   late Widget _myWidgetAnimatio = Align(
     alignment: Alignment.centerLeft,
     child: IconButton(
-        onPressed: widget.presenter.goRegister,
-        icon: const Icon(Icons.exit_to_app_rounded)),
+        onPressed: () => widget.presenter.goTo("/config"),
+        icon: const Icon(Icons.build)),
   );
   @override
   void initState() {
@@ -53,8 +53,8 @@ class _HomeAppBarState extends State<HomeAppBar>
         _myWidgetAnimatio = Align(
           alignment: Alignment.centerLeft,
           child: IconButton(
-              onPressed: widget.presenter.goRegister,
-              icon: const Icon(Icons.exit_to_app_rounded)),
+              onPressed: () => widget.presenter.goTo("/config"),
+              icon: const Icon(Icons.build)),
         );
         widget.presenter.returnFilterRoom();
       }
@@ -95,4 +95,4 @@ class _HomeAppBarState extends State<HomeAppBar>
 }
 /*     leading: IconButton(
                 onPressed: presenter.goRegister,
-                icon: const Icon(Icons.exit_to_app_rounded)), */
+                icon: const Icon(Icons.build)), */

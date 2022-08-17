@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
             page: makeChatPage,
             fullscreenDialog: true),
         GetPage(name: "/home", page: makeHomePage),
+        GetPage(name: "/config", page: makeConfigPage),
       ],
     );
   }

@@ -65,7 +65,6 @@ class ContactsDelegate extends SearchDelegate<String> {
                 .takeWhile((value) =>
                     value.givenName != null || value.givenName != "Error")
                 .toList();
-            ;
             return ListView.separated(
                 itemCount: contacts.length,
                 separatorBuilder: (context, index) {

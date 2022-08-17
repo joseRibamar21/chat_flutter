@@ -167,10 +167,11 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  void goRegister() {
-    preferences.reset();
+  void goTo(String route) {
+    Get.toNamed(route);
+    /* preferences.reset();
     localRoom.deleteAll();
-    Get.offAndToNamed('/register');
+    Get.offAndToNamed('/register'); */
   }
 
   @override
