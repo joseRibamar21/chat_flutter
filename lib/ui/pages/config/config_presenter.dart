@@ -1,1 +1,3 @@
-abstract class ConfigPresenter {}
+abstract class ConfigPresenter {
+  void logoff();
+}

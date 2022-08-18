@@ -19,7 +19,7 @@ class _HomeAppBarState extends State<HomeAppBar>
     alignment: Alignment.centerLeft,
     child: IconButton(
         onPressed: () => widget.presenter.goTo("/config"),
-        icon: const Icon(Icons.build)),
+        icon: const Icon(Icons.settings)),
   );
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _HomeAppBarState extends State<HomeAppBar>
           alignment: Alignment.centerLeft,
           child: IconButton(
               onPressed: () => widget.presenter.goTo("/config"),
-              icon: const Icon(Icons.build)),
+              icon: const Icon(Icons.settings)),
         );
         widget.presenter.returnFilterRoom();
       }

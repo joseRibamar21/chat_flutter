@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/usecase/usecase.dart';
@@ -38,7 +39,8 @@ class _HomePageState extends State<HomePage>
     switch (state) {
       case AppLifecycleState.paused:
         Future.delayed(const Duration(milliseconds: 40)).then((value) async {
-          if (await _authenticationLocal.varifyCanAuthentican()) {
+          if (Get.currentRoute == '/home' &&
+              await _authenticationLocal.varifyCanAuthentican()) {
             _authController.verify(true);
           }
         });

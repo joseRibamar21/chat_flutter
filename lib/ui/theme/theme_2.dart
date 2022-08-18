@@ -17,11 +17,11 @@ ThemeData makeTheme2() {
     titleLarge:
         TextStyle(fontSize: 24, color: textColor, fontWeight: FontWeight.bold),
     titleMedium:
-        TextStyle(fontSize: 18, color: textColor, fontWeight: FontWeight.w500),
+        TextStyle(fontSize: 20, color: textColor, fontWeight: FontWeight.w500),
     titleSmall:
-        TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.w500),
+        TextStyle(fontSize: 18, color: textColor, fontWeight: FontWeight.w500),
     bodyLarge: TextStyle(
-      fontSize: 14,
+      fontSize: 16,
       fontWeight: FontWeight.bold,
       color: textColor,
     ),

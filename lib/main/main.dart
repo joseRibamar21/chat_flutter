@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Secreto',
       debugShowCheckedModeBanner: false,
       theme: makeTheme2(),
+      defaultTransition: Transition.leftToRightWithFade,
       initialRoute: "/",
       getPages: [
         GetPage(name: "/", page: makeSplashPage),
