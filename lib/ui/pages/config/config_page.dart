@@ -12,6 +12,7 @@ class ConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(presenter);
     return Provider(
       create: (_) => presenter,
       child: Scaffold(

@@ -91,6 +91,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   Future<void> saveRooms(String name, String? master) async {
     try {
+      _preferencesEntity = await preferences.getData();
       if (master != null) {
         await localRoom.newRoom(
             name,
@@ -140,6 +141,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
 
   @override
   void goChat(RoomEntity room) async {
+    _preferencesEntity = await preferences.getData();
     _rxNavigateTo.value = null;
 
     ///Se a sala ainda não expirou

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SelectHoursList extends StatefulWidget {
-  const SelectHoursList({
-    Key? key,
-  }) : super(key: key);
+  final Function(int value) getHours;
+  const SelectHoursList({Key? key, required this.getHours}) : super(key: key);
 
   @override
   State<SelectHoursList> createState() => _SelectHoursListState();
@@ -30,7 +29,8 @@ class _SelectHoursListState extends State<SelectHoursList> {
         itemExtent: 50,
         magnification: 1.2,
         diameterRatio: 1.5,
-        onSelectedItemChanged: (value) {},
+        overAndUnderCenterOpacity: 0.4,
+        onSelectedItemChanged: (value) => widget.getHours.call(value),
         physics:
             const FixedExtentScrollPhysics(parent: BouncingScrollPhysics()),
         childDelegate: ListWheelChildBuilderDelegate(

@@ -1,3 +1,4 @@
+import 'package:chat_flutter/domain/entities/entities.dart';
 import 'package:get/get.dart';
 
 import '../domain/usecase/usecase.dart';
@@ -14,5 +15,11 @@ class GetxConfigPresenter extends GetxController implements ConfigPresenter {
     preferences.reset();
     localRoom.deleteAll();
     Get.offAndToNamed('/register');
+  }
+
+  @override
+  Future updateTime(int h, int m) async {
+    int newtime = (h * 60 * 60 * 1000) + (m * 60 * 1000);
+    await preferences.setTime(time: newtime);
   }
 }

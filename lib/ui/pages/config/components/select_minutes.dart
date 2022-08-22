@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class SelectMinutesList extends StatefulWidget {
-  const SelectMinutesList({Key? key}) : super(key: key);
+  final Function(int value) getMinutes;
+  const SelectMinutesList({Key? key, required this.getMinutes})
+      : super(key: key);
 
   @override
   State<SelectMinutesList> createState() => _SelectMinutesListState();
@@ -28,7 +30,8 @@ class _SelectMinutesListState extends State<SelectMinutesList> {
         itemExtent: 50,
         magnification: 1.2,
         diameterRatio: 1.5,
-        onSelectedItemChanged: (value) {},
+        overAndUnderCenterOpacity: 0.4,
+        onSelectedItemChanged: ((value) => widget.getMinutes.call(value)),
         physics:
             const FixedExtentScrollPhysics(parent: BouncingScrollPhysics()),
         childDelegate: ListWheelChildBuilderDelegate(
