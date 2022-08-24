@@ -35,4 +35,6 @@ abstract class ChatPresenter {
   void verifyExpirateRoom();
 
   bool validadePassword(String password);
+
+  List<Map<String, dynamic>> getlistSenders();
 }

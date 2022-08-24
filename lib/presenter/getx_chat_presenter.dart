@@ -47,6 +47,9 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   void inicialization() async {
     RoomEntity? linkCapture;
+
+    socket.desconect();
+
     _preferencesEntity = await preferences.getData();
 
     try {
@@ -79,7 +82,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
           '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
           nickG);
     }
-
     socket.listenMessagens((event) {
       /// Pegar menssagem recebida
 
@@ -110,12 +112,16 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             break;
           case 2:
             _rxSenders.value.addIf(
-                nickG != value.username, {"user": value.username, "status": 1});
+                nickG != value.username &&
+                    (_rxSenders.value.indexWhere(
+                            (element) => element['user'] == value.username) ==
+                        -1),
+                {"user": value.username, "status": 1});
+            _verifyIsConnected();
             _rxSenders.refresh();
             break;
           // Caso possua um novo conectado
           case 3:
-            _rxSenders.value = [];
             _sendUserState(status: 2);
 
             if (value.username != nickG) {
@@ -139,6 +145,12 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             _rxListMessages.refresh();
             _rxListMessages.value.removeWhere(
                 (element) => element.text.id == value.text.message);
+            break;
+
+          ///verifica conectados
+          case 6:
+            _rxSenders.value = [];
+            _sendUserState(status: 2);
             break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
@@ -184,8 +196,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   }
 
   void _inicialization() async {
-    //Mandar menssagem para todos verem sua disponibilidade
-    //socket.emit('chatMessage', {"username": 'Jose', 'text': "olaaa"});
     isInit = true;
     Future.delayed(const Duration(milliseconds: 10)).then((value) {
       _rxListMessages.value = _rxListMessages.value
@@ -212,7 +222,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     socket.sendMenssage(body);
   }
 
+  @override
   List<Map<String, dynamic>> getlistSenders() {
+    _sendUserState(status: 6);
+    _verifyIsConnected();
     _rxSenders.refresh();
     return _rxSenders.value;
   }
@@ -290,5 +303,13 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       return true;
     }
     return false;
+  }
+
+  _verifyIsConnected() {
+    for (var element in _rxSenders.value) {
+      if (element['last_time'] + 180000 < DateTime.now()) {
+        element['status'] = 4;
+      }
+    }
   }
 }

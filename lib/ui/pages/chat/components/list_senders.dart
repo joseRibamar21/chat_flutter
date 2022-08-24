@@ -42,7 +42,7 @@ class AppBarSender extends StatelessWidget {
                 );
               }),
           subtitle: const Text(
-            "Lista de presentes",
+            "Opções da sala",
             style: TextStyle(color: Colors.white, fontSize: 14),
           )),
     );
@@ -62,11 +62,11 @@ class _ListSenders extends StatefulWidget {
 }
 
 class __ListSendersState extends State<_ListSenders> {
-  //List<Map<String, dynamic>> _list = [];
+  List<Map<String, dynamic>> _list = [];
 
   @override
   void initState() {
-    //_list = widget.controller.getlistSenders();
+    _list = widget.controller.getlistSenders();
     setState(() {});
     super.initState();
   }
@@ -82,16 +82,17 @@ class __ListSendersState extends State<_ListSenders> {
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Divider(thickness: 3),
           ),
-          Center(
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              "Toque no id para copiar",
-              style: Theme.of(context).textTheme.bodySmall,
+              "Opções",
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
             child: Center(
-              child: TextButton(
+              child: TextButton.icon(
                   onPressed: () {
                     FlutterClipboard.copy(widget.controller.link ?? "")
                         .then((value) {
@@ -107,7 +108,9 @@ class __ListSendersState extends State<_ListSenders> {
                               fontSize: 16.0));
                     });
                   },
-                  child: Text(
+                  icon: Icon(Icons.copy_outlined,
+                      color: Theme.of(context).iconTheme.color),
+                  label: Text(
                     "Copiar codigo da sala",
                     style: Theme.of(context).textTheme.titleSmall,
                   )),
@@ -115,9 +118,9 @@ class __ListSendersState extends State<_ListSenders> {
           ),
           Padding(
             padding:
-                const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+                const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 10),
             child: Center(
-              child: TextButton(
+              child: TextButton.icon(
                   onPressed: () {
                     FlutterClipboard.copy(
                             "143.244.167.43/#/chat/${widget.controller.nameRoomlink}/${widget.controller.link}")
@@ -134,13 +137,22 @@ class __ListSendersState extends State<_ListSenders> {
                               fontSize: 16.0));
                     });
                   },
-                  child: Text(
+                  icon: Icon(Icons.web_outlined,
+                      color: Theme.of(context).iconTheme.color),
+                  label: Text(
                     "Copiar link da sala",
                     style: Theme.of(context).textTheme.titleSmall,
                   )),
             ),
           ),
-          /* StreamBuilder<List<Map<String, dynamic>>>(
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+              "Presentes na sala",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          StreamBuilder<List<Map<String, dynamic>>>(
             stream: widget.controller.listSendersStream,
             builder: ((context, snapshot) {
               if (snapshot.hasData) {
@@ -185,7 +197,7 @@ class __ListSendersState extends State<_ListSenders> {
                 ),
               );
             }),
-          ) */
+          )
         ],
       );
     });

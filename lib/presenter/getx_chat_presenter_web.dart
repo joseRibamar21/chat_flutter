@@ -42,7 +42,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   @override
   void inicialization() async {
     RoomEntity? linkCapture;
-
+    socket.desconect();
     try {
       linkCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
     } catch (e) {
@@ -94,6 +94,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
                   element['status'] = 1;
+                  element['last_time'] = DateTime.now().millisecondsSinceEpoch;
                 }
               }
               _rxSenders.refresh();
@@ -104,7 +105,15 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             break;
           case 2:
             _rxSenders.value.addIf(
-                nickG != value.username, {"user": value.username, "status": 1});
+                nickG != value.username &&
+                    (_rxSenders.value.indexWhere(
+                            (element) => element['user'] == value.username) ==
+                        -1),
+                {
+                  "user": value.username,
+                  "status": 1,
+                  "last_time": DateTime.now().millisecondsSinceEpoch
+                });
             _rxSenders.refresh();
             break;
           // Caso possua um novo conectado
@@ -133,6 +142,10 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             _rxListMessages.refresh();
             _rxListMessages.value.removeWhere(
                 (element) => element.text.id == value.text.message);
+            break;
+          case 6:
+            _rxSenders.value = [];
+            _sendUserState(status: 2);
             break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
@@ -207,6 +220,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   }
 
   List<Map<String, dynamic>> getlistSenders() {
+    _verifyIsConnected();
     _rxSenders.refresh();
     return _rxSenders.value;
   }
@@ -237,6 +251,14 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
 
       timerDate = DateTime.now().millisecondsSinceEpoch;
     });
+  }
+
+  _verifyIsConnected() {
+    for (var element in _rxSenders.value) {
+      if (element['last_time'] + 180000 < DateTime.now()) {
+        element['status'] = 4;
+      }
+    }
   }
 
   removeMessage(MessageEntity messageEntity) {

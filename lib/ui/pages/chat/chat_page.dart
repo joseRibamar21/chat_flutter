@@ -30,6 +30,7 @@ class _ChatPageState extends State<ChatPage>
   @override
   void initState() {
     widget.presenter.inicialization();
+
     WidgetsBinding.instance.addObserver(this);
     timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       widget.presenter.verifyExpirateRoom();
@@ -42,6 +43,7 @@ class _ChatPageState extends State<ChatPage>
     widget.presenter.disp();
     WidgetsBinding.instance.removeObserver(this);
     _authController.dispose();
+
     _textController.dispose();
     super.dispose();
   }
