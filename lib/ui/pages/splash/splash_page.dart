@@ -14,15 +14,15 @@ class SplashPage extends StatelessWidget with NavigationManager {
         presenter.inicialization();
         handleNaviationLogin(presenter.toNavigationStream);
 
-        return Container(
-          height: double.maxFinite,
-          width: double.maxFinite,
-          color: Theme.of(context).primaryColor,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Image.asset("lib/ui/assets/imgs/icon.png",
-                fit: BoxFit.fitWidth,
-                color: Theme.of(context).secondaryHeaderColor),
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 600, maxWidth: 600),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: Image.asset("lib/ui/assets/imgs/icon.png",
+                  fit: BoxFit.fitWidth,
+                  color: Theme.of(context).secondaryHeaderColor),
+            ),
           ),
         );
       }),

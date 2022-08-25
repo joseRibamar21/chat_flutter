@@ -145,7 +145,20 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             break;
           case 6:
             _rxSenders.value = [];
-            _sendUserState(status: 2);
+            _sendUserState(status: 7);
+            break;
+
+          /// Atualizar status de disponivel
+          case 7:
+            if (value.username != nickG) {
+              for (var element in _rxSenders.value) {
+                if (element['user'] == value.username) {
+                  element['status'] = 1;
+                  element['last_time'] = DateTime.now().millisecondsSinceEpoch;
+                }
+              }
+            }
+            _rxSenders.refresh();
             break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);

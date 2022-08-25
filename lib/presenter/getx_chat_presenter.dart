@@ -102,6 +102,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
                   element['status'] = 1;
+                  element['last_time'] = DateTime.now().millisecondsSinceEpoch;
                 }
               }
               _rxSenders.refresh();
@@ -116,7 +117,11 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
                     (_rxSenders.value.indexWhere(
                             (element) => element['user'] == value.username) ==
                         -1),
-                {"user": value.username, "status": 1});
+                {
+                  "user": value.username,
+                  "status": 1,
+                  "last_time": DateTime.now().millisecondsSinceEpoch
+                });
             _verifyIsConnected();
             _rxSenders.refresh();
             break;
@@ -145,12 +150,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             _rxListMessages.refresh();
             _rxListMessages.value.removeWhere(
                 (element) => element.text.id == value.text.message);
-            break;
-
-          ///verifica conectados
-          case 6:
-            _rxSenders.value = [];
-            _sendUserState(status: 2);
             break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
@@ -224,7 +223,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   @override
   List<Map<String, dynamic>> getlistSenders() {
-    _sendUserState(status: 6);
     _verifyIsConnected();
     _rxSenders.refresh();
     return _rxSenders.value;
@@ -307,7 +305,8 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   _verifyIsConnected() {
     for (var element in _rxSenders.value) {
-      if (element['last_time'] + 180000 < DateTime.now()) {
+      if (element['last_time'] + 180000 <
+          DateTime.now().millisecondsSinceEpoch) {
         element['status'] = 4;
       }
     }
