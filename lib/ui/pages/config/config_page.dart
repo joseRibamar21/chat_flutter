@@ -44,8 +44,10 @@ class ConfigPage extends StatelessWidget {
                           "Alterar codinome do aplicativo, isso irá fazer com que todas as salas sejam atualizadas."),
                     ),
                     ListTile(
-                      onTap: () {
-                        Get.to(AlterTimerPage(),
+                      onTap: () async {
+                        var t = await presenter.getTime();
+                        print(t);
+                        Get.to(AlterTimerPage(mapTime: t),
                             transition: Transition.leftToRightWithFade);
                       },
                       title: const Text("Alterar tempo de sala padrão"),

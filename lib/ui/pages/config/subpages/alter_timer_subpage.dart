@@ -5,7 +5,8 @@ import '../components/components.dart';
 import '../config.dart';
 
 class AlterTimerPage extends StatefulWidget {
-  const AlterTimerPage({Key? key}) : super(key: key);
+  final Map<String, dynamic> mapTime;
+  const AlterTimerPage({Key? key, required this.mapTime}) : super(key: key);
 
   @override
   State<AlterTimerPage> createState() => _AlterTimerPageState();
@@ -57,8 +58,11 @@ class _AlterTimerPageState extends State<AlterTimerPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SelectHoursList(getHours: (value) => hours = value),
+                            SelectHoursList(
+                                initialHours: widget.mapTime['h'],
+                                getHours: (value) => hours = value),
                             SelectMinutesList(
+                              initialMinutes: widget.mapTime['m'],
                               getMinutes: (value) => minutes = value,
                             )
                           ],

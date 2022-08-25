@@ -22,4 +22,17 @@ class GetxConfigPresenter extends GetxController implements ConfigPresenter {
     int newtime = (h * 60 * 60 * 1000) + (m * 60 * 1000);
     await preferences.setTime(time: newtime);
   }
+
+  @override
+  Future<Map<String, dynamic>> getTime() async {
+    PreferencesEntity preferencesEntity = await preferences.getData();
+
+    double h = (preferencesEntity.timer / (60 * 60 * 1000)).toDouble();
+
+    double m = (h - h.floorToDouble()) * 60;
+
+    print(h.floorToDouble());
+    print(m);
+    return {"h": h.floorToDouble(), "m": m.floorToDouble()};
+  }
 }

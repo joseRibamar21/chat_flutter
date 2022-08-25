@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class SelectMinutesList extends StatefulWidget {
   final Function(int value) getMinutes;
-  const SelectMinutesList({Key? key, required this.getMinutes})
+  final double initialMinutes;
+  const SelectMinutesList(
+      {Key? key, required this.getMinutes, required this.initialMinutes})
       : super(key: key);
 
   @override
@@ -10,6 +12,20 @@ class SelectMinutesList extends StatefulWidget {
 }
 
 class _SelectMinutesListState extends State<SelectMinutesList> {
+  late FixedExtentScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = FixedExtentScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   final List<String> _minutes = List.generate(
     60,
     ((index) {
@@ -23,29 +39,37 @@ class _SelectMinutesListState extends State<SelectMinutesList> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 150,
-      width: 100,
-      child: ListWheelScrollView.useDelegate(
-        itemExtent: 50,
-        magnification: 1.2,
-        diameterRatio: 1.5,
-        overAndUnderCenterOpacity: 0.4,
-        onSelectedItemChanged: ((value) => widget.getMinutes.call(value)),
-        physics:
-            const FixedExtentScrollPhysics(parent: BouncingScrollPhysics()),
-        childDelegate: ListWheelChildBuilderDelegate(
-          childCount: _minutes.length,
-          builder: (BuildContext context, int index) {
-            return Center(
-              child: Text(
-                _minutes[index],
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            );
-          },
+    return Builder(builder: (context) {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        _scrollController.animateTo(50 * widget.initialMinutes,
+            duration: const Duration(milliseconds: 1000),
+            curve: Curves.bounceInOut);
+      });
+      return SizedBox(
+        height: 150,
+        width: 100,
+        child: ListWheelScrollView.useDelegate(
+          controller: _scrollController,
+          itemExtent: 50,
+          magnification: 1.2,
+          diameterRatio: 1.5,
+          overAndUnderCenterOpacity: 0.4,
+          onSelectedItemChanged: ((value) => widget.getMinutes.call(value)),
+          physics:
+              const FixedExtentScrollPhysics(parent: BouncingScrollPhysics()),
+          childDelegate: ListWheelChildBuilderDelegate(
+            childCount: _minutes.length,
+            builder: (BuildContext context, int index) {
+              return Center(
+                child: Text(
+                  _minutes[index],
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              );
+            },
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
