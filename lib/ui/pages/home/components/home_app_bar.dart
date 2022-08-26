@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../home.dart';
 
@@ -18,7 +19,10 @@ class _HomeAppBarState extends State<HomeAppBar>
   late Widget _myWidgetAnimatio = Align(
     alignment: Alignment.centerLeft,
     child: IconButton(
-        onPressed: () => widget.presenter.goTo("/config"),
+        onPressed: () async {
+          await Get.toNamed("/config");
+          widget.presenter.loadRooms();
+        },
         icon: const Icon(Icons.settings)),
   );
   @override
@@ -53,7 +57,10 @@ class _HomeAppBarState extends State<HomeAppBar>
         _myWidgetAnimatio = Align(
           alignment: Alignment.centerLeft,
           child: IconButton(
-              onPressed: () => widget.presenter.goTo("/config"),
+              onPressed: () async {
+                await Get.toNamed("/config");
+                widget.presenter.loadRooms();
+              },
               icon: const Icon(Icons.settings)),
         );
         widget.presenter.returnFilterRoom();

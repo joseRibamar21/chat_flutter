@@ -75,6 +75,10 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   Future<void> loadRooms() async {
     try {
+      _preferencesEntity = await preferences.getData();
+
+      _rxName.value = _preferencesEntity.nick;
+
       var list = await localRoom.listOfRooms();
       if (list != null) {
         _rxListRoom.value = list.listRoom;
@@ -91,7 +95,9 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   Future<void> saveRooms(String name, String? master) async {
     try {
+      await loadRooms();
       _preferencesEntity = await preferences.getData();
+      _rxName.value = _preferencesEntity.nick;
       if (master != null) {
         await localRoom.newRoom(
             name,
@@ -117,6 +123,13 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Future<void> enterRoom(String link) async {
     _rxNavigateTo.value = null;
     try {
+      _preferencesEntity = await preferences.getData();
+      _rxName.value = _preferencesEntity.nick;
+      if (_preferencesEntity.nick.isNotEmpty) {
+        _rxName.value = _preferencesEntity.nick;
+      } else {
+        throw "Error";
+      }
       List<String> list = link.split("/");
       if (list.length == 1) {
         var roomS = encryterMessage.getRoomLink(list[0]);
@@ -142,6 +155,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   void goChat(RoomEntity room) async {
     _preferencesEntity = await preferences.getData();
+    _rxName.value = _preferencesEntity.nick;
     _rxNavigateTo.value = null;
 
     ///Se a sala ainda não expirou
@@ -224,7 +238,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  String getLinkRoom(RoomEntity room) {
+  Future<String> getLinkRoom(RoomEntity room) async {
+    await loadRooms();
     var roomS = encryterMessage.getLinkRoom(room);
     String link = "143.244.167.43/#/chat/${room.name}/$roomS";
     return link;

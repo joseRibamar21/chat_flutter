@@ -112,4 +112,13 @@ class GetLocalRooms implements LocalRoom {
       return null;
     }
   }
+
+  @override
+  Future<bool> updateAllRoomsMaster(String master) async {
+    var data = jsonDecode(await storage.read());
+    for (int i = 0; i < data['listRoom'].length; i++) {
+      data['listRoom'][i]['master'] = master;
+    }
+    return true;
+  }
 }

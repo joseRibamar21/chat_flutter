@@ -19,7 +19,11 @@ class _AlterTimerPageState extends State<AlterTimerPage> {
     int hours = 0;
     int minutes = 0;
     return Scaffold(
-      appBar: AppBar(title: const Text("Alterar Tempo")),
+      appBar: AppBar(
+          title: const Text("Alterar Tempo"),
+          elevation: 0,
+          centerTitle: false,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(

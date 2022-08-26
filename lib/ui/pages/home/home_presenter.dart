@@ -21,5 +21,5 @@ abstract class HomePresenter {
   void seaching(bool value);
 
   bool validadePassword(String password);
-  String getLinkRoom(RoomEntity room);
+  Future<String> getLinkRoom(RoomEntity room);
 }

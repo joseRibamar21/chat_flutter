@@ -14,4 +14,6 @@ abstract class LocalRoom {
   Future<bool> deleteAll();
 
   Future<dynamic> refreshTime(RoomEntity room, String time);
+
+  Future<bool> updateAllRoomsMaster(String master);
 }

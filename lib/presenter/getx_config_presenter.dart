@@ -1,6 +1,6 @@
-import 'package:chat_flutter/domain/entities/entities.dart';
 import 'package:get/get.dart';
 
+import '../domain/entities/entities.dart';
 import '../domain/usecase/usecase.dart';
 import '../ui/pages/pages.dart';
 
@@ -31,8 +31,18 @@ class GetxConfigPresenter extends GetxController implements ConfigPresenter {
 
     double m = (h - h.floorToDouble()) * 60;
 
-    print(h.floorToDouble());
-    print(m);
     return {"h": h.floorToDouble(), "m": m.floorToDouble()};
+  }
+
+  @override
+  Future<String> getName() async {
+    PreferencesEntity preferencesEntity = await preferences.getData();
+    return preferencesEntity.nick;
+  }
+
+  @override
+  Future<void> updateName(String codiname) async {
+    localRoom.updateAllRoomsMaster(codiname);
+    await preferences.setName(name: codiname);
   }
 }

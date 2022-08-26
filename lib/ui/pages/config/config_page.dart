@@ -37,7 +37,12 @@ class ConfigPage extends StatelessWidget {
                       child: ConfigTitleText(),
                     ),
                     ListTile(
-                      onTap: () {},
+                      onTap: () async {
+                        var t = await presenter.getName();
+                        Get.to(AlterCodinameSubpage(
+                          name: t,
+                        ));
+                      },
                       title: const Text("Alterar codinome"),
                       trailing: const Icon(Icons.arrow_forward_ios_rounded),
                       subtitle: const Text(
@@ -46,7 +51,6 @@ class ConfigPage extends StatelessWidget {
                     ListTile(
                       onTap: () async {
                         var t = await presenter.getTime();
-                        print(t);
                         Get.to(AlterTimerPage(mapTime: t),
                             transition: Transition.leftToRightWithFade);
                       },

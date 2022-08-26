@@ -48,7 +48,8 @@ class RoomsListView extends StatelessWidget {
                             shareLink: (() async {
                               Navigator.pop(context);
                               await Share.share(
-                                  presenter.getLinkRoom(snapshot.data![index]),
+                                  await presenter
+                                      .getLinkRoom(snapshot.data![index]),
                                   subject: "Secreto");
                             }),
                           );
