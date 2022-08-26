@@ -32,9 +32,9 @@ class _ChatPageState extends State<ChatPage>
     widget.presenter.inicialization();
 
     WidgetsBinding.instance.addObserver(this);
-    timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
+    /*   timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       widget.presenter.verifyExpirateRoom();
-    });
+    }); */
     super.initState();
   }
 

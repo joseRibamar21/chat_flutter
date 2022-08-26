@@ -100,6 +100,6 @@ class _HomeAppBarState extends State<HomeAppBar>
     );
   }
 }
-/*     leading: IconButton(
+/* leading: IconButton(
                 onPressed: presenter.goRegister,
                 icon: const Icon(Icons.build)), */

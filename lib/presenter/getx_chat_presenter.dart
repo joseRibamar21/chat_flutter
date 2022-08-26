@@ -151,6 +151,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             _rxListMessages.value.removeWhere(
                 (element) => element.text.id == value.text.message);
             break;
+          // expulsar todo mundo da sala
+          case 6:
+            _rxDesconect.value = "Sala finalizada!";
+            break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
@@ -310,5 +314,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
         element['status'] = 4;
       }
     }
+  }
+
+  @override
+  void finishRoom() {
+    _sendUserState(status: 6);
   }
 }

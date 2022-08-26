@@ -89,64 +89,62 @@ class __ListSendersState extends State<_ListSenders> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-            child: Center(
-              child: TextButton.icon(
-                  onPressed: () {
-                    FlutterClipboard.copy(widget.controller.link ?? "")
-                        .then((value) {
-                      Navigator.pop(context);
-                      Future.delayed(const Duration(milliseconds: 100)).then(
-                          (value) => Fluttertoast.showToast(
-                              msg: "Copiado",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.grey[800],
-                              textColor: Colors.white,
-                              fontSize: 16.0));
-                    });
-                  },
-                  icon: Icon(Icons.copy_outlined,
-                      color: Theme.of(context).iconTheme.color),
-                  label: Text(
-                    "Copiar codigo da sala",
-                    style: Theme.of(context).textTheme.titleSmall,
-                  )),
+          ListTile(
+            leading: Icon(Icons.copy_outlined,
+                color: Theme.of(context).iconTheme.color),
+            title: Text(
+              "Copiar codigo da sala",
+              style: Theme.of(context).textTheme.titleSmall,
             ),
+            onTap: () {
+              FlutterClipboard.copy(widget.controller.link ?? "").then((value) {
+                Navigator.pop(context);
+                Future.delayed(const Duration(milliseconds: 100)).then(
+                    (value) => Fluttertoast.showToast(
+                        msg: "Copiado",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.grey[800],
+                        textColor: Colors.white,
+                        fontSize: 16.0));
+              });
+            },
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 10),
-            child: Center(
-              child: TextButton.icon(
-                  onPressed: () {
-                    FlutterClipboard.copy(
-                            "143.244.167.43/#/chat/${widget.controller.nameRoomlink}/${widget.controller.link}")
-                        .then((value) {
-                      Navigator.pop(context);
-                      Future.delayed(const Duration(milliseconds: 100)).then(
-                          (value) => Fluttertoast.showToast(
-                              msg: "Copiado",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.grey[800],
-                              textColor: Colors.white,
-                              fontSize: 16.0));
-                    });
-                  },
-                  icon: Icon(Icons.web_outlined,
-                      color: Theme.of(context).iconTheme.color),
-                  label: Text(
-                    "Copiar link da sala",
-                    style: Theme.of(context).textTheme.titleSmall,
-                  )),
+          ListTile(
+            leading: Icon(Icons.web_outlined,
+                color: Theme.of(context).iconTheme.color),
+            title: Text(
+              "Copiar link da sala",
+              style: Theme.of(context).textTheme.titleSmall,
             ),
+            onTap: () {
+              FlutterClipboard.copy(
+                      "143.244.167.43/#/chat/${widget.controller.nameRoomlink}/${widget.controller.link}")
+                  .then((value) {
+                Navigator.pop(context);
+                Future.delayed(const Duration(milliseconds: 100)).then(
+                    (value) => Fluttertoast.showToast(
+                        msg: "Copiado",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.grey[800],
+                        textColor: Colors.white,
+                        fontSize: 16.0));
+              });
+            },
           ),
+          ListTile(
+              leading: Icon(Icons.exit_to_app_rounded,
+                  color: Theme.of(context).iconTheme.color),
+              title: Text(
+                "Encerrar Sala",
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              onTap: widget.controller.finishRoom),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, top: 10),
             child: Text(
               "Presentes na sala",
               style: Theme.of(context).textTheme.titleMedium,
@@ -197,7 +195,8 @@ class __ListSendersState extends State<_ListSenders> {
                 ),
               );
             }),
-          )
+          ),
+          const SizedBox(height: 10),
         ],
       );
     });

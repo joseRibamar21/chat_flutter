@@ -32,9 +32,11 @@ abstract class ChatPresenter {
 
   Future<void> verifyConnection();
 
-  void verifyExpirateRoom();
-
   bool validadePassword(String password);
 
   List<Map<String, dynamic>> getlistSenders();
+
+  void verifyExpirateRoom();
+
+  void finishRoom();
 }
