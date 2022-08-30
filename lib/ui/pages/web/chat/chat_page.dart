@@ -22,15 +22,14 @@ class ChatPageWeb extends StatefulWidget {
 class _ChatPageWebState extends State<ChatPageWeb>
     with WidgetsBindingObserver, DesconectMixin {
   final TextEditingController _textController = TextEditingController();
-  late Timer timer;
 
   @override
   void initState() {
     widget.presenter.inicialization();
     WidgetsBinding.instance.addObserver(this);
-    /*  timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       widget.presenter.verifyExpirateRoom();
-    }); */
+    });
     super.initState();
   }
 

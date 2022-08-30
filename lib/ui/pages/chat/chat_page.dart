@@ -25,7 +25,6 @@ class _ChatPageState extends State<ChatPage>
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
-  late Timer timer;
 
   @override
   void initState() {
@@ -35,6 +34,10 @@ class _ChatPageState extends State<ChatPage>
     /*   timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       widget.presenter.verifyExpirateRoom();
     }); */
+
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      widget.presenter.verifyExpirateRoom();
+    });
     super.initState();
   }
 
