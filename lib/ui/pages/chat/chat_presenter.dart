@@ -5,6 +5,7 @@ abstract class ChatPresenter {
   Stream<List<Map<String, dynamic>>> get listSendersStream;
   Stream<String?> get roomNameString;
   Stream<String?> get desconectStream;
+  Stream<MessageEntity?> get notificationMenssage;
 
   void inicialization();
 
@@ -39,4 +40,6 @@ abstract class ChatPresenter {
   void verifyExpirateRoom();
 
   void finishRoom();
+
+  void backgroundScreen(bool value);
 }

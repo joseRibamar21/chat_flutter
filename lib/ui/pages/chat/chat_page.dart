@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,8 +30,19 @@ class _ChatPageState extends State<ChatPage>
   @override
   void initState() {
     widget.presenter.inicialization();
-
     WidgetsBinding.instance.addObserver(this);
+
+    widget.presenter.notificationMenssage.listen((event) {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: 0,
+            channelKey: 'basic_channel',
+            title: "Uma nova mensagem",
+            body:
+                "${event!.username} te mandou uma mensagem. Toque para ver!" //event!.text.message,
+            ),
+      );
+    });
     /*   timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       widget.presenter.verifyExpirateRoom();
     }); */
@@ -55,6 +67,7 @@ class _ChatPageState extends State<ChatPage>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
+        widget.presenter.backgroundScreen(false);
         widget.presenter.resume();
         Future.delayed(const Duration(milliseconds: 40)).then((value) async {
           if (await _authenticationLocal.varifyCanAuthentican()) {
@@ -63,6 +76,7 @@ class _ChatPageState extends State<ChatPage>
         });
         break;
       case AppLifecycleState.inactive:
+        widget.presenter.backgroundScreen(true);
         widget.presenter.inactive();
         break;
       case AppLifecycleState.detached:

@@ -26,10 +26,12 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<String?>("");
   final _rxRoomName = Rx<String?>("");
+  final _rxNotificationMenssage = Rx<MessageEntity?>(null);
   final SecureStorage secureStorage = SecureStorage();
   late RoomEntity _roomEntity;
   late final String? _roomLink;
   late PreferencesEntity _preferencesEntity;
+  bool _isBackgroundScreen = false;
 
   @override
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
@@ -40,6 +42,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   @override
   Stream<String?> get roomNameString => _rxRoomName.stream;
+
+  @override
+  Stream<MessageEntity?> get notificationMenssage =>
+      _rxNotificationMenssage.stream;
 
   late Timer timer;
   late int timerDate;
@@ -110,6 +116,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
+
+            if (_isBackgroundScreen) {
+              _rxNotificationMenssage.value = value;
+            }
             break;
           case 2:
             _rxSenders.value.addIf(
@@ -319,5 +329,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   void finishRoom() {
     _sendUserState(status: 6);
+  }
+
+  @override
+  void backgroundScreen(bool value) {
+    _isBackgroundScreen = value;
   }
 }
