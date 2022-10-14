@@ -108,24 +108,28 @@ class _ChatPageState extends State<ChatPage>
             create: (context) => widget.presenter,
             child: Scaffold(
               bottomSheet: FooterMessage(
-                  controller: _textController, sendMessage: _send),
+                  typing: widget.presenter.isTyping,
+                  controller: _textController,
+                  sendMessage: _send),
               appBar: AppBar(
                 toolbarHeight: 60,
                 title:
                     AppBarSender(name: widget.presenter.nameRoomlink ?? "Sala"),
               ),
-              body: Builder(builder: (context) {
-                handleDesconect(context, widget.presenter.desconectStream);
-                return Stack(
-                  children: [
-                    ListMessage(
-                      stream: widget.presenter.listMessagesStream,
-                      nick: Get.parameters['nick'] ?? "",
-                    ),
-                    const CustomAlertConnection(),
-                  ],
-                );
-              }),
+              body: Builder(
+                builder: (context) {
+                  handleDesconect(context, widget.presenter.desconectStream);
+                  return Stack(
+                    children: [
+                      ListMessage(
+                        stream: widget.presenter.listMessagesStream,
+                        nick: Get.parameters['nick'] ?? "",
+                      ),
+                      const CustomAlertConnection(),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),

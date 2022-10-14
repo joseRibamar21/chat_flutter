@@ -75,8 +75,11 @@ class _ChatPageWebState extends State<ChatPageWeb>
         child: Provider(
           create: (context) => widget.presenter,
           child: Scaffold(
-            bottomSheet:
-                FooterMessage(controller: _textController, sendMessage: _send),
+            bottomSheet: FooterMessage(
+              controller: _textController,
+              sendMessage: _send,
+              typing: widget.presenter.isTyping,
+            ),
             appBar: AppBar(
               toolbarHeight: 60,
               title:

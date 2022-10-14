@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 class FooterMessage extends StatelessWidget {
   final TextEditingController controller;
   final Function() sendMessage;
+  final Function(String? value) typing;
   const FooterMessage(
-      {Key? key, required this.controller, required this.sendMessage})
+      {Key? key,
+      required this.controller,
+      required this.typing,
+      required this.sendMessage})
       : super(key: key);
 
   @override
@@ -29,6 +33,9 @@ class FooterMessage extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   autocorrect: true,
                   enableSuggestions: true,
+                  onChanged: (value) {
+                    typing.call(value);
+                  },
                   maxLines: 4,
                   minLines: 1,
                   toolbarOptions: const ToolbarOptions(

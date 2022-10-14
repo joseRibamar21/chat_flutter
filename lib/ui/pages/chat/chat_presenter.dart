@@ -6,6 +6,7 @@ abstract class ChatPresenter {
   Stream<String?> get roomNameString;
   Stream<String?> get desconectStream;
   Stream<MessageEntity?> get notificationMenssage;
+  Stream<String?> get userMessageTypingStream;
 
   void inicialization();
 
@@ -42,4 +43,6 @@ abstract class ChatPresenter {
   void finishRoom();
 
   void backgroundScreen(bool value);
+
+  void isTyping(String? value);
 }

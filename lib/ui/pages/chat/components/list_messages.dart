@@ -105,18 +105,5 @@ class ListMessageState extends State<ListMessage> {
         );
       },
     );
-    /* return ListView.builder(
-        controller: _scrollController,
-        itemCount: 100,
-        cacheExtent: 99,
-        itemBuilder: (context, index) {
-          return ChatItem(
-              key: Key(index.toString()),
-              menssage: "list[index].body.message",
-              sender: "list[index].sender",
-              isSentder: false, //(list[index].sender == widget.nick),
-              connection: 1 //list[index].body.connecting,
-              );
-        }); */
   }
 }

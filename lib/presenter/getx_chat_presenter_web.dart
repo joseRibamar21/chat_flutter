@@ -22,9 +22,14 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<String?>("");
   final _rxRoomName = Rx<String?>("");
+  final _rxNotificationMenssage = Rx<MessageEntity?>(null);
+  final _rxIsTyping = Rx<bool>(false);
+  final _rxUserMessageTyping = Rx<String?>(null);
   final SecureStorage secureStorage = SecureStorage();
   late RoomEntity _roomEntity;
   late final String? _roomLink;
+  late PreferencesEntity _preferencesEntity;
+  bool _isBackgroundScreen = false;
 
   @override
   Stream<List<MessageEntity>> get listMessagesStream => _rxListMessages.stream;
@@ -36,13 +41,22 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   @override
   Stream<String?> get roomNameString => _rxRoomName.stream;
 
+  @override
+  Stream<MessageEntity?> get notificationMenssage =>
+      _rxNotificationMenssage.stream;
+
+  @override
+  Stream<String?> get userMessageTypingStream => _rxUserMessageTyping.stream;
+
   late Timer timer;
   late int timerDate;
 
   @override
   void inicialization() async {
     RoomEntity? linkCapture;
+
     socket.desconect();
+
     try {
       linkCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
     } catch (e) {
@@ -73,7 +87,6 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
           '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
           nickG);
     }
-
     socket.listenMessagens((event) {
       /// Pegar menssagem recebida
 
@@ -91,6 +104,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
           // conectado
           case 1:
             if (value.username != nickG) {
+              _rxUserMessageTyping.value = null;
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
                   element['status'] = 1;
@@ -102,6 +116,11 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
 
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
+
+            if (_isBackgroundScreen) {
+              _rxNotificationMenssage.value = value;
+            }
+
             break;
           case 2:
             _rxSenders.value.addIf(
@@ -114,11 +133,11 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
                   "status": 1,
                   "last_time": DateTime.now().millisecondsSinceEpoch
                 });
+            _verifyIsConnected();
             _rxSenders.refresh();
             break;
           // Caso possua um novo conectado
           case 3:
-            _rxSenders.value = [];
             _sendUserState(status: 2);
 
             if (value.username != nickG) {
@@ -143,9 +162,21 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             _rxListMessages.value.removeWhere(
                 (element) => element.text.id == value.text.message);
             break;
-
+          // expulsar todo mundo da sala
           case 6:
             _rxDesconect.value = "Sala finalizada!";
+            break;
+          // usuario esta digitando
+          case 7:
+            if (value.username != nickG) {
+              _rxUserMessageTyping.value = value.username;
+            }
+            break;
+          // usuario parou de digitar
+          case 8:
+            if (value.username != nickG) {
+              _rxUserMessageTyping.value = null;
+            }
             break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
@@ -167,6 +198,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   /// Parâmetros: [value] será a mensagem a ser enviada.
   @override
   void send(String? value) {
+    _rxIsTyping.value = false;
     if (value!.isNotEmpty) {
       _sendUserState(status: 1, message: value);
     }
@@ -191,8 +223,6 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   }
 
   void _inicialization() async {
-    //Mandar menssagem para todos verem sua disponibilidade
-    //socket.emit('chatMessage', {"username": 'Jose', 'text': "olaaa"});
     isInit = true;
     Future.delayed(const Duration(milliseconds: 10)).then((value) {
       _rxListMessages.value = _rxListMessages.value
@@ -219,6 +249,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
     socket.sendMenssage(body);
   }
 
+  @override
   List<Map<String, dynamic>> getlistSenders() {
     _verifyIsConnected();
     _rxSenders.refresh();
@@ -251,14 +282,6 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
 
       timerDate = DateTime.now().millisecondsSinceEpoch;
     });
-  }
-
-  _verifyIsConnected() {
-    for (var element in _rxSenders.value) {
-      if (element['last_time'] + 180000 < DateTime.now()) {
-        element['status'] = 4;
-      }
-    }
   }
 
   removeMessage(MessageEntity messageEntity) {
@@ -296,6 +319,48 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
           int.parse(_roomEntity.expirateAt ?? "0")) {
         disp();
         _rxDesconect.value = "Sala expirada!";
+      }
+    }
+  }
+
+  @override
+  bool validadePassword(String password) {
+    if (_preferencesEntity.password == password) {
+      return true;
+    }
+    return false;
+  }
+
+  _verifyIsConnected() {
+    for (var element in _rxSenders.value) {
+      if (element['last_time'] + 180000 <
+          DateTime.now().millisecondsSinceEpoch) {
+        element['status'] = 4;
+      }
+    }
+  }
+
+  @override
+  void finishRoom() {
+    _sendUserState(status: 6);
+  }
+
+  @override
+  void backgroundScreen(bool value) {
+    _isBackgroundScreen = value;
+  }
+
+  @override
+  void isTyping(String? value) {
+    if (value != "") {
+      if (!_rxIsTyping.value) {
+        _rxIsTyping.value = true;
+        _sendUserState(status: 7);
+      }
+    } else {
+      if (_rxIsTyping.value) {
+        _rxIsTyping.value = false;
+        _sendUserState(status: 8);
       }
     }
   }

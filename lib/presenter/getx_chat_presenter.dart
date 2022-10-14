@@ -27,6 +27,8 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   final _rxDesconect = Rx<String?>("");
   final _rxRoomName = Rx<String?>("");
   final _rxNotificationMenssage = Rx<MessageEntity?>(null);
+  final _rxIsTyping = Rx<bool>(false);
+  final _rxUserMessageTyping = Rx<String?>(null);
   final SecureStorage secureStorage = SecureStorage();
   late RoomEntity _roomEntity;
   late final String? _roomLink;
@@ -46,6 +48,9 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   Stream<MessageEntity?> get notificationMenssage =>
       _rxNotificationMenssage.stream;
+
+  @override
+  Stream<String?> get userMessageTypingStream => _rxUserMessageTyping.stream;
 
   late Timer timer;
   late int timerDate;
@@ -105,6 +110,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
           // conectado
           case 1:
             if (value.username != nickG) {
+              _rxUserMessageTyping.value = null;
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
                   element['status'] = 1;
@@ -165,6 +171,18 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
           case 6:
             _rxDesconect.value = "Sala finalizada!";
             break;
+          // usuario esta digitando
+          case 7:
+            if (value.username != nickG) {
+              _rxUserMessageTyping.value = value.username;
+            }
+            break;
+          // usuario parou de digitar
+          case 8:
+            if (value.username != nickG) {
+              _rxUserMessageTyping.value = null;
+            }
+            break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
@@ -185,6 +203,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   /// Parâmetros: [value] será a mensagem a ser enviada.
   @override
   void send(String? value) {
+    _rxIsTyping.value = false;
     if (value!.isNotEmpty) {
       _sendUserState(status: 1, message: value);
     }
@@ -334,5 +353,20 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   void backgroundScreen(bool value) {
     _isBackgroundScreen = value;
+  }
+
+  @override
+  void isTyping(String? value) {
+    if (value != "" || value != null) {
+      if (!_rxIsTyping.value) {
+        _rxIsTyping.value = true;
+        _sendUserState(status: 7);
+      }
+    } else {
+      if (_rxIsTyping.value) {
+        _rxIsTyping.value = false;
+        _sendUserState(status: 8);
+      }
+    }
   }
 }

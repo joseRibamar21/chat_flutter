@@ -16,35 +16,46 @@ class AppBarSender extends StatelessWidget {
     return SizedBox(
       height: 60,
       child: ListTile(
-          isThreeLine: true,
-          onTap: () async {
-            await showModalBottomSheet(
-                isScrollControlled: true,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height - 50),
-                context: context,
-                builder: (context) {
-                  return _ListSenders(controller: controller);
-                });
+        isThreeLine: true,
+        onTap: () async {
+          await showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height - 50),
+              context: context,
+              builder: (context) {
+                return _ListSenders(controller: controller);
+              });
+        },
+        title: StreamBuilder<String?>(
+            stream: controller.roomNameString,
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.data ?? "Sala",
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              );
+            }),
+        subtitle: StreamBuilder<String?>(
+          stream: controller.userMessageTypingStream,
+          builder: (context, snapshot) {
+            return snapshot.data != null
+                ? Text(
+                    "${snapshot.data} esta digitando...",
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                  )
+                : const Text(
+                    "Opções da sala",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  );
           },
-          title: StreamBuilder<String?>(
-              stream: controller.roomNameString,
-              builder: (context, snapshot) {
-                return Text(
-                  snapshot.data ?? "Sala",
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                );
-              }),
-          subtitle: const Text(
-            "Opções da sala",
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          )),
+        ),
+      ),
     );
   }
 }

@@ -5,6 +5,8 @@ abstract class ChatWebPresenter {
   Stream<List<Map<String, dynamic>>> get listSendersStream;
   Stream<String?> get roomNameString;
   Stream<String?> get desconectStream;
+  Stream<MessageEntity?> get notificationMenssage;
+  Stream<String?> get userMessageTypingStream;
 
   void inicialization();
 
@@ -32,5 +34,15 @@ abstract class ChatWebPresenter {
 
   Future<void> verifyConnection();
 
+  bool validadePassword(String password);
+
+  List<Map<String, dynamic>> getlistSenders();
+
   void verifyExpirateRoom();
+
+  void finishRoom();
+
+  void backgroundScreen(bool value);
+
+  void isTyping(String? value);
 }
