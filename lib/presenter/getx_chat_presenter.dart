@@ -179,9 +179,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             break;
           // usuario parou de digitar
           case 8:
-            if (value.username != nickG) {
-              _rxUserMessageTyping.value = null;
-            }
+            _rxUserMessageTyping.value = null;
             break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
@@ -357,16 +355,14 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   @override
   void isTyping(String? value) {
-    if (value != "" || value != null) {
+    if (value != "") {
       if (!_rxIsTyping.value) {
         _rxIsTyping.value = true;
         _sendUserState(status: 7);
       }
     } else {
-      if (_rxIsTyping.value) {
-        _rxIsTyping.value = false;
-        _sendUserState(status: 8);
-      }
+      _rxIsTyping.value = false;
+      _sendUserState(status: 8);
     }
   }
 }

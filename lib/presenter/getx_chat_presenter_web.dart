@@ -174,9 +174,8 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             break;
           // usuario parou de digitar
           case 8:
-            if (value.username != nickG) {
-              _rxUserMessageTyping.value = null;
-            }
+            _rxUserMessageTyping.value = null;
+
             break;
           default:
             _rxListMessages.value = _rxListMessages.value..add(value);
@@ -358,10 +357,8 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
         _sendUserState(status: 7);
       }
     } else {
-      if (_rxIsTyping.value) {
-        _rxIsTyping.value = false;
-        _sendUserState(status: 8);
-      }
+      _rxIsTyping.value = false;
+      _sendUserState(status: 8);
     }
   }
 }
