@@ -40,6 +40,7 @@ class EncrypterRoom implements EncryterMessage {
     if (room.isNotEmpty) {
       String link = _unmask(room);
       List<String> roomlink = link.split(".");
+      print(roomlink);
       try {
         RoomEntity roomEntity = RoomEntity(
             master: roomlink[0],

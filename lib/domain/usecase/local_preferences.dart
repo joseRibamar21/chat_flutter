@@ -10,9 +10,10 @@ abstract class LocalPreferences {
   ///Atualiza o valor do tema
   Future<bool> setTheme({required int theme});
 
+  ///Atualiza o valor do tema
   Future<bool> setPassword({required String password});
 
-  ///Salvar local
+  ///Pegar local
   Future<PreferencesEntity> getData();
 
   ///Limpar dados

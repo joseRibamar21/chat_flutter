@@ -41,14 +41,11 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   Stream<List<Map<String, dynamic>>> get listSendersStream => _rxSenders.stream;
   @override
   Stream<String?> get desconectStream => _rxDesconect.stream;
-
   @override
   Stream<String?> get roomNameString => _rxRoomName.stream;
-
   @override
   Stream<MessageEntity?> get notificationMenssage =>
       _rxNotificationMenssage.stream;
-
   @override
   Stream<String?> get userMessageTypingStream => _rxUserMessageTyping.stream;
 
@@ -76,6 +73,8 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     }
 
     socket.init();
+
+    print(Get.parameters['link']);
 
     nickG = Get.parameters['nick'];
     _rxRoomName.value = linkCapture!.name;
