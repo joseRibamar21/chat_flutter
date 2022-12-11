@@ -41,7 +41,7 @@ class _HomeListOptionsRoomsState extends State<HomeListOptionsRooms> {
                           function: () async {
                             var t = await newRoomDialog(context);
                             if (t != null) {
-                              presenter.saveRooms(t, null);
+                              presenter.createRoom(t);
                             }
                           },
                           icon: Icons.group_add_rounded,

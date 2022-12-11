@@ -2,8 +2,12 @@ import 'entities.dart';
 
 class MessageEntity {
   final String username;
-  final BodyEntity text;
+  final String userHash;
+  final BodyEntity body;
   final String? time;
   MessageEntity(
-      {required this.username, required this.text, required this.time});
+      {required this.username,
+      required this.userHash,
+      required this.body,
+      required this.time});
 }

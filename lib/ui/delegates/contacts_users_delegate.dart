@@ -198,7 +198,7 @@ class ContactsDelegate extends SearchDelegate<String> {
     );
   }
 
-  List<Contact> _seachContact(String state, List<Contact> list) {
+  /* List<Contact> _seachContact(String state, List<Contact> list) {
     if (state.isEmpty) {
       state = '';
     }
@@ -209,5 +209,5 @@ class ContactsDelegate extends SearchDelegate<String> {
       }
     }
     return resp;
-  }
+  } */
 }

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:chat_flutter/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:provider/provider.dart';
 
@@ -26,6 +26,8 @@ class _ChatPageState extends State<ChatPage>
   final TextEditingController _textController = TextEditingController();
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
+
+  late UserEntity userEntity;
 
   @override
   void initState() {
@@ -105,33 +107,43 @@ class _ChatPageState extends State<ChatPage>
           validadePassword: widget.presenter.validadePassword,
           controller: _authController,
           body: Provider(
-            create: (context) => widget.presenter,
-            child: Scaffold(
-              bottomSheet: FooterMessage(
-                  typing: widget.presenter.isTyping,
-                  controller: _textController,
-                  sendMessage: _send),
-              appBar: AppBar(
-                toolbarHeight: 60,
-                title:
-                    AppBarSender(name: widget.presenter.nameRoomlink ?? "Sala"),
-              ),
-              body: Builder(
-                builder: (context) {
-                  handleDesconect(context, widget.presenter.desconectStream);
-                  return Stack(
-                    children: [
-                      ListMessage(
-                        stream: widget.presenter.listMessagesStream,
-                        nick: Get.parameters['nick'] ?? "",
-                      ),
-                      const CustomAlertConnection(),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
+              create: (context) => widget.presenter,
+              child: Scaffold(
+                bottomSheet: FooterMessage(
+                    typing: widget.presenter.isTyping,
+                    controller: _textController,
+                    sendMessage: _send),
+                appBar: AppBar(
+                  toolbarHeight: 60,
+                  title: AppBarSender(
+                      name: widget.presenter.nameRoomlink ?? "Sala"),
+                ),
+                body: StreamBuilder<UserEntity?>(
+                    stream: widget.presenter.currentUserStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.data != null) {
+                        userEntity = snapshot.data!;
+                      }
+                      return Builder(
+                        builder: (context) {
+                          handleDesconect(
+                              context, widget.presenter.desconectStream);
+                          return Stack(
+                            children: [
+                              ListMessage(
+                                stream: widget.presenter.listMessagesStream,
+                                nick: userEntity.name + userEntity.hash,
+                              ),
+                              const CustomAlertConnection(),
+                            ],
+                          );
+                        },
+                      );
+                    }),
+              )),
         ),
       ),
     );

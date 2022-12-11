@@ -42,14 +42,13 @@ class RoomsListView extends StatelessWidget {
                             context,
                             delete: () {
                               Navigator.pop(context);
-                              presenter.deleteRoom(snapshot.data![index].name,
-                                  snapshot.data![index].password);
+                              presenter.deleteRoom(snapshot.data![index]);
                             },
                             shareLink: (() async {
                               Navigator.pop(context);
                               await Share.share(
                                   await presenter
-                                      .getLinkRoom(snapshot.data![index]),
+                                      .getCodeRoom(snapshot.data![index]),
                                   subject: "Secreto");
                             }),
                           );

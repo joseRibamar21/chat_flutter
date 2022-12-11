@@ -6,12 +6,16 @@ import '../models/models.dart';
 
 /// Função que retorna uma String ja preparado para ser enviado
 Map<String, dynamic> prepareSendMessage(
-    {required String usarName, required int status, String? message}) {
+    {required String usarName,
+    required String userHash,
+    required int status,
+    String? message}) {
   //EncryptMessage encryptMessage = EncryptMessage();
 
   return {
     'username': usarName,
-    'text': jsonEncode(BodyModel(
+    'userHash': userHash,
+    'body': jsonEncode(BodyModel(
             id: usarName + DateTime.now().microsecondsSinceEpoch.toString(),
             message: message, //encryptMessage.encrypt(message ?? ""),
             function: status,
@@ -29,13 +33,16 @@ MessageEntity? getSendMessage({required dynamic event}) {
     //EncryptMessage encryptMessage = EncryptMessage();
     var userName = event['username'];
 
+    var userHash = event['text']['userHash'].toString();
+
     var time = event['time'];
 
     var text = event['text'];
 
     var message = MessageEntity(
         username: userName,
-        text: BodyModel.fromJson(text['text']).toEntity(),
+        userHash: userHash,
+        body: BodyModel.fromJson(text['body']).toEntity(),
         time: time);
     return message;
 
@@ -54,6 +61,8 @@ MessageEntity? getSendMessage({required dynamic event}) {
         username: message['username'],
         text: BodyModel.fromJson(teste).toEntity(),
         time: message['time']); */
-  } catch (error) {}
+  } catch (error) {
+    print("Error ao receber mensagem");
+  }
   return null;
 }

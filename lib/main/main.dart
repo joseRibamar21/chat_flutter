@@ -10,7 +10,7 @@ void inicialization() {
   WidgetsFlutterBinding();
   Provider.debugCheckInvalidValueType = null;
   AwesomeNotifications().initialize(
-    'resource://drawable/launch_background',
+    null,
     [
       NotificationChannel(
         channelKey: 'basic_channel',
@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: "/", page: makeSplashPage),
         GetPage(name: "/register", page: () => makeRegisterPage(context)),
         GetPage(
-            name: "/chat/:nick/:link",
+            name: "/chat/:user/:link",
             page: makeChatPage,
             fullscreenDialog: true),
         GetPage(name: "/home", page: makeHomePage),

@@ -21,18 +21,21 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       required this.preferences});
 
   final _rxListMessages = Rx<List<MessageEntity>>([]);
-  late String? nickG;
+  late UserEntity currentUser;
   bool isInit = false;
   final _rxSenders = Rx<List<Map<String, dynamic>>>([]);
   final _rxDesconect = Rx<String?>("");
   final _rxRoomName = Rx<String?>("");
+  final _rxCurrentUser = Rx<UserEntity?>(null);
   final _rxNotificationMenssage = Rx<MessageEntity?>(null);
   final _rxIsTyping = Rx<bool>(false);
   final _rxUserMessageTyping = Rx<String?>(null);
+
   final SecureStorage secureStorage = SecureStorage();
+  late PreferencesEntity _preferencesEntity;
+
   late RoomEntity _roomEntity;
   late final String? _roomLink;
-  late PreferencesEntity _preferencesEntity;
   bool _isBackgroundScreen = false;
 
   @override
@@ -44,6 +47,8 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   Stream<String?> get roomNameString => _rxRoomName.stream;
   @override
+  Stream<UserEntity?> get currentUserStream => _rxCurrentUser.stream;
+  @override
   Stream<MessageEntity?> get notificationMenssage =>
       _rxNotificationMenssage.stream;
   @override
@@ -54,51 +59,58 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   @override
   void inicialization() async {
-    RoomEntity? linkCapture;
+    RoomEntity? roomCapture;
 
     socket.desconect();
 
     _preferencesEntity = await preferences.getData();
 
     try {
-      linkCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
+      if (Get.parameters['link'] == null || Get.parameters['user'] == null) {
+        _rxDesconect.value = "Dados invalidos ou corrompidos!";
+      } else {
+        roomCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
+        currentUser =
+            encryterMessage.getUserEncryter(Get.parameters['user'] ?? "")!;
+      }
     } catch (e) {
       await disp();
       _rxDesconect.value = "Sala indisponível!";
     }
 
-    if (linkCapture == null) {
+    if (roomCapture == null) {
       await disp();
       _rxDesconect.value = "Sala indisponível!";
     }
 
+    _rxCurrentUser.value = currentUser;
+    await Future.delayed(const Duration(milliseconds: 200));
     socket.init();
 
-    print(Get.parameters['link']);
-
-    nickG = Get.parameters['nick'];
-    _rxRoomName.value = linkCapture!.name;
-    _roomEntity = linkCapture;
+    _rxRoomName.value = roomCapture!.name;
+    _roomEntity = roomCapture;
     _roomLink = encryterMessage.getLinkRoom(RoomEntity(
-        name: _rxRoomName.value!,
+        name: _roomEntity.name,
+        masterHash: _roomEntity.masterHash,
+        roomHash: _roomEntity.roomHash,
         password: _roomEntity.password,
-        master: linkCapture.master,
-        expirateAt: linkCapture.expirateAt));
-
+        master: roomCapture.master,
+        expirateAt: roomCapture.expirateAt));
     _inicialization();
 
     if (!socket.isConnect) {
       socket.connectRoom(
           '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
-          nickG);
+          currentUser.name);
     }
     socket.listenMessagens((event) {
       /// Pegar menssagem recebida
+      print(event);
 
       MessageEntity? value = getSendMessage(event: event);
-
+      print(value!.userHash);
       if (value != null) {
-        switch (value.text.function) {
+        switch (value.body.function) {
           // caso algue se desconect
           case 0:
             _rxSenders.value.removeWhere((e) => e["user"] == value.username);
@@ -108,7 +120,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             break;
           // conectado
           case 1:
-            if (value.username != nickG) {
+            if (value.username != currentUser.name) {
               _rxUserMessageTyping.value = null;
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
@@ -128,7 +140,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             break;
           case 2:
             _rxSenders.value.addIf(
-                nickG != value.username &&
+                currentUser.name != value.username &&
                     (_rxSenders.value.indexWhere(
                             (element) => element['user'] == value.username) ==
                         -1),
@@ -144,14 +156,14 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
           case 3:
             _sendUserState(status: 2);
 
-            if (value.username != nickG) {
+            if (value.username != currentUser.name) {
               _rxListMessages.value = _rxListMessages.value..add(value);
               _rxListMessages.refresh();
             }
             break;
           // Caso fique inativo
           case 4:
-            if (value.username != nickG) {
+            if (value.username != currentUser.name) {
               for (var element in _rxSenders.value) {
                 if (element['user'] == value.username) {
                   element['status'] = 4;
@@ -164,7 +176,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
             _rxListMessages.value.removeWhere(
-                (element) => element.text.id == value.text.message);
+                (element) => element.body.id == value.body.message);
             break;
           // expulsar todo mundo da sala
           case 6:
@@ -172,7 +184,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             break;
           // usuario esta digitando
           case 7:
-            if (value.username != nickG) {
+            if (value.username != currentUser.name) {
               _rxUserMessageTyping.value = value.username;
             }
             break;
@@ -229,7 +241,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     Future.delayed(const Duration(milliseconds: 10)).then((value) {
       _rxListMessages.value = _rxListMessages.value
         ..add(messageSystem(
-            "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala."));
+            "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e serão apagadas ao sair da sala."));
       _sendUserState(status: 3);
     });
   }
@@ -246,8 +258,11 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   }
 
   void _sendUserState({required int status, String? message}) {
-    Map<String, dynamic> body =
-        prepareSendMessage(usarName: nickG!, status: status, message: message);
+    Map<String, dynamic> body = prepareSendMessage(
+        usarName: currentUser.name,
+        userHash: currentUser.hash,
+        status: status,
+        message: message);
     socket.sendMenssage(body);
   }
 
@@ -263,7 +278,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       List<MessageEntity> list = [];
       for (var element in _rxListMessages.value) {
-        if (element.time != null && (element.text.sendAt <= timerDate)) {
+        if (element.time != null && (element.body.sendAt <= timerDate)) {
           list.add(element);
 
           /* sendRemoveMessage(id: element.body.id); */
@@ -273,9 +288,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       for (var element in list) {
         var t = MessageEntity(
             username: element.username,
-            text: BodyEntity(
+            userHash: element.userHash,
+            body: BodyEntity(
                 id: null,
-                message: element.text.id,
+                message: element.body.id,
                 function: 5,
                 sendAt: DateTime.now().microsecondsSinceEpoch),
             time: null);
@@ -290,7 +306,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     _rxListMessages.value = _rxListMessages.value..add(messageEntity);
     _rxListMessages.refresh();
     _rxListMessages.value.removeWhere(
-        (element) => element.text.id == messageEntity.text.message);
+        (element) => element.body.id == messageEntity.body.message);
   }
 
   @override
@@ -300,7 +316,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   String? get nameRoomlink => _rxRoomName.value;
 
   @override
-  String? get nick => nickG;
+  String? get nick => currentUser.name;
 
   @override
   Future<void> verifyConnection() async {

@@ -3,14 +3,19 @@ import 'dart:convert';
 import '../../domain/entities/entities.dart';
 
 class RoomModel {
+  final String master;
+  final String masterHash;
   final String name;
   final String password;
-  final String master;
+  final String roomHash;
   String? expirateAt;
+
   RoomModel(
-      {required this.name,
+      {required this.master,
+      required this.masterHash,
+      required this.name,
       required this.password,
-      required this.master,
+      required this.roomHash,
       required this.expirateAt});
 
   factory RoomModel.fromJson(dynamic json) {
@@ -21,9 +26,11 @@ class RoomModel {
       data = json;
     }
     return RoomModel(
-      name: data['name'] ?? "",
+      name: data['name'],
       password: data['password'] ?? "",
-      master: data['master'] ?? "",
+      master: data['master'],
+      masterHash: data['masterHash'],
+      roomHash: data['roomHash'],
       expirateAt: data['expirateAt'] ?? "",
     );
   }
@@ -32,15 +39,24 @@ class RoomModel {
       name: entity.name,
       password: entity.password,
       master: entity.master,
+      masterHash: entity.masterHash,
+      roomHash: entity.roomHash,
       expirateAt: entity.expirateAt);
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "password": password,
         "master": master,
+        "masterHash": masterHash,
+        "roomHash": roomHash,
         "expirateAt": expirateAt
       };
 
   RoomEntity toEntity() => RoomEntity(
-      name: name, password: password, master: master, expirateAt: expirateAt);
+      master: master,
+      masterHash: masterHash,
+      name: name,
+      roomHash: roomHash,
+      password: password,
+      expirateAt: expirateAt);
 }

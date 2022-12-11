@@ -76,6 +76,8 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
     _roomEntity = linkCapture;
     _roomLink = encryterMessage.getLinkRoom(RoomEntity(
         name: _rxRoomName.value!,
+        masterHash: _roomEntity.masterHash,
+        roomHash: _roomEntity.roomHash,
         password: _roomEntity.password,
         master: linkCapture.master,
         expirateAt: linkCapture.expirateAt));
@@ -93,7 +95,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
       MessageEntity? value = getSendMessage(event: event);
 
       if (value != null) {
-        switch (value.text.function) {
+        switch (value.body.function) {
           // caso algue se desconect
           case 0:
             _rxSenders.value.removeWhere((e) => e["user"] == value.username);
@@ -160,7 +162,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
             _rxListMessages.value.removeWhere(
-                (element) => element.text.id == value.text.message);
+                (element) => element.body.id == value.body.message);
             break;
           // expulsar todo mundo da sala
           case 6:
@@ -226,7 +228,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
     Future.delayed(const Duration(milliseconds: 10)).then((value) {
       _rxListMessages.value = _rxListMessages.value
         ..add(messageSystem(
-            "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e seram apagadas ao sair da sala."));
+            "Bem vindo a sala!\nTodas as mensagens possuem criptografia ponta a ponta e serão apagadas ao sair da sala."));
       _sendUserState(status: 3);
     });
   }
@@ -243,8 +245,8 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   }
 
   void _sendUserState({required int status, String? message}) {
-    Map<String, dynamic> body =
-        prepareSendMessage(usarName: nickG!, status: status, message: message);
+    Map<String, dynamic> body = prepareSendMessage(
+        usarName: nickG!, userHash: "", status: status, message: message);
     socket.sendMenssage(body);
   }
 
@@ -260,7 +262,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       List<MessageEntity> list = [];
       for (var element in _rxListMessages.value) {
-        if (element.time != null && (element.text.sendAt <= timerDate)) {
+        if (element.time != null && (element.body.sendAt <= timerDate)) {
           list.add(element);
 
           /* sendRemoveMessage(id: element.body.id); */
@@ -270,9 +272,10 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
       for (var element in list) {
         var t = MessageEntity(
             username: element.username,
-            text: BodyEntity(
+            userHash: element.userHash,
+            body: BodyEntity(
                 id: null,
-                message: element.text.id,
+                message: element.body.id,
                 function: 5,
                 sendAt: DateTime.now().microsecondsSinceEpoch),
             time: null);
@@ -287,7 +290,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
     _rxListMessages.value = _rxListMessages.value..add(messageEntity);
     _rxListMessages.refresh();
     _rxListMessages.value.removeWhere(
-        (element) => element.text.id == messageEntity.text.message);
+        (element) => element.body.id == messageEntity.body.message);
   }
 
   @override

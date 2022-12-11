@@ -19,8 +19,9 @@ class ListMessageState extends State<ListMessage> {
   late List<MessageEntity> list = [
     MessageEntity(
         time: DateTime.now().millisecondsSinceEpoch.toString(),
+        userHash: "BOT",
         username: "SYSTEM_SPACE",
-        text: BodyEntity(
+        body: BodyEntity(
             message: "",
             function: 1,
             id: '0',
@@ -35,9 +36,9 @@ class ListMessageState extends State<ListMessage> {
     animatedKey = GlobalKey<AnimatedListState>();
     _streamSubscription = widget.stream.listen((event) {
       /// Para excluir algo da lista
-      if (event[event.length - 1].text.function == 5) {
+      if (event[event.length - 1].body.function == 5) {
         int index = list.indexWhere((element) =>
-            element.text.id == event[event.length - 1].text.message);
+            element.body.id == event[event.length - 1].body.message);
         list.removeAt(index);
         if (index != -1) {
           if (animatedKey.currentState != null) {
@@ -96,11 +97,11 @@ class ListMessageState extends State<ListMessage> {
                 ).animate(animation),
           child: ChatItem(
             key: Key(index.toString()),
-            id: list[index].text.id ?? "",
-            menssage: list[index].text.message ?? "",
+            id: list[index].body.id ?? "",
+            menssage: list[index].body.message ?? "",
             sender: list[index].username,
             isSentder: (list[index].username == widget.nick),
-            connection: list[index].text.function,
+            connection: list[index].body.function,
           ),
         );
       },

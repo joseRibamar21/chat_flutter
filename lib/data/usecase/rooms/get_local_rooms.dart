@@ -18,7 +18,7 @@ class GetLocalRooms implements LocalRoom {
       if (data != null) {
         rooms = RoomsModel.fromJson(jsonDecode(data)).toEntity();
         rooms.listRoom.removeWhere((element) =>
-            element.name == room.name && element.password == room.password);
+            element.name == room.name && element.roomHash == room.roomHash);
       }
 
       var json = RoomsModel.fromEntity(rooms).toJson();
@@ -51,12 +51,17 @@ class GetLocalRooms implements LocalRoom {
 
   @override
   Future<bool> newRoom(
-      String nameRoom, String master, String expirateAt) async {
+      {required String nameRoom,
+      required String master,
+      required String password,
+      required String masterHash,
+      required String expirateAt}) async {
     try {
       var rng = Random();
       var nName = nameRoom;
       nName = nameRoom.replaceAll(" ", "_");
-      String password = rng.nextInt(999999999).toString();
+      String hash = rng.nextInt(999999999).toString() +
+          DateTime.now().millisecondsSinceEpoch.toString();
       RoomsEntity rooms = RoomsEntity(listRoom: []);
       String? data = await storage.read();
 
@@ -66,8 +71,10 @@ class GetLocalRooms implements LocalRoom {
       rooms.listRoom.add(
         RoomEntity(
           name: nName,
+          masterHash: masterHash,
           password: password,
           master: master,
+          roomHash: hash,
           expirateAt: expirateAt,
         ),
       );

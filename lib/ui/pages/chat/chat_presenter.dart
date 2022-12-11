@@ -4,6 +4,7 @@ abstract class ChatPresenter {
   Stream<List<MessageEntity>> get listMessagesStream;
   Stream<List<Map<String, dynamic>>> get listSendersStream;
   Stream<String?> get roomNameString;
+  Stream<UserEntity?> get currentUserStream;
   Stream<String?> get desconectStream;
   Stream<MessageEntity?> get notificationMenssage;
   Stream<String?> get userMessageTypingStream;

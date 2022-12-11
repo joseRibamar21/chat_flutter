@@ -4,7 +4,8 @@ MessageEntity messageSystem(String message) {
   return MessageEntity(
     username: 'SYSTEM',
     time: null,
-    text: BodyEntity(
+    userHash: "BOT",
+    body: BodyEntity(
         id: "0",
         message: message,
         function: 1,
