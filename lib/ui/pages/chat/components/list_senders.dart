@@ -100,60 +100,42 @@ class __ListSendersState extends State<_ListSenders> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.copy_outlined,
-                color: Theme.of(context).iconTheme.color),
-            title: Text(
-              "Copiar codigo da sala",
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            onTap: () {
-              FlutterClipboard.copy(widget.controller.link ?? "").then((value) {
-                Navigator.pop(context);
-                Future.delayed(const Duration(milliseconds: 100)).then(
-                    (value) => Fluttertoast.showToast(
-                        msg: "Copiado",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.grey[800],
-                        textColor: Colors.white,
-                        fontSize: 16.0));
-              });
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.web_outlined,
-                color: Theme.of(context).iconTheme.color),
-            title: Text(
-              "Copiar link da sala",
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-            onTap: () {
-              FlutterClipboard.copy(
-                      "143.244.167.43/#/chat/${widget.controller.nameRoomlink}/${widget.controller.link}")
-                  .then((value) {
-                Navigator.pop(context);
-                Future.delayed(const Duration(milliseconds: 100)).then(
-                    (value) => Fluttertoast.showToast(
-                        msg: "Copiado",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.grey[800],
-                        textColor: Colors.white,
-                        fontSize: 16.0));
-              });
-            },
-          ),
-          ListTile(
-              leading: Icon(Icons.exit_to_app_rounded,
-                  color: Theme.of(context).iconTheme.color),
-              title: Text(
-                "Encerrar Sala",
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              onTap: widget.controller.finishRoom),
+          widget.controller.isMaster()
+              ? ListTile(
+                  leading: Icon(Icons.copy_outlined,
+                      color: Theme.of(context).iconTheme.color),
+                  title: Text(
+                    "Copiar codigo da sala",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  onTap: () {
+                    FlutterClipboard.copy(widget.controller.link ?? "")
+                        .then((value) {
+                      Navigator.pop(context);
+                      Future.delayed(const Duration(milliseconds: 100)).then(
+                        (value) => Fluttertoast.showToast(
+                            msg: "Copiado",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.grey[800],
+                            textColor: Colors.white,
+                            fontSize: 16.0),
+                      );
+                    });
+                  },
+                )
+              : const SizedBox(),
+          widget.controller.isMaster()
+              ? ListTile(
+                  leading: Icon(Icons.exit_to_app_rounded,
+                      color: Theme.of(context).iconTheme.color),
+                  title: Text(
+                    "Encerrar Sala",
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  onTap: widget.controller.finishRoom)
+              : const SizedBox(),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 10),
             child: Text(

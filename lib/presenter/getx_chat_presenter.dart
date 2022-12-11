@@ -105,10 +105,9 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     }
     socket.listenMessagens((event) {
       /// Pegar menssagem recebida
-      print(event);
 
+      print(event);
       MessageEntity? value = getSendMessage(event: event);
-      print(value!.userHash);
       if (value != null) {
         switch (value.body.function) {
           // caso algue se desconect
@@ -379,5 +378,12 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       _rxIsTyping.value = false;
       _sendUserState(status: 8);
     }
+  }
+
+  @override
+  bool isMaster() {
+    bool t = currentUser.name + currentUser.hash ==
+        _roomEntity.master + _roomEntity.masterHash;
+    return t;
   }
 }

@@ -121,7 +121,8 @@ class _ChatPageState extends State<ChatPage>
                 body: StreamBuilder<UserEntity?>(
                     stream: widget.presenter.currentUserStream,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
+                      if (snapshot.connectionState == ConnectionState.waiting &&
+                          userEntity == null) {
                         return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.data != null) {
