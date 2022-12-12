@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../domain/entities/entities.dart';
 import '../home.dart';
 
 class HomeUserName extends StatelessWidget {
@@ -11,25 +12,26 @@ class HomeUserName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var presenter = Provider.of<HomePresenter>(context);
-    return StreamBuilder<String>(
-        stream: presenter.nameStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "Codinome: ${snapshot.data}",
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
+    return StreamBuilder<UserEntity?>(
+      stream: presenter.userStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Codinome: ${snapshot.data?.name ?? ""}",
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
-                const Divider()
-              ],
-            );
-          } else {
-            return const SizedBox();
-          }
-        });
+              ),
+              const Divider()
+            ],
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
   }
 }

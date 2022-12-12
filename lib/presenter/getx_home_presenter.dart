@@ -19,7 +19,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       required this.preferences});
 
   final _rxUiError = Rx<String?>("");
-  final _rxName = Rx<String>("");
+  final _rxUser = Rx<UserEntity?>(null);
   final _rxListRoom = Rx<List<RoomEntity>>([]);
   final _rxListRoomCopy = Rx<List<RoomEntity>>([]);
   final _rxIsSearching = Rx<bool>(false);
@@ -30,7 +30,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Stream<bool> get isSeachingStream => _rxIsSearching.stream;
 
   @override
-  Stream<String> get nameStream => _rxName.stream;
+  Stream<UserEntity?> get userStream => _rxUser.stream;
 
   @override
   Stream<List<RoomEntity>> get listRoomStream => _rxListRoom.stream;
@@ -46,7 +46,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     try {
       _preferencesEntity = await preferences.getData();
       if (_preferencesEntity.nick.isNotEmpty) {
-        _rxName.value = _preferencesEntity.nick;
+        _rxUser.value = UserEntity(
+            name: _preferencesEntity.nick, hash: _preferencesEntity.nick);
       } else {
         throw "Error";
       }
@@ -73,7 +74,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     try {
       _preferencesEntity = await preferences.getData();
 
-      _rxName.value = _preferencesEntity.nick;
+      _rxUser.value = UserEntity(
+          name: _preferencesEntity.nick, hash: _preferencesEntity.nick);
 
       var list = await localRoom.listOfRooms();
       if (list != null) {
@@ -93,7 +95,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     try {
       await loadRooms();
       _preferencesEntity = await preferences.getData();
-      _rxName.value = _preferencesEntity.nick;
+      _rxUser.value = _rxUser.value = UserEntity(
+          name: _preferencesEntity.nick, hash: _preferencesEntity.nick);
       /* if (master != null) {
         await localRoom.newRoom(
             nameRoom: name,
@@ -132,12 +135,14 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     _rxNavigateTo.value = null;
     try {
       _preferencesEntity = await preferences.getData();
-      _rxName.value = _preferencesEntity.nick;
+      _rxUser.value = UserEntity(
+          name: _preferencesEntity.nick, hash: _preferencesEntity.nick);
       var userS = encryterMessage.encryterUser(UserEntity(
           name: _preferencesEntity.nick, hash: _preferencesEntity.hash));
       var roomS = encryterMessage.getRoomLink(code);
       if (_preferencesEntity.nick.isNotEmpty || roomS == null) {
-        _rxName.value = _preferencesEntity.nick;
+        _rxUser.value = UserEntity(
+            name: _preferencesEntity.nick, hash: _preferencesEntity.nick);
       } else {
         _rxUiError.value = "Sala Inválida!";
         throw "Error";
@@ -158,7 +163,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     _preferencesEntity = await preferences.getData();
     UserEntity user = UserEntity(
         name: _preferencesEntity.nick, hash: _preferencesEntity.hash);
-    _rxName.value = _preferencesEntity.nick;
+    _rxUser.value = UserEntity(
+        name: _preferencesEntity.nick, hash: _preferencesEntity.nick);
     _rxNavigateTo.value = null;
 
     ///Se a sala ainda não expirou

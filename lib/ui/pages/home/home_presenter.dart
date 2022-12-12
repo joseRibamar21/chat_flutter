@@ -1,7 +1,7 @@
 import '../../../domain/entities/entities.dart';
 
 abstract class HomePresenter {
-  Stream<String> get nameStream;
+  Stream<UserEntity?> get userStream;
   Stream<List<RoomEntity>> get listRoomStream;
   Stream<String?> get navigatorStream;
   Stream<bool> get isSeachingStream;
