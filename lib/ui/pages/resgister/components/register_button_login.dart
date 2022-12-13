@@ -17,7 +17,10 @@ class RegisterButtonLogin extends StatelessWidget {
           builder: (context, snapshot) {
             return ElevatedButton(
                 onPressed: snapshot.hasData && snapshot.data!
-                    ? presenter.register
+                    ? () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        presenter.register();
+                      }
                     : null,
                 child: const Text("Confirmar"));
           }),
