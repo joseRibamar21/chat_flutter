@@ -130,3 +130,7 @@ class _BalloonChat extends StatelessWidget {
     );
   }
 }
+
+/* Image.memory(
+                  base64Decode(menssage),
+                ) */

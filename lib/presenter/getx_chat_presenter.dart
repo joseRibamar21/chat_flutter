@@ -64,7 +64,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     socket.desconect();
 
     _preferencesEntity = await preferences.getData();
-    timerDeleteMessages();
+    //timerDeleteMessages();
 
     try {
       if (Get.parameters['link'] == null || Get.parameters['user'] == null) {
@@ -258,7 +258,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     //socket.ondisconnect();
   }
 
-  void _sendUserState({required int status, String? message}) {
+  void _sendUserState({required int status, String? message, String? image}) {
     Map<String, dynamic> body = prepareSendMessage(
         usarName: currentUser.name,
         userHash: currentUser.hash,
@@ -389,5 +389,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     bool t = currentUser.name + currentUser.hash ==
         _roomEntity.master + _roomEntity.masterHash;
     return t;
+  }
+
+  @override
+  void sendImage(String? value) {
+    send(value);
   }
 }

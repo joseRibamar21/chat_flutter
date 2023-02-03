@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FooterMessage extends StatelessWidget {
+  final Function(String image64) sendImage;
   final TextEditingController controller;
   final Function() sendMessage;
   final Function(String? value) typing;
   const FooterMessage(
       {Key? key,
+      required this.sendImage,
       required this.controller,
       required this.typing,
       required this.sendMessage})
@@ -23,6 +28,17 @@ class FooterMessage extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(12.0))),
           child: Row(
             children: [
+              IconButton(
+                  onPressed: () async {
+                    final ImagePicker _picker = ImagePicker();
+                    // Capture a photo
+                    final XFile? photo = await _picker.pickImage(
+                        source: ImageSource.camera, imageQuality: 3);
+                    print(await photo!.length());
+                    List<int> imageBytes = await photo.readAsBytes();
+                    sendImage(base64Encode(imageBytes));
+                  },
+                  icon: const Icon(Icons.photo_camera)),
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),

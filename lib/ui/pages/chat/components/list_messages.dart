@@ -43,11 +43,16 @@ class ListMessageState extends State<ListMessage> {
         if (index != -1) {
           if (animatedKey.currentState != null) {
             animatedKey.currentState?.removeItem(
-                index,
-                (context, animation) => SizeTransition(
-                    sizeFactor: animation,
-                    axis: Axis.vertical,
-                    child: const SizedBox(height: 50.0, child: Card())));
+              index,
+              (context, animation) => SizeTransition(
+                sizeFactor: animation,
+                axis: Axis.vertical,
+                child: const SizedBox(
+                  height: 50.0,
+                  child: Card(),
+                ),
+              ),
+            );
           }
         }
       } else {

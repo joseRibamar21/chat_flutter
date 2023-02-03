@@ -16,6 +16,11 @@ abstract class ChatPresenter {
   /// Parâmetros: [value] será a mensagem a ser enviada.
   void send(String? value);
 
+  /// Funcão para mandar uma imagem de acordo.
+  ///
+  /// Parâmetros: [value] será a uma imagem em 64bits a ser enviada.
+  void sendImage(String? value);
+
   /// Função para apagar uma mensagem para todos
   void sendRemoveMessage({required String id});
 

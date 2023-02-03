@@ -45,9 +45,6 @@ class _ChatPageState extends State<ChatPage>
             ),
       );
     });
-    var timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
-      widget.presenter.verifyExpirateRoom();
-    });
 
     Future.delayed(const Duration(milliseconds: 1000), () {
       widget.presenter.verifyExpirateRoom();
@@ -109,6 +106,7 @@ class _ChatPageState extends State<ChatPage>
               create: (context) => widget.presenter,
               child: Scaffold(
                 bottomSheet: FooterMessage(
+                    sendImage: widget.presenter.sendImage,
                     typing: widget.presenter.isTyping,
                     controller: _textController,
                     sendMessage: _send),
