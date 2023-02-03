@@ -44,8 +44,8 @@ class GetxRegisterPresenter extends GetxController
     _password = _password.replaceAll(" ", "");
     await preferences.setName(name: _name);
     await preferences.setPassword(password: _password);
-    _rxNavigateTo.value = "/home";
     _rxIsLoading.value = false;
+    Get.offAllNamed("/home");
     return true;
   }
 

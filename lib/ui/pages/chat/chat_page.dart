@@ -45,9 +45,9 @@ class _ChatPageState extends State<ChatPage>
             ),
       );
     });
-    /*   timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
+    var timer = Timer.periodic(const Duration(milliseconds: 2000), (timer) {
       widget.presenter.verifyExpirateRoom();
-    }); */
+    });
 
     Future.delayed(const Duration(milliseconds: 1000), () {
       widget.presenter.verifyExpirateRoom();
@@ -60,7 +60,6 @@ class _ChatPageState extends State<ChatPage>
     widget.presenter.disp();
     WidgetsBinding.instance.removeObserver(this);
     _authController.dispose();
-
     _textController.dispose();
     super.dispose();
   }

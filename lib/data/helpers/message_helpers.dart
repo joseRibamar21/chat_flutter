@@ -19,7 +19,7 @@ Map<String, dynamic> prepareSendMessage(
             id: usarName + DateTime.now().microsecondsSinceEpoch.toString(),
             message: message, //encryptMessage.encrypt(message ?? ""),
             function: status,
-            sendAt: DateTime.now().microsecondsSinceEpoch)
+            sendAt: DateTime.now().millisecondsSinceEpoch)
         .toJson())
   };
 }

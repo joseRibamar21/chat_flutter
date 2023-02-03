@@ -64,6 +64,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     socket.desconect();
 
     _preferencesEntity = await preferences.getData();
+    timerDeleteMessages();
 
     try {
       if (Get.parameters['link'] == null || Get.parameters['user'] == null) {
@@ -108,6 +109,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
       print(event);
       MessageEntity? value = getSendMessage(event: event);
+      print(value);
       if (value != null) {
         switch (value.body.function) {
           // caso algue se desconect
@@ -172,10 +174,12 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             }
             break;
           case 5:
+            /* print("ID MENSSAGEM APAGAR: " + value.body.message.toString());
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
             _rxListMessages.value.removeWhere(
-                (element) => element.body.id == value.body.message);
+                (element) => element.body.id == value.body.message); */
+            removeMessage(value);
             break;
           // expulsar todo mundo da sala
           case 6:
@@ -275,13 +279,16 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   Future<void> timerDeleteMessages() async {
     timerDate = DateTime.now().millisecondsSinceEpoch;
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      print("Função APAGAR");
       List<MessageEntity> list = [];
       for (var element in _rxListMessages.value) {
+        print("${element.body.sendAt} <= ${timerDate}");
         if (element.time != null && (element.body.sendAt <= timerDate)) {
+          print("apagar elemento");
           list.add(element);
 
-          /* sendRemoveMessage(id: element.body.id); */
-          /* removeMessage(element); */
+          /* sendRemoveMessage(id: element.body.id ?? "");
+          removeMessage(element); */
         }
       }
       for (var element in list) {
@@ -294,7 +301,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
                 function: 5,
                 sendAt: DateTime.now().microsecondsSinceEpoch),
             time: null);
-        removeMessage(t);
+        sendRemoveMessage(id: element.body.id ?? "");
       }
 
       timerDate = DateTime.now().millisecondsSinceEpoch;
@@ -306,6 +313,8 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     _rxListMessages.refresh();
     _rxListMessages.value.removeWhere(
         (element) => element.body.id == messageEntity.body.message);
+    _rxListMessages.value
+        .removeWhere((element) => element.body.id == messageEntity.body.id);
   }
 
   @override
