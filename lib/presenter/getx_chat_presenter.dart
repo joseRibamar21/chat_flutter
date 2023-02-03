@@ -107,9 +107,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     socket.listenMessagens((event) {
       /// Pegar menssagem recebida
 
-      print(event);
       MessageEntity? value = getSendMessage(event: event);
-      print(value);
       if (value != null) {
         switch (value.body.function) {
           // caso algue se desconect
@@ -279,12 +277,9 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   Future<void> timerDeleteMessages() async {
     timerDate = DateTime.now().millisecondsSinceEpoch;
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      print("Função APAGAR");
       List<MessageEntity> list = [];
       for (var element in _rxListMessages.value) {
-        print("${element.body.sendAt} <= ${timerDate}");
         if (element.time != null && (element.body.sendAt <= timerDate)) {
-          print("apagar elemento");
           list.add(element);
 
           /* sendRemoveMessage(id: element.body.id ?? "");
