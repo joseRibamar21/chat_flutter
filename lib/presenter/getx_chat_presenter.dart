@@ -64,7 +64,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     socket.desconect();
 
     _preferencesEntity = await preferences.getData();
-    //timerDeleteMessages();
+    timerDeleteMessages();
 
     try {
       if (Get.parameters['link'] == null || Get.parameters['user'] == null) {
@@ -276,7 +276,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   Future<void> timerDeleteMessages() async {
     timerDate = DateTime.now().millisecondsSinceEpoch;
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       List<MessageEntity> list = [];
       for (var element in _rxListMessages.value) {
         if (element.time != null && (element.body.sendAt <= timerDate)) {
@@ -393,6 +393,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
 
   @override
   void sendImage(String? value) {
-    send(value);
+    send("image@:$value");
   }
 }

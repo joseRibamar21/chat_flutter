@@ -75,7 +75,7 @@ class ListMessageState extends State<ListMessage> {
   }
 
   void _scrollToBotton() {
-    Future.delayed(const Duration(milliseconds: 50)).then((value) {
+    Future.delayed(const Duration(milliseconds: 250)).then((value) {
       final position = _scrollController.position.maxScrollExtent;
       _scrollController.animateTo(position,
           duration: const Duration(milliseconds: 100), curve: Curves.easeIn);
@@ -103,7 +103,7 @@ class ListMessageState extends State<ListMessage> {
           child: ChatItem(
             key: Key(index.toString()),
             id: list[index].body.id ?? "",
-            menssage: list[index].body.message ?? "",
+            message: list[index].body.message ?? "",
             sender: list[index].username,
             isSentder:
                 (list[index].username + list[index].userHash == widget.nick),

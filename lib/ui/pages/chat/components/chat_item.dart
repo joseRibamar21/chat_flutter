@@ -1,56 +1,66 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
-class ChatItem extends StatelessWidget {
+class ChatItem extends StatefulWidget {
   final String id;
-  final String menssage;
+  final String message;
   final String sender;
   final bool isSentder;
   final int connection;
   const ChatItem({
     Key? key,
     required this.id,
-    required this.menssage,
+    required this.message,
     required this.sender,
     required this.isSentder,
     required this.connection,
   }) : super(key: key);
 
   @override
+  State<ChatItem> createState() => _ChatItemState();
+}
+
+class _ChatItemState extends State<ChatItem>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
-    switch (connection) {
+    super.build(context);
+    switch (widget.connection) {
       case 0:
         return Align(
           alignment: Alignment.center,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text("$sender saiu!",
+            child: Text("${widget.sender} saiu!",
                 style: Theme.of(context).textTheme.titleSmall),
           ),
         );
       case 1:
-        if (sender == "SYSTEM") {
-          return _SystemMessage(message: menssage);
+        if (widget.sender == "SYSTEM") {
+          return _SystemMessage(message: widget.message);
         } else {
-          if (sender == "SYSTEM_SPACE") {
+          if (widget.sender == "SYSTEM_SPACE") {
             return const SizedBox(height: 60);
           }
         }
-        return menssage == "null" || menssage.isEmpty
+        return widget.message == "null" || widget.message.isEmpty
             ? const SizedBox()
             : Align(
-                alignment:
-                    isSentder ? Alignment.centerRight : Alignment.centerLeft,
+                alignment: widget.isSentder
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
                 child: _BalloonChat(
-                    id: id,
-                    menssage: menssage,
-                    sender: sender,
-                    isSentder: isSentder),
+                    id: widget.id,
+                    message: widget.message,
+                    sender: widget.sender,
+                    isSentder: widget.isSentder),
               );
 
       case 3:
         return Align(
           alignment: Alignment.center,
-          child: Text("$sender entrou!",
+          child: Text("${widget.sender} entrou!",
               style: Theme.of(context).textTheme.titleSmall),
         );
 
@@ -58,6 +68,9 @@ class ChatItem extends StatelessWidget {
         return const SizedBox();
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _SystemMessage extends StatelessWidget {
@@ -86,13 +99,13 @@ class _SystemMessage extends StatelessWidget {
 class _BalloonChat extends StatelessWidget {
   const _BalloonChat(
       {Key? key,
-      required this.menssage,
+      required this.message,
       required this.sender,
       required this.isSentder,
       required this.id})
       : super(key: key);
 
-  final String menssage;
+  final String message;
   final String sender;
   final bool isSentder;
   final String id;
@@ -100,6 +113,16 @@ class _BalloonChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /*  var controller = Provider.of<ChatPresenter>(context); */
+    bool isImage = false;
+    String newMessage = message;
+    List<String> splitMessage = message.split('image@:');
+    print(message);
+    print(splitMessage.length);
+    if (splitMessage.length > 1) {
+      isImage = true;
+      newMessage = splitMessage[1];
+    }
+
     return Padding(
       padding: isSentder
           ? const EdgeInsets.only(left: 30, right: 10)
@@ -118,12 +141,23 @@ class _BalloonChat extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: isSentder
-              ? Text(menssage)
-              : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(sender, style: Theme.of(context).textTheme.bodyLarge),
-                  const SizedBox(height: 5),
-                  Text(menssage)
-                ]),
+              ? isImage
+                  ? Image.memory(
+                      base64Decode(newMessage),
+                    )
+                  : Text(newMessage)
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(sender, style: Theme.of(context).textTheme.bodyLarge),
+                    const SizedBox(height: 5),
+                    isImage
+                        ? Image.memory(
+                            base64Decode(newMessage),
+                          )
+                        : Text(newMessage)
+                  ],
+                ),
         ),
       ),
       /*   ), */
@@ -131,6 +165,4 @@ class _BalloonChat extends StatelessWidget {
   }
 }
 
-/* Image.memory(
-                  base64Decode(menssage),
-                ) */
+/*  */

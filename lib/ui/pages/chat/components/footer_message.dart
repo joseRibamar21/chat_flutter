@@ -30,13 +30,14 @@ class FooterMessage extends StatelessWidget {
             children: [
               IconButton(
                   onPressed: () async {
-                    final ImagePicker _picker = ImagePicker();
+                    final ImagePicker picker = ImagePicker();
                     // Capture a photo
-                    final XFile? photo = await _picker.pickImage(
-                        source: ImageSource.camera, imageQuality: 3);
-                    print(await photo!.length());
-                    List<int> imageBytes = await photo.readAsBytes();
-                    sendImage(base64Encode(imageBytes));
+                    final XFile? photo = await picker.pickImage(
+                        source: ImageSource.camera, imageQuality: 12);
+                    if (photo != null) {
+                      List<int> imageBytes = await photo.readAsBytes();
+                      sendImage(base64Encode(imageBytes));
+                    }
                   },
                   icon: const Icon(Icons.photo_camera)),
               Expanded(
