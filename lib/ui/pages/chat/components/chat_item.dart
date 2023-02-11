@@ -116,8 +116,6 @@ class _BalloonChat extends StatelessWidget {
     bool isImage = false;
     String newMessage = message;
     List<String> splitMessage = message.split('image@:');
-    print(message);
-    print(splitMessage.length);
     if (splitMessage.length > 1) {
       isImage = true;
       newMessage = splitMessage[1];
@@ -144,6 +142,7 @@ class _BalloonChat extends StatelessWidget {
               ? isImage
                   ? Image.memory(
                       base64Decode(newMessage),
+                      gaplessPlayback: true,
                     )
                   : Text(newMessage)
               : Column(
