@@ -153,6 +153,7 @@ class _BalloonChat extends StatelessWidget {
                     isImage
                         ? Image.memory(
                             base64Decode(newMessage),
+                            gaplessPlayback: true,
                           )
                         : Text(newMessage)
                   ],
