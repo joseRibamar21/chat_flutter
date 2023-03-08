@@ -28,7 +28,7 @@ Dart 2.17
 
 - [x] Status dos membros na sala
 
-- [ ] Criação de novas salas
+- [x] Criação de novas salas
 
 ## Instalação
 Para a instalação do Flutter, segue o link para a instalação e documentacão online do Flutter

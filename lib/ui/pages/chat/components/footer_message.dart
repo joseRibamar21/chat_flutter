@@ -1,7 +1,7 @@
-import 'dart:convert';
+/* import 'dart:convert';
+import 'package:image_picker/image_picker.dart'; */
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class FooterMessage extends StatelessWidget {
   final Function(String image64) sendImage;
@@ -28,7 +28,7 @@ class FooterMessage extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(12.0))),
           child: Row(
             children: [
-              IconButton(
+              /* IconButton(
                   onPressed: () async {
                     final ImagePicker picker = ImagePicker();
                     // Capture a photo
@@ -39,7 +39,7 @@ class FooterMessage extends StatelessWidget {
                       sendImage(base64Encode(imageBytes));
                     }
                   },
-                  icon: const Icon(Icons.photo_camera)),
+                  icon: const Icon(Icons.photo_camera)), */
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),

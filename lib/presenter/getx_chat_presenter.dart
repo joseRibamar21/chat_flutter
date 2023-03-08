@@ -60,7 +60,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   @override
   void inicialization() async {
     RoomEntity? roomCapture;
-
     socket.desconect();
 
     _preferencesEntity = await preferences.getData();
@@ -104,6 +103,12 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
           '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
           currentUser.name);
     }
+
+    socket.listenDesconect((p0) async {
+      await disp();
+      _rxDesconect.value = "Conexão com servidor perdida!";
+    });
+
     socket.listenMessagens((event) {
       /// Pegar menssagem recebida
 
@@ -172,11 +177,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             }
             break;
           case 5:
-            /* print("ID MENSSAGEM APAGAR: " + value.body.message.toString());
-            _rxListMessages.value = _rxListMessages.value..add(value);
-            _rxListMessages.refresh();
-            _rxListMessages.value.removeWhere(
-                (element) => element.body.id == value.body.message); */
             removeMessage(value);
             break;
           // expulsar todo mundo da sala
@@ -197,13 +197,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
             _rxListMessages.value = _rxListMessages.value..add(value);
             _rxListMessages.refresh();
         }
-      }
-    });
-
-    socket.listenDesconect((p0) async {
-      if (p0 != null) {
-        await disp();
-        _rxDesconect.value = "Conexão com servidor perdida!";
       }
     });
   }
