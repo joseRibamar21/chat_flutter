@@ -45,6 +45,7 @@ class _RegisterPageState extends State<RegisterPage>
                               physics: const NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               children: [
+                                RegisterSetp0(pageController: pageController),
                                 RegisterSetp1(pageController: pageController),
                                 const RegisterSetp2()
                               ],
@@ -53,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage>
                       Expanded(
                         child: SmoothPageIndicator(
                           controller: pageController,
-                          count: 2,
+                          count: 3,
                           effect: const WormEffect(
                               radius: 8,
                               spacing: 10,
@@ -68,96 +69,6 @@ class _RegisterPageState extends State<RegisterPage>
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class RegisterSetp1 extends StatelessWidget {
-  final PageController pageController;
-  const RegisterSetp1({
-    required this.pageController,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var presenter = Provider.of<RegisterPresenter>(context);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 30),
-            Text("Insira um codinome para utilizar a aplicação!",
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text("Codinome",
-                  style: Theme.of(context).textTheme.titleMedium),
-            ),
-            TextFieldRegister(onConfirm: () {}),
-            const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerRight,
-              child: StreamBuilder<String?>(
-                  stream: presenter.nameErrorStream,
-                  builder: (context, snapshot) {
-                    return ElevatedButton(
-                      onPressed: snapshot.data == null &&
-                              snapshot.connectionState == ConnectionState.active
-                          ? () {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              pageController.nextPage(
-                                  duration: const Duration(milliseconds: 200),
-                                  curve: Curves.bounceInOut);
-                            }
-                          : null,
-                      child: const Text("Proximo"),
-                    );
-                  }),
-            ),
-            const SizedBox(height: 90),
-            const Divider(),
-            Text(
-                "Para aumentar sua segurança, tenha cadastrado uma biometria em seu celular!",
-                style: Theme.of(context).textTheme.bodySmall)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class RegisterSetp2 extends StatelessWidget {
-  const RegisterSetp2({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 30),
-            Text("Insira uma senha numérica para utilizar o bloqueador do app!",
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child:
-                  Text("Senha", style: Theme.of(context).textTheme.titleMedium),
-            ),
-            TextPasswordFieldRegister(onConfirm: () {}),
-            const SizedBox(height: 90),
-            const Center(child: RegisterButtonLogin()),
-          ],
         ),
       ),
     );

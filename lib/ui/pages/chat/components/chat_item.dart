@@ -8,14 +8,16 @@ class ChatItem extends StatefulWidget {
   final String sender;
   final bool isSentder;
   final int connection;
-  const ChatItem({
-    Key? key,
-    required this.id,
-    required this.message,
-    required this.sender,
-    required this.isSentder,
-    required this.connection,
-  }) : super(key: key);
+  final bool isSend;
+  const ChatItem(
+      {Key? key,
+      required this.id,
+      required this.message,
+      required this.sender,
+      required this.isSentder,
+      required this.connection,
+      required this.isSend})
+      : super(key: key);
 
   @override
   State<ChatItem> createState() => _ChatItemState();
@@ -53,6 +55,7 @@ class _ChatItemState extends State<ChatItem>
                 child: _BalloonChat(
                     id: widget.id,
                     message: widget.message,
+                    isSend: widget.isSend,
                     sender: widget.sender,
                     isSentder: widget.isSentder),
               );
@@ -102,6 +105,7 @@ class _BalloonChat extends StatelessWidget {
       required this.message,
       required this.sender,
       required this.isSentder,
+      required this.isSend,
       required this.id})
       : super(key: key);
 
@@ -109,7 +113,7 @@ class _BalloonChat extends StatelessWidget {
   final String sender;
   final bool isSentder;
   final String id;
-
+  final bool isSend;
   @override
   Widget build(BuildContext context) {
     /*  var controller = Provider.of<ChatPresenter>(context); */
@@ -134,7 +138,9 @@ class _BalloonChat extends StatelessWidget {
         child: */
           Card(
         color: isSentder
-            ? Theme.of(context).cardColor
+            ? isSend
+                ? Theme.of(context).cardColor
+                : const Color(0xFFc8c8c8)
             : Theme.of(context).cardTheme.color,
         child: Padding(
           padding: const EdgeInsets.all(10.0),

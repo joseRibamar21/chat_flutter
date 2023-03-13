@@ -16,9 +16,11 @@ class GetxRegisterPresenter extends GetxController
   final _rxUiError = Rx<String>("");
   final _rxValid = Rx<bool>(false);
   final _rxNameError = Rx<String?>("");
+  final _rxCodeError = Rx<String?>(null);
   final _rxPasswordError = Rx<String?>("");
   final _rxIsLoading = Rx<bool>(false);
 
+  String _code = "";
   String _name = "";
   String _password = "";
 
@@ -30,6 +32,8 @@ class GetxRegisterPresenter extends GetxController
   Stream<String> get navigationStream => _rxNavigateTo.stream;
   @override
   Stream<String> get uiErrorStream => _rxUiError.stream;
+  @override
+  Stream<String?> get codeErrorStream => _rxCodeError.stream;
   @override
   Stream<String?> get nameErrorStream => _rxNameError.stream;
   @override
@@ -111,5 +115,21 @@ class GetxRegisterPresenter extends GetxController
     }
     _password.replaceAll(" ", "_");
     _isFormValid();
+  }
+
+  @override
+  void validadeCode(String value) {
+    _code = value;
+    if (value.isEmpty) {
+      _rxCodeError.value = "Campo vazio.";
+    } else {
+      _rxCodeError.value = null;
+    }
+  }
+
+  @override
+  Future<bool> verifyCode() async {
+    preferences.setCode(code: _code);
+    return true;
   }
 }

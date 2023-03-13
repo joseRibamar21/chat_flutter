@@ -28,11 +28,13 @@ class GetPreferencesStorage implements LocalPreferences {
     DateTime time = DateTime.now();
     try {
       String data = jsonEncode({
+        "code": "",
         "nick": "",
         "timer": 3600000,
         "theme": 1,
         "password": "",
-        "hash": time.millisecondsSinceEpoch.toString()
+        "hash": time.millisecondsSinceEpoch.toString(),
+        "isDeveloper": false
       });
 
       await storage.save(data);
@@ -112,6 +114,33 @@ class GetPreferencesStorage implements LocalPreferences {
       var data = jsonDecode(await storage.read());
       if (data!['password'] == password) {
         return true;
+      }
+    } catch (e) {
+      return false;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> setCode({required String code}) async {
+    try {
+      var data = jsonDecode(await storage.read());
+      data!['code'] = code;
+      if (code == "123456") {
+        data['isDeveloper'];
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> verifyIsDeveloper() async {
+    try {
+      var data = jsonDecode(await storage.read());
+      if (data!['isDeveloper'] != null) {
+        return data['isDeveloper'];
       }
     } catch (e) {
       return false;

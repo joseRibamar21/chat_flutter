@@ -28,7 +28,6 @@ void showDesconect(BuildContext context, String title) {
 
 void hideDesconect(BuildContext context) {
   if (Navigator.canPop(context)) {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil("/register", (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
   }
 }

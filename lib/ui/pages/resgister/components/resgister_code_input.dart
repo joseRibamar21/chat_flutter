@@ -3,16 +3,16 @@ import 'package:provider/provider.dart';
 
 import '../register.dart';
 
-class TextFieldRegister extends StatefulWidget {
+class ResgisterCodeInput extends StatefulWidget {
   final Function() onConfirm;
-  const TextFieldRegister({Key? key, required this.onConfirm})
+  const ResgisterCodeInput({Key? key, required this.onConfirm})
       : super(key: key);
 
   @override
-  State<TextFieldRegister> createState() => _TextFieldRegisterState();
+  State<ResgisterCodeInput> createState() => _ResgisterCodeInputState();
 }
 
-class _TextFieldRegisterState extends State<TextFieldRegister> {
+class _ResgisterCodeInputState extends State<ResgisterCodeInput> {
   late TextEditingController? textControler;
 
   @override
@@ -39,9 +39,9 @@ class _TextFieldRegisterState extends State<TextFieldRegister> {
               return TextFormField(
                 controller: textControler,
                 style: Theme.of(context).textTheme.bodyMedium,
-                onChanged: presenter.validadeName,
-                decoration:
-                    InputDecoration(hintText: "Bill", errorText: snapshot.data),
+                onChanged: presenter.validadeCode,
+                decoration: InputDecoration(
+                    hintText: "####-####-####", errorText: snapshot.data),
                 autocorrect: false,
               );
             }),

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:chat_flutter/data/models/models.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 
 import '../../../data/helpers/helpers.dart';
@@ -30,6 +32,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   final _rxNotificationMenssage = Rx<MessageEntity?>(null);
   final _rxIsTyping = Rx<bool>(false);
   final _rxUserMessageTyping = Rx<String?>(null);
+  final Connectivity _connectivity = Connectivity();
 
   final SecureStorage secureStorage = SecureStorage();
   late PreferencesEntity _preferencesEntity;
@@ -65,9 +68,18 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     _preferencesEntity = await preferences.getData();
     timerDeleteMessages();
 
+    _connectivity.onConnectivityChanged.listen((event) {
+      if (event == ConnectivityResult.none) {
+        _rxDesconect.value =
+            "Sua conexão foi perdida! Por favor retorne a sala!";
+        return;
+      }
+    });
+
     try {
       if (Get.parameters['link'] == null || Get.parameters['user'] == null) {
         _rxDesconect.value = "Dados invalidos ou corrompidos!";
+        return;
       } else {
         roomCapture = encryterMessage.getRoomLink(Get.parameters['link'] ?? "");
         currentUser =
@@ -76,18 +88,20 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     } catch (e) {
       await disp();
       _rxDesconect.value = "Sala indisponível!";
+      return;
     }
 
     if (roomCapture == null) {
       await disp();
       _rxDesconect.value = "Sala indisponível!";
+      return;
     }
 
     _rxCurrentUser.value = currentUser;
     await Future.delayed(const Duration(milliseconds: 200));
     socket.init();
 
-    _rxRoomName.value = roomCapture!.name;
+    _rxRoomName.value = roomCapture.name;
     _roomEntity = roomCapture;
     _roomLink = encryterMessage.getLinkRoom(RoomEntity(
         name: _roomEntity.name,
@@ -107,6 +121,7 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     socket.listenDesconect((p0) async {
       await disp();
       _rxDesconect.value = "Conexão com servidor perdida!";
+      return;
     });
 
     socket.listenMessagens((event) {
@@ -208,8 +223,14 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
   void send(String? value) {
     _rxIsTyping.value = false;
     if (value!.isNotEmpty) {
-      _sendUserState(status: 1, message: value);
+      MessageEntity m = _sendUserState(status: 1, message: value);
+      _rxListMessages.value = _rxListMessages.value..add(m);
+      _rxListMessages.refresh();
     }
+
+    socket.connectRoom(
+        '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
+        currentUser.name);
   }
 
   /// Função para apagar uma mensagem para todos
@@ -251,13 +272,15 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
     //socket.ondisconnect();
   }
 
-  void _sendUserState({required int status, String? message, String? image}) {
+  MessageEntity _sendUserState({required int status, String? message}) {
     Map<String, dynamic> body = prepareSendMessage(
         usarName: currentUser.name,
         userHash: currentUser.hash,
         status: status,
         message: message);
     socket.sendMenssage(body);
+    MessageModel.fromJson(body).toEntity();
+    return MessageModel.fromJson(body).toEntity();
   }
 
   @override
@@ -280,15 +303,6 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
         }
       }
       for (var element in list) {
-        var t = MessageEntity(
-            username: element.username,
-            userHash: element.userHash,
-            body: BodyEntity(
-                id: null,
-                message: element.body.id,
-                function: 5,
-                sendAt: DateTime.now().microsecondsSinceEpoch),
-            time: null);
         sendRemoveMessage(id: element.body.id ?? "");
       }
 
@@ -320,19 +334,21 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
       bool tryReconnect = await socket.reconnect();
 
       if (!tryReconnect) {
-        disp();
+        await disp();
         _rxDesconect.value = "Conexão com servidor perdida!";
+        return;
       }
     }
   }
 
   @override
-  void verifyExpirateRoom() {
+  void verifyExpirateRoom() async {
     if (_roomEntity.expirateAt != null) {
       if (DateTime.now().millisecondsSinceEpoch >
           int.parse(_roomEntity.expirateAt ?? "0")) {
-        disp();
+        await disp();
         _rxDesconect.value = "Sala expirada!";
+        return;
       }
     }
   }

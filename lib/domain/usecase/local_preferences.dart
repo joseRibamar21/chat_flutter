@@ -13,11 +13,17 @@ abstract class LocalPreferences {
   ///Atualiza o valor do tema
   Future<bool> setPassword({required String password});
 
+  ///Atualiza o valor de Code
+  Future<bool> setCode({required String code});
+
   ///Pegar local
   Future<PreferencesEntity> getData();
 
   ///Limpar dados
   Future<bool> reset();
+
+  ///Verifica se a conta atual é de desenvolvimento
+  Future<bool> verifyIsDeveloper();
 
   Future<bool> verifyPassword({required String password});
 }

@@ -38,7 +38,6 @@ class _CustomAlertConnectionState extends State<CustomAlertConnection> {
     } catch (e) {
       return;
     }
-
     return _updateConnectionStatus(result);
   }
 

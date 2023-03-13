@@ -13,10 +13,19 @@ class PreferencesEntity {
   /// Tema que inicializará com o app;
   final int theme;
 
-  PreferencesEntity(
-      {required this.nick,
-      required this.hash,
-      required this.password,
-      required this.timer,
-      required this.theme});
+  /// Codigo de desbloqueio do app;
+  final String code;
+
+  /// Codigo de desbloqueio do app;
+  final bool isDeveloper;
+
+  PreferencesEntity({
+    required this.code,
+    required this.nick,
+    required this.hash,
+    required this.password,
+    required this.timer,
+    required this.theme,
+    required this.isDeveloper,
+  });
 }
