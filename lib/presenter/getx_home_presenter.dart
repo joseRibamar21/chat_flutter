@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../domain/entities/entities.dart';
@@ -254,5 +255,52 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     var roomS = encryterMessage.getLinkRoom(room);
     String link = "$roomS";
     return link;
+  }
+
+  @override
+  Future<bool> accountValid() async {
+    PreferencesEntity p = await preferences.getData();
+    print(
+        "${int.parse(p.expirationCode)} s> ${DateTime.now().millisecondsSinceEpoch}");
+    if (int.parse(p.expirationCode) < DateTime.now().millisecondsSinceEpoch) {
+      await Get.dialog(
+          Dialog(
+              child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Seu código expirou!",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 10),
+                const Text("Entre em contato com o seu fornecedor."),
+                const SizedBox(height: 60),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          preferences.reset();
+                          localRoom.deleteAll();
+                          Get.offAndToNamed('/register');
+                        },
+                        child: Text(
+                          "Apagar tudo!",
+                          style: TextStyle(color: Colors.red[700]),
+                        )),
+                    ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Inserir outro código"))
+                  ],
+                )
+              ],
+            ),
+          )),
+          barrierDismissible: false);
+      return false;
+    }
+    return true;
   }
 }

@@ -12,6 +12,7 @@ class GetPreferencesStorage implements LocalPreferences {
   Future<PreferencesEntity> getData() async {
     try {
       var data = jsonDecode(await storage.read());
+      print(data);
       return PreferencesModel.fromJson(data).toEntity();
     } catch (e) {
       if (await reset()) {
@@ -34,7 +35,8 @@ class GetPreferencesStorage implements LocalPreferences {
         "theme": 1,
         "password": "",
         "hash": time.millisecondsSinceEpoch.toString(),
-        "isDeveloper": false
+        "isDeveloper": false,
+        "expirationCode": ""
       });
 
       await storage.save(data);
@@ -122,13 +124,16 @@ class GetPreferencesStorage implements LocalPreferences {
   }
 
   @override
-  Future<bool> setCode({required String code}) async {
+  Future<bool> setCode(
+      {required String code, required String expiration}) async {
     try {
       var data = jsonDecode(await storage.read());
-      data!['code'] = code;
-      if (code == "123456") {
-        data['isDeveloper'];
+      if (code == "dev123") {
+        data!['isDeveloper'] = true;
       }
+      data!['code'] = code;
+      data!['expirationCode'] = expiration;
+      await storage.save(jsonEncode(data));
       return true;
     } catch (e) {
       return false;

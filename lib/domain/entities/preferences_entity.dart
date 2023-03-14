@@ -19,6 +19,9 @@ class PreferencesEntity {
   /// Codigo de desbloqueio do app;
   final bool isDeveloper;
 
+  /// Tempo de expiração do codigo;
+  final String expirationCode;
+
   PreferencesEntity({
     required this.code,
     required this.nick,
@@ -27,5 +30,6 @@ class PreferencesEntity {
     required this.timer,
     required this.theme,
     required this.isDeveloper,
+    required this.expirationCode,
   });
 }

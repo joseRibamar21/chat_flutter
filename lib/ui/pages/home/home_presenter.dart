@@ -12,6 +12,8 @@ abstract class HomePresenter {
   Future<void> saveRooms(RoomEntity room);
   Future<void> enterRoom(String code);
   Future<void> loadRooms();
+  Future<bool> accountValid();
+
   void deleteRoom(RoomEntity room);
   void goChat(RoomEntity room);
   void goTo(String route);

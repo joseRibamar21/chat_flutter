@@ -14,7 +14,7 @@ abstract class LocalPreferences {
   Future<bool> setPassword({required String password});
 
   ///Atualiza o valor de Code
-  Future<bool> setCode({required String code});
+  Future<bool> setCode({required String code, required String expiration});
 
   ///Pegar local
   Future<PreferencesEntity> getData();

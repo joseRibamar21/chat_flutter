@@ -129,7 +129,14 @@ class GetxRegisterPresenter extends GetxController
 
   @override
   Future<bool> verifyCode() async {
-    preferences.setCode(code: _code);
+    DateTime now = DateTime.now();
+    if (_code == "dev123") {
+      int timeExpire = now.millisecondsSinceEpoch + (24 * 60 * 60 * 1000);
+      preferences.setCode(code: _code, expiration: timeExpire.toString());
+    } else {
+      int timeExpire = 0;
+      preferences.setCode(code: _code, expiration: timeExpire.toString());
+    }
     return true;
   }
 }

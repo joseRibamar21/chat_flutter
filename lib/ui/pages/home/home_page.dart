@@ -76,8 +76,10 @@ class _HomePageState extends State<HomePage>
             body: Builder(builder: (_) {
               widget.presenter.inicialization();
               handleUIError(context, widget.presenter.uiErrorStream);
-              Future.delayed(const Duration(milliseconds: 100),
-                  widget.presenter.loadRooms);
+              Future.delayed(const Duration(milliseconds: 100), () async {
+                widget.presenter.accountValid();
+                widget.presenter.loadRooms();
+              });
               handleNaviationPush(widget.presenter.navigatorStream);
               return GestureDetector(
                 onTap: () => hideKeyboard(context),
