@@ -291,7 +291,12 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
                           style: TextStyle(color: Colors.red[700]),
                         )),
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          var t = await Get.toNamed('/expirate');
+                          if (t != null && t == true) {
+                            Get.back();
+                          }
+                        },
                         child: const Text("Inserir outro código"))
                   ],
                 )

@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:chat_flutter/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -60,6 +61,7 @@ class _MyAppState extends State<MyApp> {
             page: makeChatPage,
             fullscreenDialog: true),
         GetPage(name: "/home", page: makeHomePage),
+        GetPage(name: "/expirate", page: makeExpirateCode),
         GetPage(
           name: "/config",
           page: makeConfigPage,
