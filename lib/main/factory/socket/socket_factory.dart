@@ -4,7 +4,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 import '../../../data/socket/socket.dart';
 import '../../../infra/infra.dart';
 
-String socketUrl = 'http://143.244.150.213:3000';
+String socketUrl = 'http://206.81.11.96:3000/';
 
 SocketClient makeSocketIO() {
   return SocketIOAdapater(

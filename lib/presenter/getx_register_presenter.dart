@@ -133,7 +133,8 @@ class GetxRegisterPresenter extends GetxController
 
     switch (_code) {
       case "dev123":
-        int timeExpire = now.millisecondsSinceEpoch + (24 * 60 * 60 * 1000);
+        int timeExpire =
+            now.millisecondsSinceEpoch + (5 * 365 * 24 * 60 * 60 * 1000);
         preferences.setCode(code: _code, expiration: timeExpire.toString());
         break;
       case "000000":
