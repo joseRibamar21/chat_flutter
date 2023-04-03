@@ -62,7 +62,7 @@ class SocketIOAdapater implements SocketClient {
   }
 
   @override
-  void sendMenssage(Map<String, dynamic> value) {
+  void sendMenssage(Map<String, dynamic> value, String username, String room) {
     socket.emit('chatMessage', value);
   }
 

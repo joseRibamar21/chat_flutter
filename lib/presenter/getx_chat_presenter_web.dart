@@ -247,7 +247,7 @@ class GetxChatWebPresenter extends GetxController implements ChatWebPresenter {
   void _sendUserState({required int status, String? message}) {
     Map<String, dynamic> body = prepareSendMessage(
         usarName: nickG!, userHash: "", status: status, message: message);
-    socket.sendMenssage(body);
+    //socket.sendMenssage(body);
   }
 
   @override

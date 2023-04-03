@@ -278,7 +278,10 @@ class GetxChatPresenter extends GetxController implements ChatPresenter {
         userHash: currentUser.hash,
         status: status,
         message: message);
-    socket.sendMenssage(body);
+    socket.sendMenssage(
+        body,
+        '${_rxRoomName.value}+${_roomEntity.password}+${_roomEntity.master}+${_roomEntity.expirateAt}',
+        currentUser.name);
     MessageModel.fromJson(body).toEntity();
     return MessageModel.fromJson(body).toEntity();
   }
