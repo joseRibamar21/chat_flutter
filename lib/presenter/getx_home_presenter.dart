@@ -78,8 +78,12 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       _rxUser.value = UserEntity(
           name: _preferencesEntity.nick, hash: _preferencesEntity.nick);
 
-      var list = await localRoom.listOfRooms();
+      RoomsEntity? list = await localRoom.listOfRooms();
+      DateTime today = DateTime.now();
       if (list != null) {
+        list.listRoom.removeWhere((element) =>
+            element.master != _preferencesEntity.nick &&
+            today.millisecondsSinceEpoch > int.parse(element.expirateAt!));
         _rxListRoom.value = list.listRoom;
         _rxListRoom.refresh();
         _rxListRoomCopy.value = list.listRoom;
@@ -134,6 +138,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   Future<void> enterRoom(String code) async {
     _rxNavigateTo.value = null;
+    _rxUiError.value = null;
     try {
       _preferencesEntity = await preferences.getData();
       _rxUser.value = UserEntity(
@@ -152,7 +157,14 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       if (roomS?.master == _preferencesEntity.nick) {
         _rxUiError.value = "Você não pode entrar na sua sala como convidado!";
       } else {
-        _rxNavigateTo.value = "/chat/${userS!}/$code";
+        // Verifica se a sala não já esta expirada
+        DateTime today = DateTime.now();
+        if (int.parse(roomS!.expirateAt!) > today.millisecondsSinceEpoch) {
+          localRoom.save(roomS);
+          _rxNavigateTo.value = "/chat/${userS!}/$code";
+        } else {
+          _rxUiError.value = "Sala expirada!";
+        }
       }
     } catch (e) {
       _rxUiError.value = "Sala não encontrada!";
@@ -260,8 +272,6 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
   Future<bool> accountValid() async {
     PreferencesEntity p = await preferences.getData();
-    print(
-        "${int.parse(p.expirationCode)} s> ${DateTime.now().millisecondsSinceEpoch}");
     if (int.parse(p.expirationCode) < DateTime.now().millisecondsSinceEpoch) {
       await Get.dialog(
           Dialog(
@@ -308,4 +318,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     }
     return true;
   }
+
+  @override
+  String get userName => _preferencesEntity.nick;
 }

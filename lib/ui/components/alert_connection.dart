@@ -54,7 +54,7 @@ class _CustomAlertConnectionState extends State<CustomAlertConnection> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      color: Theme.of(context).errorColor,
+      color: Theme.of(context).colorScheme.error,
       height: !_open ? 0 : 60,
       width: double.maxFinite,
       child: Center(

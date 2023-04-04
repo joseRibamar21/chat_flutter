@@ -14,15 +14,17 @@ Future<String?> searchRoomDialog(BuildContext context) async {
                 const Text("Insira o id da sala"),
                 TextField(
                   decoration: const InputDecoration(hintText: "Id da Sala"),
+                  autofocus: true,
                   onChanged: (value) {
                     t = value;
                   },
                 ),
                 ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Confirmar"))
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Confirmar"),
+                )
               ],
             ),
           ),

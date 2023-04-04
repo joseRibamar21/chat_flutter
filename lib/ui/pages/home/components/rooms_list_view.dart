@@ -56,12 +56,22 @@ class RoomsListView extends StatelessWidget {
                         trailing: Icon(Icons.arrow_forward_ios_rounded,
                             color: Theme.of(context).iconTheme.color),
                         title: Text(snapshot.data![index].name),
-                        subtitle: Text(
-                          _formatDate(
-                            DateTime.fromMillisecondsSinceEpoch(int.tryParse(
-                                    snapshot.data![index].expirateAt ?? "0") ??
-                                0),
-                          ),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            snapshot.data![index].master == presenter.userName
+                                ? const Text("Meu")
+                                : Text(snapshot.data![index].master),
+                            Text(
+                              _formatDate(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.tryParse(
+                                            snapshot.data![index].expirateAt ??
+                                                "0") ??
+                                        0),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     });
@@ -80,14 +90,25 @@ class RoomsListView extends StatelessWidget {
   }
 
   String _formatDate(DateTime time) {
-    String minutes = "00";
-    if (time.minute < 10) {
-      minutes = "0${time.minute}";
+    DateTime today = DateTime.now();
+    int resultado = time.millisecondsSinceEpoch - today.millisecondsSinceEpoch;
+    if (resultado <= 0) {
+      return "Sala expirada";
     } else {
-      minutes = "${time.minute}";
+      return converterMilissegundos(resultado);
     }
+  }
 
-    return "expira em: ${time.day}/${time.month}/${time.year} ${time.hour}:$minutes";
+  String converterMilissegundos(int millis) {
+    int minutos = (millis ~/ (1000 * 60)) % 60;
+    int horas = (millis ~/ (1000 * 60 * 60)) % 24;
+    int dias = (millis ~/ (1000 * 60 * 60 * 24));
+
+    String value = "";
+    if (dias != 0) value += "$dias d";
+    if (horas != 0) value += "$horas h";
+
+    return '$value $minutos m';
   }
 }
 
@@ -114,8 +135,8 @@ Future<void> _showOptionsRoom(BuildContext context,
             ListTile(
                 onTap: delete,
                 title: const Text("Apagar Sala"),
-                trailing:
-                    Icon(Icons.delete, color: Theme.of(context).errorColor))
+                trailing: Icon(Icons.delete,
+                    color: Theme.of(context).colorScheme.error))
           ],
         );
       });

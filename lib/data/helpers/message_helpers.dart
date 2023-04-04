@@ -62,7 +62,6 @@ MessageEntity? getSendMessage({required dynamic event}) {
         text: BodyModel.fromJson(teste).toEntity(),
         time: message['time']); */
   } catch (error) {
-    print("Error ao receber mensagem");
+    rethrow;
   }
-  return null;
 }

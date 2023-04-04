@@ -287,7 +287,7 @@ class _ErrorTextPassword extends StatelessWidget {
     return Text(
       errorText ?? "",
       style: TextStyle(
-          color: Theme.of(context).errorColor,
+          color: Theme.of(context).colorScheme.error,
           fontSize: 16,
           decoration: TextDecoration.none),
     );

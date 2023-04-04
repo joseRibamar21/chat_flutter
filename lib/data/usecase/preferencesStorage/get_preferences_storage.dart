@@ -12,7 +12,6 @@ class GetPreferencesStorage implements LocalPreferences {
   Future<PreferencesEntity> getData() async {
     try {
       var data = jsonDecode(await storage.read());
-      print(data);
       return PreferencesModel.fromJson(data).toEntity();
     } catch (e) {
       if (await reset()) {

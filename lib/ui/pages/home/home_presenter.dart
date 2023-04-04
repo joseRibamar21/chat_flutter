@@ -25,4 +25,5 @@ abstract class HomePresenter {
 
   bool validadePassword(String password);
   Future<String> getCodeRoom(RoomEntity room);
+  String get userName;
 }

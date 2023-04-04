@@ -62,24 +62,20 @@ class ListMessageState extends State<ListMessage> {
       } else {
         String userNick =
             "${event[event.length - 1].username}${event[event.length - 1].userHash}";
-        print(
-            "recebendo ${event[event.length - 1].username}${event[event.length - 1].userHash} - EU:${widget.nick}");
+
         // Caso eu esteja recebendo a minha mensagem
         if (userNick == widget.nick) {
-          print("AKIIIIII");
           int index = list.indexWhere((element) =>
               element.message.body.id == event[event.length - 1].body.id);
-          print("Index: $index");
+
           // Se achar a mensagem
           if (index != -1) {
-            print("Marcar mensagem");
             if (animatedKey.currentState != null) {
               animatedKey.currentState?.setState(() {
                 list[index].isSend = true;
               });
             }
           } else {
-            print("Mensagem add mensagem");
             list.insert(
                 list.length - 1,
                 MessageViewModel(

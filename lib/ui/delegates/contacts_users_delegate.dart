@@ -49,14 +49,14 @@ class ContactsDelegate extends SearchDelegate<String> {
             return Center(
                 child: Text(
               "Aguarde...",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             ));
 
           case ConnectionState.none:
             return Center(
                 child: Text(
               "Erro ao carregar dados.",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             ));
 
           case ConnectionState.done:
@@ -85,7 +85,7 @@ class ContactsDelegate extends SearchDelegate<String> {
         return Center(
             child: Text(
           "Erro ao carregar dados",
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyMedium,
         ));
       },
     );

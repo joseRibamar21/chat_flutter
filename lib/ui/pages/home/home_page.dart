@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +33,9 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    Timer.periodic(const Duration(minutes: 1), (timer) {
+      widget.presenter.loadRooms();
+    });
     super.initState();
   }
 

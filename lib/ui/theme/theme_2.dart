@@ -86,9 +86,7 @@ ThemeData makeTheme2() {
     bottomSheetTheme: sheetThemeData,
     cardTheme: cardTheme,
     cardColor: color5,
-    colorScheme: ColorScheme.fromSeed(seedColor: color1),
     dialogTheme: dialogTheme,
-    backgroundColor: Colors.amber,
     dividerTheme: dividerThemeData,
     iconTheme: iconThemeData,
     floatingActionButtonTheme: floatingActionButtonThemeData,
@@ -99,7 +97,9 @@ ThemeData makeTheme2() {
     scaffoldBackgroundColor: color3,
     textButtonTheme: textButtonThemeData,
     textTheme: textTheme,
-    errorColor: Colors.redAccent,
     useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(seedColor: color1)
+        .copyWith(background: Colors.amber)
+        .copyWith(error: Colors.redAccent),
   );
 }
