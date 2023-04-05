@@ -30,9 +30,12 @@ class _HomePageState extends State<HomePage>
   final BlockAuthController _authController = BlockAuthController();
   final AuthenticationLocal _authenticationLocal = AuthenticationLocal();
 
+  late Timer timer;
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    
     Timer.periodic(const Duration(minutes: 1), (timer) {
       widget.presenter.loadRooms();
     });

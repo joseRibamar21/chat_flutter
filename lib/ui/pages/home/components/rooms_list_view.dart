@@ -53,26 +53,26 @@ class RoomsListView extends StatelessWidget {
                             }),
                           );
                         },
-                        trailing: Icon(Icons.arrow_forward_ios_rounded,
-                            color: Theme.of(context).iconTheme.color),
-                        title: Text(snapshot.data![index].name),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            snapshot.data![index].master == presenter.userName
-                                ? const Text("Meu")
-                                : Text(snapshot.data![index].master),
-                            Text(
-                              _formatDate(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    int.tryParse(
-                                            snapshot.data![index].expirateAt ??
-                                                "0") ??
-                                        0),
-                              ),
-                            ),
-                          ],
+                        trailing: Text(
+                          _formatDate(
+                            DateTime.fromMillisecondsSinceEpoch(int.tryParse(
+                                    snapshot.data![index].expirateAt ?? "0") ??
+                                0),
+                          ),
                         ),
+                        /* Icon(Icons.arrow_forward_ios_rounded,
+                            color: Theme.of(context).iconTheme.color), */
+                        title: Text(snapshot.data![index].name),
+                        subtitle:
+                            snapshot.data![index].master == presenter.userName
+                                ? null
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(snapshot.data![index].master),
+                                    ],
+                                  ),
                       );
                     });
               } else {
